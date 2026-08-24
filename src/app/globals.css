@@ -3,13 +3,130 @@
 @tailwind utilities;
 
 :root {
-  --background: #0a0a0f;
+  --green: #0ae448;
+  --lt: #abff84;
+  --black: #0e100f;
+  --white: #fffce1;
+  --s75: #bbbaa6;
+  --s50: #7c7c6f;
+  --s25: #42433d;
+  --color-grey-dark: #191919;
+  --color-shockingly-green: #0ae448;
+  --grad-macha: linear-gradient(114.41deg, #0ae448 20.74%, #abff84 65.5%);
+  --background: #0e100f;
   --foreground: #ededed;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Helvetica Neue", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
+}
+
+.font-mono-code {
+  font-family: "Roboto Mono", "Space Grotesk", monospace;
+}
+
+/* Island & Menu styles */
+.island {
+  background: var(--color-grey-dark);
+  border: 1.5px solid var(--s25);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.island-logo--cont {
+  position: relative;
+  width: 0px;
+  height: 20px;
+  pointer-events: none;
+}
+
+.island-logo {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  opacity: 0;
+  margin-left: 0.75rem;
+}
+
+.menu-btn {
+  height: 34px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.button-cont {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-btn:focus-visible {
+  outline: 2px solid var(--color-shockingly-green);
+  outline-offset: 3px;
+}
+
+.menu-panel {
+  border: 1.5px solid var(--s25);
+  background: var(--color-grey-dark);
+  border-radius: 18px;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  text-decoration: none;
+  color: var(--s75);
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.menu-link + .menu-link {
+  border-top: 1px solid var(--s25);
+}
+
+.menu-link:first-child {
+  border-radius: 14px 14px 0 0;
+}
+
+.menu-link:last-child {
+  border-radius: 0 0 14px 14px;
+}
+
+.menu-link:hover {
+  color: var(--color-shockingly-green);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.menu-link:focus-visible {
+  outline: 2px solid var(--color-shockingly-green);
+  outline-offset: -2px;
+}
+
+.link-num {
+  font-family: "Roboto Mono", monospace;
+  font-size: 0.7rem;
+  color: var(--s25);
+  transition: color 0.15s;
+}
+
+.menu-link:hover .link-num {
+  color: var(--s50);
 }
