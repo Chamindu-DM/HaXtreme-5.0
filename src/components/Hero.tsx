@@ -148,11 +148,12 @@ export default function Hero() {
         const wrap = animateSelector(".a > span");
         const char = animateSelector(".a > span > span");
 
-        tl.set(wrap, { transformOrigin: "50% 100%" });
-        tl.from(char, { yPercent: 100 });
-        tl.from(
+        tl.set(wrap, { transformOrigin: "50% 100%", rotationX: 0, yPercent: 0 });
+        tl.fromTo(char, { yPercent: 100 }, { yPercent: 0, duration: 0.6 });
+        tl.fromTo(
           wrap,
-          { rotationX: -180, ease: "back.out(1.7)", duration: 1 },
+          { rotationX: -180 },
+          { rotationX: 0, ease: "back.out(1.7)", duration: 1 },
           "-=.4"
         );
         return tl;
@@ -167,27 +168,31 @@ export default function Hero() {
         const wrap = animateSelector(".n > span > span");
         const chars = animateSelector(".n > span > span > span");
 
-        tl.set(chars[1], { autoAlpha: 1 });
+        tl.set(chars[1], { autoAlpha: 1, rotationY: 0 });
         tl.set(circles, { autoAlpha: 1, yPercent: 100 });
-        tl.from(circlesSvg, { scale: 0, ease: "back.out(1.7)" });
+        tl.fromTo(circlesSvg, { scale: 0 }, { scale: 1, ease: "back.out(1.7)", duration: 0.6 });
         tl.to(circles, {
           yPercent: -200,
           autoAlpha: 0,
           duration: 1.5,
           ease: "power4.out",
         });
-        tl.from(wrap, { yPercent: 100, duration: 0.4 }, "<");
-        tl.from(
+        tl.fromTo(wrap, { yPercent: 100 }, { yPercent: 0, duration: 0.4 }, "<");
+        tl.fromTo(
           windmill,
           {
             x: () => window.innerWidth / -2,
             rotationZ: -360,
+          },
+          {
+            x: 0,
+            rotationZ: 0,
             duration: 1,
           },
           "<"
         );
-        tl.from(chars[0], { rotationY: -180, duration: 0.3 }, "+=.4");
-        tl.to(chars[1], { rotationY: 180, duration: 0.3 }, "<");
+        tl.fromTo(chars[0], { rotationY: -180 }, { rotationY: 0, duration: 0.3 }, "+=.4");
+        tl.fromTo(chars[1], { rotationY: 0 }, { rotationY: 180, duration: 0.3 }, "<");
         tl.to(
           windmill,
           {
@@ -204,20 +209,21 @@ export default function Hero() {
       // Letter 3: "i"
       const char3 = () => {
         const char = animateSelector(".i > span");
-        return gsap.from(char, {
-          yPercent: -100,
-          ease: "back.out(1.4)",
-          duration: 1,
-        });
+        return gsap.fromTo(
+          char,
+          { yPercent: -100 },
+          { yPercent: 0, ease: "back.out(1.4)", duration: 1 }
+        );
       };
 
       // Letter 4: "m"
       const char4 = () => {
         const char = animateSelector(".m > span");
-        return gsap.from(char, {
-          xPercent: -100,
-          ...defaults,
-        });
+        return gsap.fromTo(
+          char,
+          { xPercent: -100 },
+          { xPercent: 0, ...defaults }
+        );
       };
 
       // Letter 5: "a2" + Star Flair (nests char4)
@@ -229,12 +235,12 @@ export default function Hero() {
         const char = animateSelector(".a2 > span > span");
 
         tl.set(star, { xPercent: -150, autoAlpha: 1 });
-        tl.from(starSvg, { scale: 0, duration: 0.4 });
+        tl.fromTo(starSvg, { scale: 0 }, { scale: 1, duration: 0.4 });
         tl.add(char4(), "+=.6");
         tl.to(star, { xPercent: 0 }, "<");
         tl.set(wrap, { overflow: "hidden" });
         tl.to(star, { yPercent: 130, ease: "power2.in" }, "+=.5");
-        tl.from(char, { yPercent: 100 }, "-=.3");
+        tl.fromTo(char, { yPercent: 100 }, { yPercent: 0, duration: 0.6 }, "-=.3");
         tl.to(starSvg, { rotationZ: 360, ease: "none", repeat: 2, duration: 2 }, 0);
         return tl;
       };
@@ -242,10 +248,11 @@ export default function Hero() {
       // Letter 7: "e"
       const char7 = () => {
         const char = animateSelector(".e > span");
-        return gsap.from(char, {
-          yPercent: 100,
-          duration: 0.9,
-        });
+        return gsap.fromTo(
+          char,
+          { yPercent: 100 },
+          { yPercent: 0, duration: 0.9, ease: "power2.out" }
+        );
       };
 
       // Letter 6: "t" + Odometer Counter (nests char7)
@@ -311,11 +318,11 @@ export default function Hero() {
       // Letter 10: "y"
       const char10 = () => {
         const char = anythingSelector(".y > span");
-        return gsap.from(char, {
-          rotationY: -180,
-          duration: 1,
-          scale: 0,
-        });
+        return gsap.fromTo(
+          char,
+          { rotationY: -180, scale: 0 },
+          { rotationY: 0, scale: 1, duration: 1, ease: "power2.out" }
+        );
       };
 
       // Letter 11: "t" + Lightning Bolt
@@ -357,7 +364,7 @@ export default function Hero() {
           },
           "-=2"
         );
-        tl.from(char, { scale: 0, ease: "back.out(1.4)" }, "<.5");
+        tl.fromTo(char, { scale: 0 }, { scale: 1, ease: "back.out(1.4)", duration: 0.6 }, "<.5");
         return tl;
       };
 
@@ -367,14 +374,22 @@ export default function Hero() {
         const worm = anythingSelector(".home-hero__flair--worm img");
         const char = anythingSelector(".h span span");
 
-        tl.from(worm, {
-          autoAlpha: 0,
-          duration: 1.5,
-          yPercent: 100,
-          rotationZ: 180,
-          ease: "back.out(1.6)",
-        });
-        tl.from(char, { yPercent: -100 }, "<.2");
+        tl.fromTo(
+          worm,
+          {
+            autoAlpha: 0,
+            yPercent: 100,
+            rotationZ: 180,
+          },
+          {
+            autoAlpha: 1,
+            yPercent: 0,
+            rotationZ: 0,
+            duration: 1.5,
+            ease: "back.out(1.6)",
+          }
+        );
+        tl.fromTo(char, { yPercent: -100 }, { yPercent: 0, duration: 0.6 }, "<.2");
         return tl;
       };
 
@@ -382,7 +397,7 @@ export default function Hero() {
       const char14 = () => {
         const tl = gsap.timeline({ defaults });
         const char = anythingSelector(".n2 span");
-        tl.from(char, { xPercent: -100 });
+        tl.fromTo(char, { xPercent: -100 }, { xPercent: 0, duration: 0.6 });
         return tl;
       };
 
@@ -413,11 +428,15 @@ export default function Hero() {
       const char15 = () => {
         const tl = gsap.timeline({ defaults });
         const char = anythingSelector(".g span");
-        tl.from(
+        tl.fromTo(
           char,
           {
             autoAlpha: 0,
             rotationZ: -120,
+          },
+          {
+            autoAlpha: 1,
+            rotationZ: 0,
             duration: 2,
             ease: "elastic.out(1, 0.4)",
           },
@@ -959,7 +978,7 @@ export default function Hero() {
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/flair-images/flair-20.webp"
+                      src="/flair-images/worm-e8f0c8f6.png"
                       alt=""
                       className="w-full h-full object-contain"
                     />
@@ -987,8 +1006,10 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* ─── Subtitle with Curly Braces ─── */}
-          <div className="home-hero__subtitle">
+          {/* ─── Bottom Area: Subtitle & CTA Button ─── */}
+          <div className="home-hero__bottom-area">
+            {/* Subtitle with Curly Braces */}
+            <div className="home-hero__subtitle">
             <h3
               ref={subtitleWrapRef}
               className="subtitle subtitle--large subtitle--left"
@@ -1245,11 +1266,11 @@ export default function Hero() {
                 className="get-gsap-btn__button button button--stroke"
               >
                 <span className="get-gsap-btn__word">
-                  <span className="button__label">Get</span>
+                  <span className="button__label">Explore</span>
                 </span>
 
                 <span className="get-gsap-btn__word">
-                  <span className="button__label">GSAP</span>
+                  <span className="button__label">HaXtreme</span>
 
                   <span className="button__icon">
                     <span>
@@ -1283,6 +1304,7 @@ export default function Hero() {
           </div>
         </div>
       </div>
+    </div>
     </section>
   );
 }

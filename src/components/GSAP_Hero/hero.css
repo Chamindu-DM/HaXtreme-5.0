@@ -28,48 +28,67 @@
   --ease-in-out-quart: cubic-bezier(.645, .045, .355, 1);
 }
 
+/* ─── Hero Section (Full Viewport Fit — No Scrolling) ─── */
 .home-hero {
-  overflow: hidden;
-  padding-bottom: 2.1875rem;
-  padding-top: 30vh;
   position: relative;
+  width: 100%;
+  min-height: calc(100vh - 72px);
+  max-height: calc(100vh - 72px);
+  height: calc(100dvh - 72px);
+  padding-top: 0 !important;
+  padding-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-@media only screen and (min-width: 48rem) {
+@media only screen and (max-height: 700px) {
   .home-hero {
-    align-items: center;
-    display: flex;
-    padding-bottom: 12.5rem;
-    padding-top: 12.5rem;
-  }
-}
-
-@media only screen and (min-width: 77.5rem) {
-  .home-hero {
-    min-height: 100vh;
-    padding-bottom: 8.75rem;
-    padding-top: 13.75rem;
+    min-height: calc(100vh - 60px);
+    max-height: none;
+    height: auto;
   }
 }
 
 .home-hero .container {
   width: 100%;
+  height: 100%;
+  max-width: 120rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: max(1.25rem, min(4vw, 4rem));
+  padding-right: max(1.25rem, min(4vw, 4rem));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .home-hero__inner {
   position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .home-hero__heading {
-  padding-bottom: max(2.5rem, min(2.589vw + 1.8932rem, 5rem));
   position: relative;
   z-index: 1;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .home-hero__heading .home-hero__heading-text {
   pointer-events: none;
   position: relative;
   z-index: 1;
+  width: 100%;
 }
 
 .home-hero__heading .home-hero__heading-text > span {
@@ -96,6 +115,10 @@
 .home-hero__heading .home-hero__heading-text .home-hero__anything .y {
   perspective: 750px;
   position: relative;
+}
+
+.home-hero__heading .home-hero__heading-text .home-hero__animate .a > span {
+  transform-origin: 50% 100%;
 }
 
 .home-hero__heading .home-hero__heading-text .home-hero__animate .n > span > span > span,
@@ -133,6 +156,21 @@
   position: absolute;
 }
 
+/* ─── Typography Sizing (Calibrated to Fit Viewport) ─── */
+.heading-xl {
+  font-size: clamp(3.25rem, 8vw, 8.5rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 0.92;
+}
+
+@media only screen and (max-height: 800px) {
+  .heading-xl {
+    font-size: clamp(2.75rem, 6.8vw, 6.5rem);
+  }
+}
+
+/* ─── SVG Flairs ─── */
 .home-hero__flair {
   font-size: 0;
   position: absolute;
@@ -146,101 +184,103 @@
 }
 
 .home-hero__flair--circles {
-  left: max(.3125rem, min(.323625vw + .23665rem, .625rem));
+  left: max(.25rem, min(.3vw + .15rem, .5rem));
   visibility: hidden;
 }
 
 .home-hero__flair--circles,
 .home-hero__flair--windmill {
-  height: max(1.9375rem, min(6.86084vw + .32949rem, 8.5625rem));
-  top: max(-5.75rem, min(-4.78964vw - .00242718rem, -1.125rem));
-  width: max(1.9375rem, min(6.86084vw + .32949rem, 8.5625rem));
+  height: max(1.75rem, min(5.5vw + .25rem, 6.5rem));
+  top: max(-4.5rem, min(-3.8vw - .002rem, -1rem));
+  width: max(1.75rem, min(5.5vw + .25rem, 6.5rem));
 }
 
 .home-hero__flair--windmill {
-  left: max(.3125rem, min(.711974vw + .145631rem, 1rem));
+  left: max(.25rem, min(.6vw + .1rem, .875rem));
 }
 
 .home-hero__flair--star {
-  bottom: max(.5625rem, min(.970874vw + .334951rem, 1.5rem));
-  height: max(2.5rem, min(7.11974vw + .831311rem, 9.375rem));
-  left: max(.25rem, min(.582524vw + .113471rem, .8125rem));
+  bottom: max(.45rem, min(.8vw + .25rem, 1.25rem));
+  height: max(2.25rem, min(5.8vw + .6rem, 7rem));
+  left: max(.2rem, min(.45vw + .1rem, .65rem));
   visibility: hidden;
-  width: max(2.5rem, min(7.11974vw + .831311rem, 9.375rem));
+  width: max(2.25rem, min(5.8vw + .6rem, 7rem));
 }
 
 .home-hero__flair--worm {
-  bottom: max(-4.375rem, min(-2.589vw - 1.2682rem, -1.875rem));
-  height: max(3.125rem, min(8.34952vw + 1.16808rem, 11.1875rem));
+  bottom: max(-3.5rem, min(-2vw - 1rem, -1.5rem));
+  height: max(2.5rem, min(6.5vw + 1rem, 8.5rem));
   left: 0;
   transform: rotate(25deg);
-  width: max(1.875rem, min(4.85437vw + .737257rem, 6.5625rem));
+  width: max(1.5rem, min(3.8vw + .5rem, 5rem));
+  pointer-events: none;
 }
 
 .home-hero__flair--bolt {
-  height: max(4.375rem, min(12.2977vw + 1.49272rem, 16.25rem));
+  height: max(3.5rem, min(9.5vw + 1.2rem, 12rem));
   left: 0;
-  top: max(.0625rem, min(.323625vw - .0133495rem, .375rem));
+  top: max(.05rem, min(.25vw - .01rem, .3rem));
   visibility: hidden;
-  width: max(2.1875rem, min(6.14887vw + .746359rem, 8.125rem));
+  width: max(1.75rem, min(4.8vw + .6rem, 6rem));
 }
 
-.home-hero__subtitle {
-  margin-bottom: 7.625rem;
+/* ─── Bottom Area (Subtitle + Button in Viewport) ─── */
+.home-hero__bottom-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.25rem;
+  position: relative;
+  z-index: 10;
 }
 
 @media only screen and (min-width: 48rem) {
-  .home-hero__subtitle {
-    margin-bottom: 0;
+  .home-hero__bottom-area {
+    flex-direction: row;
+    align-items: flex-end;
   }
+}
+
+.home-hero__subtitle {
+  margin-bottom: 0;
 }
 
 .home-hero__subtitle .subtitle {
   margin: 0 auto;
   max-width: max(15.625rem, min(6.87023vw + 14.0148rem, 17.3125rem));
-  padding: 1rem 2rem;
+  padding: 0.625rem 1.5rem;
   text-align: left;
 }
 
 @media only screen and (min-width: 48rem) {
   .home-hero__subtitle .subtitle {
     margin-left: 0;
-    max-width: max(25.125rem, min(13.2813vw + 18.75rem, 34.6875rem));
-  }
-}
-
-.home-hero__button {
-  position: relative;
-  visibility: hidden;
-  z-index: 2;
-}
-
-@media only screen and (min-width: 48rem) {
-  .home-hero__button {
-    bottom: 0;
-    position: absolute;
-    right: 0;
+    max-width: max(22rem, min(12vw + 16rem, 30rem));
   }
 }
 
 .subtitle {
   display: inline-block;
   max-width: 33.75rem;
-  padding: 1rem 1.25rem;
+  padding: 0.625rem 1.25rem;
   position: relative;
   text-align: center;
   visibility: hidden;
 }
 
 .subtitle--large {
-  padding: max(.5rem, min(.517799vw + .378641rem, 1rem)) max(1.5rem, min(.517799vw + 1.37864rem, 2rem));
+  padding: max(.4rem, min(.4vw + .3rem, .75rem)) max(1.25rem, min(.4vw + 1.1rem, 1.75rem));
 }
 
 .subtitle__label {
   font-weight: 400;
   letter-spacing: -.01em;
-  line-height: 1.2;
-  font-size: max(.875rem, min(.647249vw + .723301rem, 1.5rem));
+  line-height: 1.25;
+  font-size: max(.8125rem, min(.5vw + .65rem, 1.25rem));
 }
 
 .subtitle__brace {
@@ -268,6 +308,13 @@
   fill: currentColor;
 }
 
+.home-hero__button {
+  position: relative;
+  visibility: hidden;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
 .get-gsap-btn {
   position: relative;
   z-index: 1;
@@ -284,15 +331,15 @@
   border-radius: 6.25rem;
   cursor: pointer;
   display: inline-flex;
-  font-size: max(1rem, min(.38835vw + .908981rem, 1.375rem));
+  font-size: max(0.9rem, min(.3vw + .85rem, 1.15rem));
   font-weight: 600;
   gap: .363636em;
   justify-content: center;
   letter-spacing: -.01em;
   line-height: 1.04545;
-  min-width: 13.75rem;
+  min-width: 12.5rem;
   overflow: hidden;
-  padding: .9375rem 1.5rem;
+  padding: .75rem 1.25rem;
   position: relative;
   text-decoration: none;
   transition: none;
@@ -313,11 +360,11 @@
   border: .125rem solid;
   border-radius: 50%;
   display: flex;
-  height: 1.5rem;
+  height: 1.35rem;
   justify-content: center;
   margin-left: .5rem;
   overflow: hidden;
-  width: 1.5rem;
+  width: 1.35rem;
 }
 
 .get-gsap-btn__button .button__icon span {
@@ -326,8 +373,8 @@
 
 .get-gsap-btn__button .button__icon svg {
   grid-area: 1/1;
-  height: 11px;
-  width: 10px;
+  height: 10px;
+  width: 9px;
 }
 
 .get-gsap-btn__button .button__icon path {
@@ -336,7 +383,7 @@
 
 @media only screen and (min-width: 77.5rem) {
   .get-gsap-btn__button {
-    min-width: 17.125rem;
+    min-width: 15rem;
   }
 }
 
@@ -352,11 +399,4 @@
 
 .get-gsap-btn__flair svg {
   transform: translate(-50%) translateY(-50%);
-}
-
-.heading-xl {
-  font-size: max(5.125rem, min(13.3333vw + 2rem, 18rem));
-  font-weight: 600;
-  letter-spacing: -.02em;
-  line-height: .9;
 }

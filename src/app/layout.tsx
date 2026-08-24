@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "../components/GSAP_Hero/hero.css";
 
 export const metadata: Metadata = {
   title: "HaXtreme 5.0 | Next.js + GSAP",

@@ -111,7 +111,7 @@ function StarFlair() {
 const BoltFlair = forwardRef<
   { path: SVGPathElement | null; rect: SVGRectElement | null },
   { pathRef: React.RefObject<SVGPathElement | null>; rectRef: React.RefObject<SVGRectElement | null> }
->(function BoltFlairInner({ pathRef, rectRef }, _ref) {
+>(function BoltFlairInner({ pathRef, rectRef }) {
   const maskId = useId();
   return (
     <div className="hero-flair hero-flair--bolt" aria-hidden="true">

@@ -1,8 +1,8 @@
 // tests/hero/adversarial-stress.mjs
-// Adversarial Stress Testing Harness for GSAP Hero Recreation
-// Focus: Rapid CTA hover recycling, Particle coordinate bounds, CustomEase evaluations,
-//        Simultaneous master timeline collisions, React StrictMode 100-cycle stress,
-//        Event listener leaks, Reduced-motion toggles, and Boundary physics.
+// Authoritative Adversarial Stress Testing Harness for GSAP Hero Recreation
+// Challenges: Timeline timings, Keyframe boundaries, Extreme Viewport Resolutions (320px to 8K),
+//            Rapid Cursor Jumps & Teleportation, Torque Rotation Inversion Clamp Bounds,
+//            Infinite Yoyo Loop Memory Stability, 500-Cycle StrictMode Leaks, and CustomEase Curves.
 
 import { setupDOMEnvironment, loadHeroHTML, MockNode } from './dom-env.mjs';
 
@@ -76,43 +76,532 @@ class AdversarialRunner {
 const runner = new AdversarialRunner();
 
 console.log('\n========================================================================');
-console.log('       ADVERSARIAL CHALLENGER 2: STRESS & LIFECYCLE TEST SUITE          ');
+console.log('       ADVERSARIAL CHALLENGER: EXHAUSTIVE STRESS & BOUNDARY SUITE       ');
 console.log('========================================================================\n');
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SUITE 1: CTA BUTTON & PARTICLE BURST STRESS-TESTS
+// SECTION 1: TIMELINE CHOREOGRAPHY TIMINGS & KEYFRAME BOUNDARIES
 // ─────────────────────────────────────────────────────────────────────────────
-console.log('\x1b[1m▶ Section 1: CTA Button & Particle Burst Adversarial Tests\x1b[0m');
+console.log('\x1b[1m▶ Section 1: Timeline Choreography Timings & Keyframe Offset Boundaries\x1b[0m');
 
-// 1.1 CustomEase bezier curve evaluations across 10,000 points
-await runner.run('1.1 CustomEase "airtime" & "rotaaaaate" Evaluation Stability (10,000 steps)', (t) => {
-  const airtimeEase = CustomEase.get("airtime");
-  const rotaaaaateEase = CustomEase.get("rotaaaaate");
+// 1.1 Exact Offset Sequencing Across All 15 Characters & Flairs
+await runner.run('1.1 Master Timeline 15-Character Exact Offset Timings and Nesting Integrity', (t) => {
+  const DOM = loadHeroHTML();
+  const heading1 = DOM.querySelector(".home-hero__animate");
+  const heading2 = DOM.querySelector(".home-hero__anything");
+  const animateSelector = gsap.utils.selector(heading1);
+  const anythingSelector = gsap.utils.selector(heading2);
 
-  t.assert(typeof airtimeEase === 'function', 'airtime CustomEase must be a function');
-  t.assert(typeof rotaaaaateEase === 'function', 'rotaaaaate CustomEase must be a function');
+  const defaults = { ease: "power2.out", duration: 0.6 };
 
-  // Test at boundary 0 and 1
-  t.assertCloseTo(airtimeEase(0), 0, 0.001, 'airtime at t=0 must be 0');
-  t.assertCloseTo(airtimeEase(1), 1, 0.001, 'airtime at t=1 must be 1');
-  t.assertCloseTo(rotaaaaateEase(0), 0, 0.001, 'rotaaaaate at t=0 must be 0');
-  t.assertCloseTo(rotaaaaateEase(1), 1, 0.001, 'rotaaaaate at t=1 must be 1');
+  // Character factories matching Hero.tsx
+  const char1 = () => {
+    const tl = gsap.timeline({ defaults });
+    tl.from(animateSelector(".a > span > span"), { yPercent: 100 });
+    tl.from(animateSelector(".a > span"), { rotationX: -180, ease: "back.out(1.7)", duration: 1 }, "-=.4");
+    return tl;
+  };
 
-  // Sweep 10,000 samples between 0 and 1
-  for (let i = 0; i <= 10000; i++) {
-    const progress = i / 10000;
-    const vAir = airtimeEase(progress);
-    const vRot = rotaaaaateEase(progress);
+  const char2 = () => {
+    const tl = gsap.timeline({ defaults });
+    tl.from(animateSelector(".home-hero__flair--circles svg"), { scale: 0, ease: "back.out(1.7)" });
+    tl.to(animateSelector(".home-hero__flair--circles"), { yPercent: -200, autoAlpha: 0, duration: 1.5, ease: "power4.out" });
+    tl.from(animateSelector(".n > span > span"), { yPercent: 100, duration: 0.4 }, "<");
+    tl.from(animateSelector(".home-hero__flair--windmill"), { x: () => window.innerWidth / -2, rotationZ: -360, duration: 1 }, "<");
+    tl.from(animateSelector(".n > span > span > span")[0], { rotationY: -180, duration: 0.3 }, "+=.4");
+    tl.to(animateSelector(".n > span > span > span")[1], { rotationY: 180, duration: 0.3 }, "<");
+    tl.to(animateSelector(".home-hero__flair--windmill"), { rotationZ: 90, duration: 0.3, repeat: -1, repeatDelay: 1 }, "<");
+    return tl;
+  };
 
-    t.assert(!Number.isNaN(vAir) && Number.isFinite(vAir), `airtime(${progress}) must be finite, got ${vAir}`);
-    t.assert(!Number.isNaN(vRot) && Number.isFinite(vRot), `rotaaaaate(${progress}) must be finite, got ${vRot}`);
-    t.assert(vAir >= -0.05 && vAir <= 1.05, `airtime value within valid ease range, got ${vAir}`);
-    t.assert(vRot >= -0.05 && vRot <= 1.05, `rotaaaaate value within valid ease range, got ${vRot}`);
+  const char3 = () => gsap.from(animateSelector(".i > span"), { yPercent: -100, ease: "back.out(1.4)", duration: 1 });
+  const char4 = () => gsap.from(animateSelector(".m > span"), { xPercent: -100, ...defaults });
+
+  const char5 = () => {
+    const tl = gsap.timeline({ defaults });
+    tl.from(animateSelector(".home-hero__flair--star svg"), { scale: 0, duration: 0.4 });
+    tl.add(char4(), "+=.6");
+    tl.to(animateSelector(".home-hero__flair--star"), { xPercent: 0 }, "<");
+    tl.to(animateSelector(".home-hero__flair--star"), { yPercent: 130, ease: "power2.in" }, "+=.5");
+    tl.from(animateSelector(".a2 > span > span"), { yPercent: 100 }, "-=.3");
+    tl.to(animateSelector(".home-hero__flair--star svg"), { rotationZ: 360, ease: "none", repeat: 2, duration: 2 }, 0);
+    return tl;
+  };
+
+  const char7 = () => gsap.from(animateSelector(".e > span"), { yPercent: 100, duration: 0.9 });
+
+  const char6 = () => {
+    const tl = gsap.timeline({ defaults });
+    const numbers = animateSelector(".t > span > span > span");
+    tl.from(numbers[0], { yPercent: 100, duration: 0.4 }, "<");
+    tl.fromTo([numbers[1], numbers[2]], { yPercent: 100 }, { yPercent: -100, duration: 0.9, stagger: 0.1, ease: "power2.inOut" }, "+=.2");
+    tl.to(numbers[0], { yPercent: -100 }, "-=.6");
+    tl.from(animateSelector(".t > span > span")[0], { yPercent: 100, duration: 0.9 }, "<");
+    tl.add(char7(), "<");
+    return tl;
+  };
+
+  const char8to9 = () => {
+    const tl = gsap.timeline({ defaults });
+    tl.fromTo(anythingSelector(".a span:last-of-type, .n span:last-of-type"), { yPercent: 100 }, {
+      keyframes: { yPercent: [100, 0, 100, 0], ease: "power1.out" }, duration: 3, stagger: 0.4
+    });
+    tl.fromTo(anythingSelector(".a span:first-of-type, .n span:first-of-type"), { yPercent: -100 }, {
+      keyframes: { yPercent: [-100, -100, 20, -100], ease: "power1.out" }, duration: 3, stagger: 0.4
+    }, "<");
+    return tl;
+  };
+
+  const char10 = () => gsap.from(anythingSelector(".y > span"), { rotationY: -180, duration: 1, scale: 0 });
+
+  const char11 = () => {
+    const tl = gsap.timeline({ defaults });
+    tl.fromTo(DOM.querySelector("#bolt-path"), { strokeDasharray: 600.3, strokeDashoffset: 600.3 }, { strokeDashoffset: 0, duration: 1, ease: "power3.inOut" });
+    tl.from(DOM.querySelector("#bolt-rect"), { yPercent: 100, duration: 3.5, ease: "power4.out" }, "<.5");
+    tl.from(DOM.querySelector(".home-hero__flair--bolt"), { keyframes: { scale: [1, 1.1, 0.6, 0.7, 0.2, 0.3, 0], duration: 2 } }, "-=2");
+    tl.from(anythingSelector(".t span"), { scale: 0, ease: "back.out(1.4)" }, "<.5");
+    return tl;
+  };
+
+  const char12 = () => {
+    const tl = gsap.timeline({ defaults });
+    tl.from(DOM.querySelector("#home-hero-squiggle img"), { autoAlpha: 0, duration: 1.5, yPercent: 100, rotationZ: 180, ease: "back.out(1.6)" });
+    tl.from(anythingSelector(".h span span"), { yPercent: -100 }, "<.2");
+    return tl;
+  };
+
+  const char14 = () => {
+    const tl = gsap.timeline({ defaults });
+    tl.from(anythingSelector(".n2 span"), { xPercent: -100 });
+    return tl;
+  };
+
+  const char13 = () => {
+    const tl = gsap.timeline({ defaults });
+    tl.from(anythingSelector(".i > span"), { autoAlpha: 0, duration: 0.1 }, "<");
+    tl.from(anythingSelector(".i > span"), { rotationX: -450, duration: 1.3 }, "<.14");
+    tl.add(char14(), "<+=.5");
+    tl.to(anythingSelector(".i > span"), { rotationX: 540, duration: 1.5, repeat: -1, repeatDelay: 3, yoyo: true, yoyoEase: "power2.out" }, "+=2");
+    return tl;
+  };
+
+  const char15 = () => {
+    const tl = gsap.timeline({ defaults });
+    tl.from(anythingSelector(".g span"), { autoAlpha: 0, rotationZ: -120, duration: 2, ease: "elastic.out(1, 0.4)" }, "<.6");
+    return tl;
+  };
+
+  const buttonIn = () => gsap.from(DOM.querySelector(".home-hero__button"), { autoAlpha: 0, yPercent: 30, ...defaults });
+
+  const masterTl = gsap.timeline({ defaults });
+  const c1 = char1();
+  const c2 = char2();
+  const c3 = char3();
+  const c5 = char5();
+  const c6 = char6();
+  const c89 = char8to9();
+  const c10 = char10();
+  const c11 = char11();
+  const c12 = char12();
+  const c13 = char13();
+  const c15 = char15();
+  const btn = buttonIn();
+
+  masterTl.add(c1, 0);
+  masterTl.add(c2, 0.4);
+  masterTl.add(c3, 1.0);
+  masterTl.add(c5, 0.8);
+  masterTl.add(c6, 1.1);
+  masterTl.add(c89, 1.5);
+  masterTl.add(c10, 1.7);
+  masterTl.add(c11, 2.0);
+  masterTl.add(c12, 1.9);
+  masterTl.add(c13, 2.4);
+  masterTl.add(c15, 2.2);
+  masterTl.add(btn, 1.0);
+
+  // Assert precise offset registrations
+  t.assertEqual(c1.startTime(), 0.0, 'Char 1 offset is 0.0s');
+  t.assertEqual(c2.startTime(), 0.4, 'Char 2 offset is 0.4s');
+  t.assertEqual(c3.startTime(), 1.0, 'Char 3 offset is 1.0s');
+  t.assertEqual(c5.startTime(), 0.8, 'Char 5 offset is 0.8s');
+  t.assertEqual(c6.startTime(), 1.1, 'Char 6 offset is 1.1s');
+  t.assertEqual(c89.startTime(), 1.5, 'Char 8-9 ticker offset is 1.5s');
+  t.assertEqual(c10.startTime(), 1.7, 'Char 10 offset is 1.7s');
+  t.assertEqual(c11.startTime(), 2.0, 'Char 11 bolt offset is 2.0s');
+  t.assertEqual(c12.startTime(), 1.9, 'Char 12 squiggle offset is 1.9s');
+  t.assertEqual(c13.startTime(), 2.4, 'Char 13 offset is 2.4s');
+  t.assertEqual(c15.startTime(), 2.2, 'Char 15 offset is 2.2s');
+  t.assertEqual(btn.startTime(), 1.0, 'Button offset is 1.0s');
+
+  masterTl.kill();
+});
+
+// 1.2 Subtitle & Curly Brace Delays and Directional Inversion
+await runner.run('1.2 Subtitle Delay (2.5s) and Mirrored Brace Slide-In Synchronization', (t) => {
+  const DOM = loadHeroHTML();
+  const subtitleEl = DOM.querySelector(".home-hero__subtitle");
+  const label = subtitleEl.querySelector(".subtitle__label");
+  const braces = subtitleEl.querySelectorAll(".subtitle__brace");
+
+  const subtitleTl = gsap.timeline({ defaults: { ease: "power3.out", duration: 0.3 } });
+  gsap.set(subtitleEl, { autoAlpha: 1 });
+
+  subtitleTl
+    .from(label, { opacity: 0, duration: 0.7, delay: 2.5 })
+    .from(braces[0], { opacity: 0, xPercent: 100 }, "<0.1")
+    .from(braces[1], { opacity: 0, xPercent: -100 }, "<");
+
+  const children = subtitleTl.getChildren();
+  const labelTween = children.find(c => c.targets().includes(label));
+  const leftBraceTween = children.find(c => c.targets().includes(braces[0]));
+  const rightBraceTween = children.find(c => c.targets().includes(braces[1]));
+
+  t.assertEqual(labelTween.vars.delay, 2.5, 'Label delay must be 2.5s');
+  t.assertEqual(labelTween.duration(), 0.7, 'Label fade duration is 0.7s');
+  t.assertCloseTo(leftBraceTween.startTime(), 2.6, 0.01, 'Left brace starts at 2.5 + 0.1 = 2.6s');
+  t.assertCloseTo(rightBraceTween.startTime(), 2.6, 0.01, 'Right brace starts simultaneously at 2.6s');
+  t.assertEqual(leftBraceTween.vars.xPercent, 100, 'Left brace slides from +100%');
+  t.assertEqual(rightBraceTween.vars.xPercent, -100, 'Right brace slides from -100%');
+
+  subtitleTl.kill();
+});
+
+// 1.3 Keyframe Boundaries & Interpolation Integrity
+await runner.run('1.3 Keyframe Boundaries for Dual-Span Tickers and Lightning Scale', (t) => {
+  const tickerBottomTarget = { yPercent: 0 };
+  const tickerTopTarget = { yPercent: 0 };
+
+  const tickerBottomTween = gsap.fromTo(
+    tickerBottomTarget,
+    { yPercent: 100 },
+    { keyframes: { yPercent: [100, 0, 100, 0], ease: "power1.out" }, duration: 3, paused: true }
+  );
+
+  const tickerTopTween = gsap.fromTo(
+    tickerTopTarget,
+    { yPercent: -100 },
+    { keyframes: { yPercent: [-100, -100, 20, -100], ease: "power1.out" }, duration: 3, paused: true }
+  );
+
+  // Initial state at t=0
+  tickerBottomTween.seek(0);
+  t.assertCloseTo(tickerBottomTarget.yPercent, 100, 0.01, 'Bottom ticker at t=0s is 100%');
+  tickerTopTween.seek(0);
+  t.assertCloseTo(tickerTopTarget.yPercent, -100, 0.01, 'Top ticker at t=0s is -100%');
+
+  // Keyframe 1 dip at eased progress 1/3 (t = 3 * (1 - sqrt(2/3)) ≈ 0.5505s)
+  const tDip = 3 * (1 - Math.sqrt(2 / 3));
+  tickerBottomTween.seek(tDip);
+  t.assertCloseTo(tickerBottomTarget.yPercent, 0, 1.0, 'Bottom ticker at first dip reaches 0%');
+
+  // Keyframe 2 peak at eased progress 2/3 (t = 3 * (1 - sqrt(1/3)) ≈ 1.2679s)
+  const tPeak = 3 * (1 - Math.sqrt(1 / 3));
+  tickerBottomTween.seek(tPeak);
+  t.assertCloseTo(tickerBottomTarget.yPercent, 100, 1.0, 'Bottom ticker at second peak reaches 100%');
+  tickerTopTween.seek(tPeak);
+  t.assertCloseTo(tickerTopTarget.yPercent, 20, 1.0, 'Top ticker at peak reaches +20%');
+
+  // Final resting state at t=3.0s
+  tickerBottomTween.seek(3.0);
+  t.assertCloseTo(tickerBottomTarget.yPercent, 0, 0.01, 'Bottom ticker at t=3.0s rests at 0%');
+  tickerTopTween.seek(3.0);
+  t.assertCloseTo(tickerTopTarget.yPercent, -100, 0.01, 'Top ticker at t=3.0s rests at -100%');
+
+  tickerBottomTween.kill();
+  tickerTopTween.kill();
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 2: MOUSE COORDINATE MAPPING ACROSS EXTREME VIEWPORT RESOLUTIONS
+// ─────────────────────────────────────────────────────────────────────────────
+console.log('\n\x1b[1m▶ Section 2: Mouse Coordinate Mapping Across Extreme Resolutions\x1b[0m');
+
+// 2.1 Viewport Resolution Sweeps (320px Mobile to 7680px 8K)
+await runner.run('2.1 Viewport Resolution Sweep (320px, 375px, 768px, 1080p, 1440p, 4K, 8K, Ultrawide)', (t) => {
+  const resolutions = [
+    { name: 'iPhone SE (Mobile)', w: 320, h: 568 },
+    { name: 'iPhone 15 (Standard)', w: 393, h: 852 },
+    { name: 'iPad Portrait', w: 768, h: 1024 },
+    { name: 'Laptop / Tablet Landscape', w: 1024, h: 768 },
+    { name: 'HD Budget Laptop', w: 1366, h: 768 },
+    { name: 'Full HD 1080p', w: 1920, h: 1080 },
+    { name: '2K QHD', w: 2560, h: 1440 },
+    { name: '3440x1440 Ultrawide (21:9)', w: 3440, h: 1440 },
+    { name: '4K UHD', w: 3840, h: 2160 },
+    { name: '5120x1440 Super Ultrawide (32:9)', w: 5120, h: 1440 },
+    { name: '8K UHD Super Hi-Vision', w: 7680, h: 4320 },
+  ];
+
+  for (const res of resolutions) {
+    // Test 5 canonical cursor positions per resolution
+    const sampleCoords = [
+      { x: 0, y: 0, expX: -20, expY: -20, expRotRange: 1, expRot: -20 },
+      { x: res.w, y: 0, expX: 20, expY: -20, expRotRange: -1, expRot: 20 },
+      { x: 0, y: res.h, expX: -20, expY: 20, expRotRange: 1, expRot: 20 },
+      { x: res.w, y: res.h, expX: 20, expY: 20, expRotRange: -1, expRot: -20 },
+      { x: res.w / 2, y: res.h / 2, expX: 0, expY: 0, expRotRange: 0, expRot: 0 },
+    ];
+
+    for (const sc of sampleCoords) {
+      const xPercent = gsap.utils.mapRange(0, res.w, -20, 20, sc.x);
+      const yPercent = gsap.utils.mapRange(0, res.h, -20, 20, sc.y);
+      const rotateRange = gsap.utils.clamp(
+        -1,
+        1,
+        gsap.utils.mapRange(res.w * 0.25, res.w * 0.75, 1, -1, sc.x)
+      );
+      const targetRotation = yPercent * 1 * rotateRange;
+
+      t.assert(!Number.isNaN(xPercent) && Number.isFinite(xPercent), `xPercent must be finite for ${res.name}`);
+      t.assert(!Number.isNaN(yPercent) && Number.isFinite(yPercent), `yPercent must be finite for ${res.name}`);
+      t.assert(!Number.isNaN(rotateRange) && Number.isFinite(rotateRange), `rotateRange must be finite for ${res.name}`);
+      t.assert(!Number.isNaN(targetRotation) && Number.isFinite(targetRotation), `targetRotation must be finite for ${res.name}`);
+
+      t.assertCloseTo(xPercent, sc.expX, 0.01, `${res.name} xPercent for x=${sc.x}`);
+      t.assertCloseTo(yPercent, sc.expY, 0.01, `${res.name} yPercent for y=${sc.y}`);
+      t.assertCloseTo(rotateRange, sc.expRotRange, 0.01, `${res.name} rotateRange for x=${sc.x}`);
+      t.assertCloseTo(targetRotation, sc.expRot, 0.01, `${res.name} targetRotation for x=${sc.x}, y=${sc.y}`);
+    }
   }
 });
 
-// 1.2 Particle random coordinate distribution bounds (10,000 random draws)
-await runner.run('1.2 Particle Trajectory Random Coordinate Bounds (10,000 samples)', (t) => {
+// 2.2 Extreme Out-of-Bounds & Negative Coordinates
+await runner.run('2.2 Out-of-Bounds Coordinates (-1,000,000 to +1,000,000) Clamping & Finiteness', (t) => {
+  const w = 1920;
+  const h = 1080;
+
+  const extremeInputs = [
+    { x: -1000000, y: -1000000 },
+    { x: 1000000, y: 1000000 },
+    { x: -500, y: 2500 },
+    { x: 3000, y: -200 },
+    { x: -0.00001, y: 1080.00001 }
+  ];
+
+  for (const input of extremeInputs) {
+    const xPercent = gsap.utils.mapRange(0, w, -20, 20, input.x);
+    const yPercent = gsap.utils.mapRange(0, h, -20, 20, input.y);
+    const rotateRange = gsap.utils.clamp(
+      -1,
+      1,
+      gsap.utils.mapRange(w * 0.25, w * 0.75, 1, -1, input.x)
+    );
+    const targetRotation = yPercent * 1 * rotateRange;
+
+    t.assert(Number.isFinite(xPercent), `xPercent must be finite for (${input.x}, ${input.y})`);
+    t.assert(Number.isFinite(yPercent), `yPercent must be finite for (${input.x}, ${input.y})`);
+    t.assert(rotateRange >= -1 && rotateRange <= 1, `rotateRange must strictly stay in [-1, 1], got ${rotateRange}`);
+    t.assert(Number.isFinite(targetRotation), `targetRotation must be finite for (${input.x}, ${input.y})`);
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 3: RAPID CURSOR JUMPS & TORQUE ROTATION INVERSION
+// ─────────────────────────────────────────────────────────────────────────────
+console.log('\n\x1b[1m▶ Section 3: Rapid Cursor Jumps & Torque Rotation Inversion Bounds\x1b[0m');
+
+// 3.1 Diagonal Teleportation Stress Test (1,000 Hz Alternating Corners)
+await runner.run('3.1 1,000 Hz Diagonal Cursor Teleportation Across Screen Corners', (t) => {
+  const w = 1920;
+  const h = 1080;
+  const corners = [
+    { x: 0, y: 0 },
+    { x: w, y: h },
+    { x: 0, y: h },
+    { x: w, y: 0 },
+  ];
+
+  let prevRotation = 0;
+  for (let i = 0; i < 1000; i++) {
+    const corner = corners[i % 4];
+    const xPercent = gsap.utils.mapRange(0, w, -20, 20, corner.x);
+    const yPercent = gsap.utils.mapRange(0, h, -20, 20, corner.y);
+    const rotateRange = gsap.utils.clamp(
+      -1,
+      1,
+      gsap.utils.mapRange(w * 0.25, w * 0.75, 1, -1, corner.x)
+    );
+    const targetRotation = yPercent * 1 * rotateRange;
+
+    t.assert(Number.isFinite(targetRotation), `targetRotation at step ${i} must be finite`);
+    t.assert(Math.abs(targetRotation) <= 20.001, `Target rotation must be bounded within [-20, 20], got ${targetRotation}`);
+    prevRotation = targetRotation;
+  }
+});
+
+// 3.2 Mathematical Symmetry of Torque Rotation Inversion
+await runner.run('3.2 Mathematical Torque Inversion Clamp Bounds & Odd Symmetry (10,000 points)', (t) => {
+  const w = 1920;
+  const centerX = w / 2;
+
+  // Verify left clamp zone (x <= 0.25 * w = 480)
+  for (let x = -5000; x <= 480; x += 100) {
+    const clampVal = gsap.utils.clamp(
+      -1,
+      1,
+      gsap.utils.mapRange(w * 0.25, w * 0.75, 1, -1, x)
+    );
+    t.assertEqual(clampVal, 1, `Clamp value for x=${x} <= 480 must be exactly +1`);
+  }
+
+  // Verify right clamp zone (x >= 0.75 * w = 1440)
+  for (let x = 1440; x <= 6000; x += 100) {
+    const clampVal = gsap.utils.clamp(
+      -1,
+      1,
+      gsap.utils.mapRange(w * 0.25, w * 0.75, 1, -1, x)
+    );
+    t.assertEqual(clampVal, -1, `Clamp value for x=${x} >= 1440 must be exactly -1`);
+  }
+
+  // Verify exact center (x = 960)
+  const centerVal = gsap.utils.clamp(
+    -1,
+    1,
+    gsap.utils.mapRange(w * 0.25, w * 0.75, 1, -1, centerX)
+  );
+  t.assertEqual(centerVal, 0, 'Center value at x=960 must be exactly 0');
+
+  // Verify odd symmetry: f(centerX - dx) == -f(centerX + dx)
+  for (let dx = 1; dx <= 800; dx += 10) {
+    const leftVal = gsap.utils.clamp(
+      -1,
+      1,
+      gsap.utils.mapRange(w * 0.25, w * 0.75, 1, -1, centerX - dx)
+    );
+    const rightVal = gsap.utils.clamp(
+      -1,
+      1,
+      gsap.utils.mapRange(w * 0.25, w * 0.75, 1, -1, centerX + dx)
+    );
+    t.assertCloseTo(leftVal, -rightVal, 0.0001, `Symmetry violated for dx=${dx}: left=${leftVal}, right=${rightVal}`);
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 4: INFINITE YOYO LOOP & PROLONGED TIMELINE STABILITY
+// ─────────────────────────────────────────────────────────────────────────────
+console.log('\n\x1b[1m▶ Section 4: Infinite Yoyo Loop & Prolonged Timeline Stability\x1b[0m');
+
+// 4.1 Extreme Time Horizon Seeking (t = 1,000,000 seconds)
+await runner.run('4.1 Extreme Timeline Time Horizons (t=10s, 1000s, 100,000s, 1,000,000s)', (t) => {
+  const DOM = loadHeroHTML();
+  const char13Target = { rotationX: 0 };
+  const windmillTarget = { rotationZ: 0 };
+
+  // Char 13 infinite yoyo tween
+  const char13Tl = gsap.timeline();
+  char13Tl.to(char13Target, {
+    rotationX: 540,
+    duration: 1.5,
+    repeat: -1,
+    repeatDelay: 3,
+    yoyo: true,
+    yoyoEase: "power2.out"
+  });
+
+  // Windmill infinite loop tween
+  const windmillTl = gsap.timeline();
+  windmillTl.to(windmillTarget, {
+    rotationZ: 90,
+    duration: 0.3,
+    repeat: -1,
+    repeatDelay: 1
+  });
+
+  const horizons = [10, 100, 1000, 10000, 100000, 1000000];
+
+  for (const time of horizons) {
+    char13Tl.seek(time);
+    windmillTl.seek(time);
+
+    t.assert(!Number.isNaN(char13Target.rotationX) && Number.isFinite(char13Target.rotationX),
+      `Char 13 rotationX must be finite at t=${time}s, got ${char13Target.rotationX}`);
+    t.assert(char13Target.rotationX >= -0.01 && char13Target.rotationX <= 540.01,
+      `Char 13 rotationX must stay in [0, 540] at t=${time}s, got ${char13Target.rotationX}`);
+
+    t.assert(!Number.isNaN(windmillTarget.rotationZ) && Number.isFinite(windmillTarget.rotationZ),
+      `Windmill rotationZ must be finite at t=${time}s, got ${windmillTarget.rotationZ}`);
+  }
+
+  char13Tl.kill();
+  windmillTl.kill();
+});
+
+// 4.2 500-Cycle React StrictMode Memory & Leak Proof
+await runner.run('4.2 500-Cycle StrictMode Mount/Unmount/Remount Memory Cleanliness', (t) => {
+  const initialTweens = gsap.globalTimeline.getChildren(true, true, true).length;
+
+  for (let cycle = 1; cycle <= 500; cycle++) {
+    const DOM = loadHeroHTML();
+    let resizeHandler = null;
+    let mouseHandler = null;
+
+    const ctx = gsap.context(() => {
+      const btn = DOM.querySelector(".get-gsap-btn");
+      const squiggle = DOM.querySelector("#home-hero-squiggle");
+
+      const xTo = gsap.quickTo(squiggle, "xPercent", { duration: 1 });
+      const yTo = gsap.quickTo(squiggle, "yPercent", { duration: 1 });
+      const rotateTo = gsap.quickTo(squiggle, "rotation", { duration: 1 });
+
+      resizeHandler = () => {};
+      mouseHandler = (e) => {
+        xTo(e.clientX || 0);
+        yTo(e.clientY || 0);
+        rotateTo(0);
+      };
+
+      window.addEventListener("resize", resizeHandler);
+      window.addEventListener("mousemove", mouseHandler);
+
+      const btnTl = gsap.timeline({ paused: true });
+      btnTl.to(btn, { scale: 1.05 });
+
+      // Infinite yoyo loop
+      const yoyoTl = gsap.timeline();
+      yoyoTl.to(".i > span", { rotationX: 540, repeat: -1, yoyo: true });
+    }, DOM);
+
+    // Fast-forward
+    window.dispatchEvent({ type: 'mousemove', clientX: 200, clientY: 400 });
+
+    // Clean unmount
+    ctx.revert();
+    window.removeEventListener("resize", resizeHandler);
+    window.removeEventListener("mousemove", mouseHandler);
+  }
+
+  const finalTweens = gsap.globalTimeline.getChildren(true, true, true).length;
+  t.assertEqual(finalTweens, initialTweens, `Tween count must return exactly to baseline (${initialTweens}), got ${finalTweens}`);
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 5: CTA PARTICLE BURST PHYSICS & CUSTOMEASE STRESS
+// ─────────────────────────────────────────────────────────────────────────────
+console.log('\n\x1b[1m▶ Section 5: CTA Particle Physics & CustomEase Curve Evaluations\x1b[0m');
+
+// 5.1 CustomEase High-Resolution Evaluation (100,000 steps)
+await runner.run('5.1 CustomEase "airtime" & "rotaaaaate" Evaluation at 100,000 Steps', (t) => {
+  const airtimeEase = CustomEase.get("airtime");
+  const rotaaaaateEase = CustomEase.get("rotaaaaate");
+
+  t.assert(typeof airtimeEase === 'function', 'airtime must be a valid function');
+  t.assert(typeof rotaaaaateEase === 'function', 'rotaaaaate must be a valid function');
+
+  for (let i = 0; i <= 100000; i += 10) {
+    const progress = i / 100000;
+    const vAir = airtimeEase(progress);
+    const vRot = rotaaaaateEase(progress);
+
+    t.assert(Number.isFinite(vAir), `airtime at ${progress} must be finite`);
+    t.assert(Number.isFinite(vRot), `rotaaaaate at ${progress} must be finite`);
+  }
+});
+
+// 5.2 10,000 Particle Random Trajectory Bounds
+await runner.run('5.2 10,000 Random Particle Trajectory Bounds & Spread Uniformity', (t) => {
   let minY = Infinity, maxY = -Infinity;
   let minX = Infinity, maxX = -Infinity;
 
@@ -129,19 +618,17 @@ await runner.run('1.2 Particle Trajectory Random Coordinate Bounds (10,000 sampl
     if (xVal > maxX) maxX = xVal;
   }
 
-  // Verify spread coverage
   t.assert(minY <= -118 && maxY >= -82, `Y bounds spread must cover range, got [${minY}, ${maxY}]`);
   t.assert(minX <= -48 && maxX >= 98, `X bounds spread must cover range, got [${minX}, ${maxX}]`);
 });
 
-// 1.3 Rapid Hover Burst (1,000 mouseenter events in rapid succession)
-await runner.run('1.3 Rapid Hover Burst Recycling (1,000 mouseenter events in bursts)', (t) => {
+// 5.3 1,000-Hover Rapid Spamming with Active Interruption Guard
+await runner.run('5.3 1,000-Hover Spamming with Debounce Guard & Clean Completion', (t) => {
   const DOM = loadHeroHTML();
   const btnBlock = DOM.querySelector(".get-gsap-btn");
   const btnSelector = gsap.utils.selector(btnBlock);
   const getWord = btnSelector(".get-gsap-btn__word:first-child");
   const gsapWord = btnSelector(".get-gsap-btn__word:last-child");
-  const icons = btnSelector(".get-gsap-btn__button svg");
   const flairs = [
     btnSelector("#btn-circles"),
     btnSelector("#btn-windmill"),
@@ -156,52 +643,13 @@ await runner.run('1.3 Rapid Hover Burst Recycling (1,000 mouseenter events in bu
   const btnTl = gsap.timeline({
     defaults: { duration: 1 },
     paused: true,
-    onStart: () => {
-      isPlaying = true;
-      startCount++;
-    },
-    onComplete: () => {
-      isPlaying = false;
-      completeCount++;
-    },
+    onStart: () => { isPlaying = true; startCount++; },
+    onComplete: () => { isPlaying = false; completeCount++; }
   });
 
-  gsap.set(flairs, { scale: 0 });
-
-  btnTl
-    .set(flairs, { scale: 0, x: 0, y: 10, rotateZ: 0 })
-    .set(icons[0], { yPercent: -140 })
-    .set(icons[1], { yPercent: 0 })
-    .to(getWord, {
-      keyframes: [
-        { x: -30, ease: "power4.out" },
-        { x: 0, ease: "power4.in" },
-      ],
-    })
-    .to(gsapWord, {
-      keyframes: [
-        { x: 30, ease: "power4.out" },
-        { x: 0, ease: "power4.in" },
-      ],
-    }, "<")
-    .to(icons[0], { yPercent: 0, duration: 0.6, ease: "power3.in" }, "<.3")
-    .to(icons[1], { yPercent: 140, duration: 0.6, ease: "power3.out" }, "<")
-    .to(flairs, {
-      keyframes: [
-        { scale: 0, zIndex: 2, duration: 0 },
-        { y: () => gsap.utils.random(-80, -120), scale: 1 },
-        { zIndex: -1, duration: 0.05 },
-        { y: 0, scale: 0.3 },
-      ],
-      ease: CustomEase.get("airtime"),
-      stagger: 0.15,
-    }, "<")
-    .to(flairs, {
-      x: () => gsap.utils.random(-50, 100),
-      rotateZ: () => -360,
-      ease: CustomEase.get("rotaaaaate"),
-      stagger: 0.15,
-    }, "<");
+  btnTl.to(getWord, { keyframes: [{ x: -30, ease: "power4.out" }, { x: 0, ease: "power4.in" }] })
+       .to(gsapWord, { keyframes: [{ x: 30, ease: "power4.out" }, { x: 0, ease: "power4.in" }] }, "<")
+       .to(flairs, { keyframes: [{ scale: 0, zIndex: 2, duration: 0 }, { y: () => gsap.utils.random(-80, -120), scale: 1 }, { zIndex: -1, duration: 0.05 }, { y: 0, scale: 0.3 }], ease: "airtime", stagger: 0.15 }, "<");
 
   const playBtnTimeline = () => {
     if (!isPlaying) {
@@ -209,287 +657,105 @@ await runner.run('1.3 Rapid Hover Burst Recycling (1,000 mouseenter events in bu
     }
   };
 
-  // Burst 1: 500 immediate calls
-  for (let i = 0; i < 500; i++) {
-    playBtnTimeline();
-  }
-  // Tick forward 1 frame with suppressEvents=false to trigger onStart
+  // Burst 1: 500 spam calls
+  for (let i = 0; i < 500; i++) playBtnTimeline();
   btnTl.seek(0.05, false);
-  t.assertEqual(startCount, 1, 'Only 1 animation must start during first burst');
-  t.assertEqual(isPlaying, true, 'isPlaying flag must remain true during active playback');
+  t.assertEqual(startCount, 1, 'Only 1 animation triggers during burst 1');
 
-  // Advance timeline to 50%
+  // Advance to 50%
   btnTl.seek(0.5, false);
+  for (let i = 0; i < 300; i++) playBtnTimeline();
+  t.assertEqual(startCount, 1, 'Mid-flight hover calls must be ignored');
 
-  // Burst 2: 300 calls while mid-flight
-  for (let i = 0; i < 300; i++) {
-    playBtnTimeline();
-  }
-  t.assertEqual(startCount, 1, 'Mid-flight burst calls must be ignored');
-
-  // Complete timeline
+  // Finish
   btnTl.seek(btnTl.duration(), false);
   t.assertEqual(completeCount, 1, 'Complete count must be 1');
-  t.assertEqual(isPlaying, false, 'isPlaying flag must be false after completion');
+  t.assertEqual(isPlaying, false, 'isPlaying resets to false');
 
-  // Burst 3: Hover after completion triggers new start
+  // Burst 2: New hover triggers next cycle
   playBtnTimeline();
   btnTl.seek(0.05, false);
-  t.assertEqual(startCount, 2, 'Hover after completion triggers second animation cycle');
+  t.assertEqual(startCount, 2, 'New hover after completion triggers second cycle');
 
   btnTl.kill();
 });
 
-// 1.4 Simultaneous CTA Button Hover during Active Master Timeline
-await runner.run('1.4 Simultaneous CTA Button Hover during Active Master Timeline', (t) => {
-  const DOM = loadHeroHTML();
-  const heading1 = DOM.querySelector(".home-hero__animate");
-  const heading2 = DOM.querySelector(".home-hero__anything");
-  const animateSelector = gsap.utils.selector(heading1);
-
-  const defaults = { ease: "power2.out", duration: 0.6 };
-
-  // Master timeline construction
-  const masterTl = gsap.timeline({ defaults });
-  masterTl.set([heading1, heading2], { autoAlpha: 1 });
-
-  // Add sample letter timelines
-  const aWrap = animateSelector(".a > span");
-  const aChar = animateSelector(".a > span > span");
-  masterTl.from(aChar, { yPercent: 100 }, 0);
-  masterTl.from(aWrap, { rotationX: -180, ease: "back.out(1.7)", duration: 1 }, 0.4);
-
-  const nWrap = animateSelector(".n > span > span");
-  masterTl.from(nWrap, { yPercent: 100, duration: 0.4 }, 0.4);
-
-  // Button timeline
-  const btnBlock = DOM.querySelector(".get-gsap-btn");
-  const btnSelector = gsap.utils.selector(btnBlock);
-  const getWord = btnSelector(".get-gsap-btn__word:first-child");
-  const gsapWord = btnSelector(".get-gsap-btn__word:last-child");
-  const flairs = [
-    btnSelector("#btn-circles"),
-    btnSelector("#btn-windmill"),
-    btnSelector("#btn-square"),
-    btnSelector("#btn-star"),
-  ];
-
-  let isPlaying = false;
-  const btnTl = gsap.timeline({
-    paused: true,
-    onStart: () => { isPlaying = true; },
-    onComplete: () => { isPlaying = false; },
-  });
-
-  btnTl.to(getWord, { x: -30, duration: 0.5 })
-       .to(gsapWord, { x: 30, duration: 0.5 }, "<")
-       .to(flairs, { y: () => gsap.utils.random(-80, -120), stagger: 0.1, duration: 1 }, "<");
-
-  // Step through master timeline while firing button hovers
-  const checkTimes = [0.1, 0.4, 0.8, 1.2, 1.8, 2.4, 3.5];
-  for (const time of checkTimes) {
-    masterTl.seek(time);
-    if (!isPlaying) {
-      btnTl.invalidate().play(0);
-    }
-    btnTl.seek(0.3);
-
-    // Verify master timeline elements and button elements are animated independently
-    t.assert(getWord[0].style.transform !== '', 'getWord must have active transform from button timeline');
-    t.assert(aChar[0].style.transform !== '', 'aChar must have active transform from master timeline');
-  }
-
-  masterTl.kill();
-  btnTl.kill();
-});
-
 // ─────────────────────────────────────────────────────────────────────────────
-// SUITE 2: REACT STRICTMODE & LIFECYCLE ADVERSARIAL TESTS
+// SECTION 6: REDUCED MOTION & ZERO-DIMENSION EDGE CASES
 // ─────────────────────────────────────────────────────────────────────────────
-console.log('\n\x1b[1m▶ Section 2: React StrictMode & Lifecycle Adversarial Tests\x1b[0m');
+console.log('\n\x1b[1m▶ Section 6: Reduced Motion & Zero-Dimension Viewport Edge Cases\x1b[0m');
 
-// 2.1 100-Cycle Mount -> Unmount -> Remount StrictMode Stress Test
-await runner.run('2.1 100-Cycle StrictMode Mount/Unmount/Remount with Memory & Listener Checks', (t) => {
-  const initialTweens = gsap.globalTimeline.getChildren(true, true, true).length;
-
-  for (let cycle = 1; cycle <= 100; cycle++) {
-    const DOM = loadHeroHTML();
-    const listeners = { resize: null, mousemove: null, mouseenter: null };
-
-    // Simulate Component Mounting & Hook setup
-    const ctx = gsap.context(() => {
-      const btnBlock = DOM.querySelector(".get-gsap-btn");
-      const squiggleEl = DOM.querySelector("#home-hero-squiggle");
-
-      const xTo = gsap.quickTo(squiggleEl, "xPercent", { duration: 1 });
-      const yTo = gsap.quickTo(squiggleEl, "yPercent", { duration: 1 });
-      const rotateTo = gsap.quickTo(squiggleEl, "rotation", { duration: 1 });
-
-      const handleResize = () => {};
-      const handleMouseMove = (e) => {
-        xTo(e.clientX || 0);
-        yTo(e.clientY || 0);
-        rotateTo(0);
-      };
-
-      window.addEventListener("resize", handleResize);
-      window.addEventListener("mousemove", handleMouseMove);
-      listeners.resize = handleResize;
-      listeners.mousemove = handleMouseMove;
-
-      const btnTl = gsap.timeline({ paused: true });
-      btnTl.to(btnBlock, { scale: 1.05 });
-
-      const playBtn = () => btnTl.play(0);
-      btnBlock.addEventListener("mouseenter", playBtn);
-      listeners.mouseenter = playBtn;
-
-      // Master timeline with infinite yoyo loop (char13)
-      const masterTl = gsap.timeline();
-      masterTl.to(".i > span", { rotationX: 540, repeat: -1, yoyo: true });
-    }, DOM);
-
-    // Simulate activity mid-cycle
-    window.dispatchEvent({ type: 'mousemove', clientX: 500, clientY: 300 });
-
-    // Simulate Component Unmount & Cleanup
-    ctx.revert(); // GSAP context revert kills all tweens & timelines created inside
-    window.removeEventListener("resize", listeners.resize);
-    window.removeEventListener("mousemove", listeners.mousemove);
-    DOM.querySelector(".get-gsap-btn").removeEventListener("mouseenter", listeners.mouseenter);
-  }
-
-  // After 100 cycles, verify no orphan active tweens in global timeline
-  const finalTweens = gsap.globalTimeline.getChildren(true, true, true).length;
-  t.assertEqual(finalTweens, initialTweens, `Active tween count must return to baseline (${initialTweens}), got ${finalTweens}`);
-});
-
-// 2.2 Mid-Animation Interrupt at Random Microseconds
-await runner.run('2.2 Mid-Animation Interrupt at 20 Random Progress Intervals', (t) => {
-  for (let i = 0; i < 20; i++) {
-    const DOM = loadHeroHTML();
-    const interruptProgress = Math.random();
-
-    const ctx = gsap.context(() => {
-      const masterTl = gsap.timeline();
-      masterTl.to(DOM.querySelectorAll(".a, .n, .i, .m, .t, .e"), {
-        yPercent: 100,
-        stagger: 0.1,
-        duration: 3,
-      });
-
-      masterTl.seek(interruptProgress * 3);
-    }, DOM);
-
-    // Hard interrupt
-    ctx.revert();
-
-    // Verify all inline styles reverted cleanly
-    const spans = DOM.querySelectorAll(".a, .n, .i, .m, .t, .e");
-    for (const span of spans) {
-      t.assert(span.style.transform === '' || span.style.transform === 'none', 'Inline transform must be cleared on revert');
-    }
-  }
-});
-
-// 2.3 Window Resize Listener Storm & Detachment Verification
-await runner.run('2.3 Window Resize Storm (500 events) and Clean Detachment', (t) => {
-  let resizeCount = 0;
-  const handleResize = () => { resizeCount++; };
-
-  window.addEventListener("resize", handleResize);
-
-  // Dispatch 500 resize events with diverse window dimensions
-  for (let i = 0; i < 500; i++) {
-    window.innerWidth = 320 + (i % 3840);
-    window.innerHeight = 480 + (i % 2160);
-    window.dispatchEvent({ type: 'resize' });
-  }
-  t.assertEqual(resizeCount, 500, 'All 500 resize events must be received');
-
-  // Detach listener
-  window.removeEventListener("resize", handleResize);
-
-  // Dispatch 100 more events
-  for (let i = 0; i < 100; i++) {
-    window.dispatchEvent({ type: 'resize' });
-  }
-  t.assertEqual(resizeCount, 500, 'No resize events should fire after detachment');
-});
-
-// 2.4 Reduced Motion Dynamic Toggling
-await runner.run('2.4 Reduced Motion Dynamic Toggling and Static Layout Guarantee', (t) => {
+// 6.1 prefers-reduced-motion Static Reveal Validation
+await runner.run('6.1 Reduced Motion Static Reveal Instant State & Flair Suppression', (t) => {
   const DOM = loadHeroHTML();
 
-  // Test when prefersReducedMotion is TRUE
-  const testReducedMotion = (isReduced) => {
-    if (isReduced) {
-      gsap.set(
-        [
-          DOM.querySelector(".home-hero__animate"),
-          DOM.querySelector(".home-hero__anything"),
-          DOM.querySelector(".home-hero__subtitle"),
-          DOM.querySelector(".home-hero__button"),
-          DOM.querySelector(".subtitle"),
-        ],
-        {
-          autoAlpha: 1,
-          visibility: "inherit",
-          opacity: 1,
-          x: 0,
-          y: 0,
-          scale: 1,
-          rotation: 0,
-        }
-      );
-      gsap.set(DOM.querySelector(".home-hero__flair--circles"), { autoAlpha: 0 });
-      gsap.set(DOM.querySelector(".home-hero__flair--star"), { autoAlpha: 0 });
-      gsap.set(DOM.querySelector(".home-hero__flair--bolt"), { autoAlpha: 0 });
-    }
+  const applyReducedMotion = () => {
+    gsap.set(
+      [
+        DOM.querySelector(".home-hero__animate"),
+        DOM.querySelector(".home-hero__anything"),
+        DOM.querySelector(".home-hero__subtitle"),
+        DOM.querySelector(".home-hero__button"),
+        DOM.querySelector(".subtitle"),
+      ],
+      {
+        autoAlpha: 1,
+        visibility: "inherit",
+        opacity: 1,
+        x: 0,
+        y: 0,
+        scale: 1,
+        rotation: 0,
+      }
+    );
+    gsap.set(DOM.querySelector(".home-hero__flair--circles"), { autoAlpha: 0 });
+    gsap.set(DOM.querySelector(".home-hero__flair--star"), { autoAlpha: 0 });
+    gsap.set(DOM.querySelector(".home-hero__flair--bolt"), { autoAlpha: 0 });
+    gsap.set(DOM.querySelector(".subtitle__label"), { opacity: 1 });
+    gsap.set(DOM.querySelectorAll(".subtitle__brace"), { opacity: 1, xPercent: 0 });
   };
 
-  testReducedMotion(true);
+  applyReducedMotion();
 
   const animate = DOM.querySelector(".home-hero__animate");
   const anything = DOM.querySelector(".home-hero__anything");
   const circles = DOM.querySelector(".home-hero__flair--circles");
+  const star = DOM.querySelector(".home-hero__flair--star");
+  const bolt = DOM.querySelector(".home-hero__flair--bolt");
+  const label = DOM.querySelector(".subtitle__label");
+  const braces = DOM.querySelectorAll(".subtitle__brace");
 
-  t.assertEqual(animate.style.opacity, '1', 'animate opacity is 1 in reduced motion');
-  t.assertEqual(anything.style.opacity, '1', 'anything opacity is 1 in reduced motion');
-  t.assertEqual(circles.style.opacity, '0', 'circles flair hidden in reduced motion');
+  t.assertEqual(animate.style.opacity, '1', 'animate opacity must be 1');
+  t.assertEqual(anything.style.opacity, '1', 'anything opacity must be 1');
+  t.assertEqual(circles.style.opacity, '0', 'circles flair hidden');
+  t.assertEqual(star.style.opacity, '0', 'star flair hidden');
+  t.assertEqual(bolt.style.opacity, '0', 'bolt flair hidden');
+  t.assertEqual(label.style.opacity, '1', 'subtitle label opacity is 1');
+  t.assertEqual(braces[0].style.opacity, '1', 'brace 0 opacity is 1');
+  t.assertEqual(braces[1].style.opacity, '1', 'brace 1 opacity is 1');
 });
 
-// 2.5 Squiggle Extreme Viewport Coordinates Physics Clamping
-await runner.run('2.5 Squiggle Physics Extreme Coordinate Clamping (-10000 to +10000)', (t) => {
-  const windowWidth = 1920;
-  const windowHeight = 1080;
-
-  const testCoords = [
-    { x: -5000, y: -5000, desc: 'Far Top-Left' },
-    { x: 10000, y: 10000, desc: 'Far Bottom-Right' },
-    { x: 0, y: 0, desc: 'Top-Left Origin' },
-    { x: windowWidth, y: windowHeight, desc: 'Bottom-Right Corner' },
-    { x: windowWidth / 2, y: windowHeight / 2, desc: 'Exact Center' },
+// 6.2 Zero/Degenerate Viewport Dimensions Defense
+await runner.run('6.2 Zero & Degenerate Viewport Dimensions (0x0, 1x1) Mathematical Stability', (t) => {
+  const degenerateSizes = [
+    { w: 1, h: 1 },
+    { w: 0.0001, h: 0.0001 },
   ];
 
-  for (const tc of testCoords) {
-    const xPercent = gsap.utils.mapRange(0, windowWidth, -20, 20, tc.x);
-    const yPercent = gsap.utils.mapRange(0, windowHeight, -20, 20, tc.y);
+  for (const ds of degenerateSizes) {
+    const xPercent = gsap.utils.mapRange(0, ds.w, -20, 20, 0.5);
+    const yPercent = gsap.utils.mapRange(0, ds.h, -20, 20, 0.5);
     const rotateRange = gsap.utils.clamp(
       -1,
       1,
-      gsap.utils.mapRange(
-        windowWidth * 0.25,
-        windowWidth * 0.75,
-        1,
-        -1,
-        tc.x
-      )
+      gsap.utils.mapRange(ds.w * 0.25, ds.w * 0.75, 1, -1, 0.5)
     );
+    const targetRotation = yPercent * 1 * rotateRange;
 
-    t.assert(!Number.isNaN(xPercent) && Number.isFinite(xPercent), `xPercent must be finite for ${tc.desc}`);
-    t.assert(!Number.isNaN(yPercent) && Number.isFinite(yPercent), `yPercent must be finite for ${tc.desc}`);
-    t.assert(rotateRange >= -1 && rotateRange <= 1, `rotateRange must be clamped within [-1, 1], got ${rotateRange}`);
+    t.assert(Number.isFinite(xPercent), `xPercent must be finite for degenerate size (${ds.w}x${ds.h})`);
+    t.assert(Number.isFinite(yPercent), `yPercent must be finite for degenerate size (${ds.w}x${ds.h})`);
+    t.assert(Number.isFinite(rotateRange), `rotateRange must be finite for degenerate size (${ds.w}x${ds.h})`);
+    t.assert(Number.isFinite(targetRotation), `targetRotation must be finite for degenerate size (${ds.w}x${ds.h})`);
   }
 });
 

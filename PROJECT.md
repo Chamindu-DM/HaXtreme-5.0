@@ -38,12 +38,12 @@
 ## Milestones
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
-| E2E | E2E Testing Suite | Multi-tier test harness and verification tests for all 20 features | none | IN_PROGRESS |
-| M1 | DOM Structure, CSS & Flairs | Exact HTML/CSS layout from `hero.html` & `hero.css`, vector SVGs, gradients, defs | none | IN_PROGRESS |
-| M2 | Master Letter Timelines | Exact 15 character timelines, master sequencing, easings, stroke-drawing, odometer, infinite yoyo | M1 | PLANNED |
-| M3 | Interactive Squiggle, Subtitle & CTA Button | Mouse-following physics (`quickTo`), animated subtitle braces, and particle burst button | M1, M2 | PLANNED |
-| M4 | Lifecycle, Reduced Motion & Final Build | React 19 StrictMode cleanup, SSR safety, `prefers-reduced-motion` fallback, `npm run build` verification | M2, M3 | PLANNED |
-| M_FINAL | 100% E2E Verification & Adversarial Hardening | Pass 100% of E2E test suite (Tiers 1-4) followed by Tier 5 adversarial gap coverage | E2E, M4 | PLANNED |
+| E2E | E2E Testing Suite | Multi-tier test harness and verification tests for all 20 features | none | DONE |
+| M1 | DOM Structure, CSS & Flairs | Exact HTML/CSS layout from `hero.html` & `hero.css`, vector SVGs, gradients, defs | none | DONE |
+| M2 | Master Letter Timelines | Exact 15 character timelines, master sequencing, easings, stroke-drawing, odometer, infinite yoyo | M1 | DONE |
+| M3 | Interactive Squiggle, Subtitle & CTA Button | Mouse-following physics (`quickTo`), animated subtitle braces, and particle burst button | M1, M2 | DONE |
+| M4 | Lifecycle, Reduced Motion & Final Build | React 19 StrictMode cleanup, SSR safety, `prefers-reduced-motion` fallback, `npm run build` verification | M2, M3 | DONE |
+| M_FINAL | 100% E2E Verification & Adversarial Hardening | Pass 100% of E2E test suite (Tiers 1-4) followed by Tier 5 adversarial gap coverage | E2E, M4 | DONE |
 
 ## Code Layout
 - `src/components/Hero.tsx`: Main React component exporting the GSAP Hero section
