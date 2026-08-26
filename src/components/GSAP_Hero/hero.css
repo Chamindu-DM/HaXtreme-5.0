@@ -32,11 +32,11 @@
 .home-hero {
   position: relative;
   width: 100%;
-  min-height: calc(100vh - 72px);
-  max-height: calc(100vh - 72px);
-  height: calc(100dvh - 72px);
-  padding-top: 0 !important;
-  padding-bottom: 1.25rem;
+  min-height: 100vh;
+  max-height: 100vh;
+  height: 100dvh;
+  padding-top: 72px;
+  padding-bottom: 180px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -47,7 +47,7 @@
 
 @media only screen and (max-height: 700px) {
   .home-hero {
-    min-height: calc(100vh - 60px);
+    min-height: 100vh;
     max-height: none;
     height: auto;
   }
@@ -56,11 +56,9 @@
 .home-hero .container {
   width: 100%;
   height: 100%;
-  max-width: 120rem;
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
-  padding-left: max(1.25rem, min(4vw, 4rem));
-  padding-right: max(1.25rem, min(4vw, 4rem));
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -78,6 +76,7 @@
 .home-hero__heading {
   position: relative;
   z-index: 1;
+  width: 100%;
   margin-top: auto;
   margin-bottom: auto;
   padding-top: 0.5rem;
@@ -89,12 +88,18 @@
   position: relative;
   z-index: 1;
   width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: nowrap;
 }
 
 .home-hero__heading .home-hero__heading-text > span {
-  display: flex;
+  display: inline-flex;
   visibility: hidden;
-  width: 100%;
+  width: auto;
+  align-items: baseline;
 }
 
 .home-hero__heading .home-hero__heading-text > span:last-child {
@@ -139,14 +144,25 @@
   width: 500%;
 }
 
+.home-hero__heading .home-hero__heading-text .home-hero__anything .a,
+.home-hero__heading .home-hero__heading-text .home-hero__anything .n {
+  display: inline-block;
+  padding: 0 0.02em;
+  margin: 0 -0.04em;
+  overflow: hidden;
+}
+
 .home-hero__heading .home-hero__heading-text .home-hero__anything .a span,
 .home-hero__heading .home-hero__heading-text .home-hero__anything .n span {
   position: relative;
+  display: block;
+  font-weight: 600;
+  width: 100%;
 }
 
 .home-hero__heading .home-hero__heading-text .home-hero__anything .a span:first-child,
 .home-hero__heading .home-hero__heading-text .home-hero__anything .n span:first-child {
-  font-weight: 400;
+  font-weight: 600;
 }
 
 .home-hero__heading .home-hero__heading-text .home-hero__anything .a span:last-child,
@@ -154,19 +170,34 @@
   bottom: 0;
   left: 0;
   position: absolute;
+  font-weight: 600;
+  width: 100%;
 }
 
-/* ─── Typography Sizing (Calibrated to Fit Viewport) ─── */
+/* ─── Typography Sizing (Calibrated to Fit Viewport Horizontally) ─── */
 .heading-xl {
-  font-size: clamp(3.25rem, 8vw, 8.5rem);
+  font-size: clamp(3.8rem, 10vw, 12.5rem);
   font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 0.92;
+  letter-spacing: -0.035em;
+  line-height: 0.9;
+  width: 100%;
+}
+
+@media only screen and (min-width: 48rem) {
+  .heading-xl {
+    font-size: clamp(5rem, 11.2vw, 15rem);
+  }
+}
+
+@media only screen and (min-width: 77.5rem) {
+  .heading-xl {
+    font-size: clamp(5.8rem, 12.2vw, 17.5rem);
+  }
 }
 
 @media only screen and (max-height: 800px) {
   .heading-xl {
-    font-size: clamp(2.75rem, 6.8vw, 6.5rem);
+    font-size: clamp(3.5rem, 9.2vw, 11.5rem);
   }
 }
 
@@ -208,7 +239,7 @@
 }
 
 .home-hero__flair--worm {
-  bottom: max(-3.5rem, min(-2vw - 1rem, -1.5rem));
+  bottom: max(-8.5rem, min(-6.6vw - 1rem, -1.5rem));
   height: max(2.5rem, min(6.5vw + 1rem, 8.5rem));
   left: 0;
   transform: rotate(25deg);

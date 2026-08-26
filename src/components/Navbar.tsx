@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { triggerSectionTransition } from "./SectionTransition";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP);
@@ -31,6 +32,37 @@ export default function Navbar() {
   const labelRef = useRef<HTMLDivElement>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLight, setIsLight] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollYRef = useRef(0);
+
+  useEffect(() => {
+    const handleThemeChange = (e: Event) => {
+      const customEvent = e as CustomEvent<{ theme?: string }>;
+      setIsLight(customEvent.detail?.theme === "light");
+    };
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY || window.pageYOffset;
+      if (currentScrollY <= 30) {
+        setIsVisible(true);
+      } else if (currentScrollY > lastScrollYRef.current + 8 && currentScrollY > 80) {
+        // Scrolling down
+        setIsVisible(false);
+      } else if (currentScrollY < lastScrollYRef.current - 8) {
+        // Scrolling up
+        setIsVisible(true);
+      }
+      lastScrollYRef.current = currentScrollY;
+    };
+
+    window.addEventListener("theme-change", handleThemeChange);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("theme-change", handleThemeChange);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const { contextSafe } = useGSAP(
     () => {
@@ -313,17 +345,24 @@ export default function Navbar() {
   return (
     <header
       ref={containerRef}
-      className="sticky top-0 z-50 w-full backdrop-blur-md bg-[#0E100F]/60 transition-all duration-300"
+      className={`sticky top-0 z-[1000] w-full backdrop-blur-md transition-all duration-300 border-b ${
+        isVisible ? "translate-y-0" : "-translate-y-full"
+      } ${
+        isLight
+          ? "bg-white/90 border-black/10 shadow-sm"
+          : "bg-[#0E100F]/80 border-white/10"
+      }`}
     >
       <div className="self-stretch px-4 sm:px-6 md:px-10 inline-flex justify-between items-center w-full">
-        <div className="flex-1 py-4 border-b border-white/20 flex justify-between items-center relative">
-          
+        <div
+          className={`flex-1 py-4 transition-colors duration-500 flex justify-between items-center relative`}
+        >
           {/* Left: Logo */}
           <div className="py-2 inline-flex flex-col justify-start items-start gap-2">
             <a href="#hero" className="flex items-center group">
               <img
-                className="w-40 sm:w-48 h-auto object-contain transition-transform duration-300 group-hover:scale-105"
-                src="/Logo.svg"
+                className="w-40 sm:w-48 h-auto object-contain transition-all duration-300 group-hover:scale-105"
+                src={isLight ? "/White_Logo.svg" : "/Logo.svg"}
                 alt="HaXtreme 5.0"
               />
             </a>
@@ -333,11 +372,14 @@ export default function Navbar() {
           <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center z-50 pointer-events-auto">
             <div
               ref={islandRef}
-              className="island flex items-center justify-between"
+              className="island flex items-center justify-between transition-colors duration-500"
               style={{
                 padding: "0.5rem",
-                background: "var(--color-grey-dark)",
-                border: "1.5px solid var(--s25)",
+                background: isLight ? "#ffffff" : "var(--color-grey-dark)",
+                border: isLight
+                  ? "1.5px solid rgba(0, 0, 0, 0.15)"
+                  : "1.5px solid var(--s25)",
+                boxShadow: isLight ? "0 2px 8px rgba(0,0,0,0.06)" : "none",
                 borderRadius: "99px",
                 whiteSpace: "nowrap",
                 width: "50px",
@@ -442,7 +484,7 @@ export default function Navbar() {
                       y1="5"
                       x2="14"
                       y2="5"
-                      stroke="#BBBAA6"
+                      stroke={isLight ? "#050505" : "#BBBAA6"}
                       strokeWidth="1.5"
                       strokeLinecap="round"
                     />
@@ -452,7 +494,7 @@ export default function Navbar() {
                       y1="8"
                       x2="14"
                       y2="8"
-                      stroke="#BBBAA6"
+                      stroke={isLight ? "#050505" : "#BBBAA6"}
                       strokeWidth="1.5"
                       strokeLinecap="round"
                     />
@@ -462,7 +504,7 @@ export default function Navbar() {
                       y1="11"
                       x2="14"
                       y2="11"
-                      stroke="#BBBAA6"
+                      stroke={isLight ? "#050505" : "#BBBAA6"}
                       strokeWidth="1.5"
                       strokeLinecap="round"
                     />
@@ -547,18 +589,19 @@ export default function Navbar() {
           onClick={closeMenu}
           className="menu-backdrop absolute inset-0 opacity-0 cursor-pointer"
           style={{
-            background: "rgba(14, 16, 15, 0.88)",
+            background: isLight ? "rgba(255, 255, 255, 0.85)" : "rgba(14, 16, 15, 0.88)",
             backdropFilter: "blur(3px)",
             WebkitBackdropFilter: "blur(3px)",
           }}
         />
 
         <div
-          className="menu-panel absolute top-20 left-1/2 -translate-x-1/2 w-[90vw] max-w-[400px] p-[0.375rem] invisible shadow-2xl"
+          className="menu-panel absolute top-20 left-1/2 -translate-x-1/2 w-[90vw] max-w-[400px] p-[0.375rem] invisible shadow-2xl transition-colors duration-500"
           style={{
-            background: "var(--color-grey-dark)",
-            border: "1.5px solid var(--s25)",
+            background: isLight ? "#ffffff" : "var(--color-grey-dark)",
+            border: isLight ? "1.5px solid rgba(0, 0, 0, 0.12)" : "1.5px solid var(--s25)",
             borderRadius: "18px",
+            boxShadow: isLight ? "0 10px 30px rgba(0, 0, 0, 0.12)" : "none",
           }}
         >
           <nav>
@@ -568,10 +611,28 @@ export default function Navbar() {
                 className="menu-link"
                 href={link.href}
                 tabIndex={isOpen ? 0 : -1}
-                onClick={closeMenu}
+                style={{
+                  color: isLight ? "#050505" : "var(--s75)",
+                  borderTop: isLight ? "1px solid rgba(0, 0, 0, 0.08)" : undefined,
+                }}
+                onClick={(e) => {
+                  closeMenu();
+                  if (link.href === "#countdown") {
+                    e.preventDefault();
+                    triggerSectionTransition("countdown");
+                  } else if (link.href === "#hero") {
+                    e.preventDefault();
+                    triggerSectionTransition("hero");
+                  }
+                }}
               >
-                <span>{link.name}</span>
-                <span className="link-num">{link.num}</span>
+                <span className="font-medium">{link.name}</span>
+                <span
+                  className="link-num"
+                  style={{ color: isLight ? "#888888" : undefined }}
+                >
+                  {link.num}
+                </span>
               </a>
             ))}
           </nav>

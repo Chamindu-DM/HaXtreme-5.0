@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { CustomEase } from "gsap/CustomEase";
+import SectionTransition, { triggerSectionTransition } from "./SectionTransition";
 import "./GSAP_Hero/hero.css";
 
 // Register GSAP plugins safely
@@ -245,7 +246,7 @@ export default function Hero() {
         return tl;
       };
 
-      // Letter 7: "e"
+      // Letter 7: "n"
       const char7 = () => {
         const char = animateSelector(".e > span");
         return gsap.fromTo(
@@ -255,7 +256,17 @@ export default function Hero() {
         );
       };
 
-      // Letter 6: "t" + Odometer Counter (nests char7)
+      // Letter 8: "e"
+      const char8_e = () => {
+        const char = animateSelector(".e2 > span");
+        return gsap.fromTo(
+          char,
+          { yPercent: 100 },
+          { yPercent: 0, duration: 0.9, ease: "power2.out" }
+        );
+      };
+
+      // Letter 6: "i" + Odometer Counter (nests char7 and char8_e)
       const char6 = () => {
         const tl = gsap.timeline({ defaults });
         const char = animateSelector(".t > span > span")[0];
@@ -263,7 +274,7 @@ export default function Hero() {
         const numbers = animateSelector(".t > span > span > span");
 
         tl.set(numbersWrap, { autoAlpha: 1 });
-        tl.from(numbers[0], { yPercent: 100, duration: 0.4 }, "<");
+        tl.fromTo(numbers[0], { yPercent: 100 }, { yPercent: 0, duration: 0.4 }, "<");
         tl.fromTo(
           [numbers[1], numbers[2]],
           { yPercent: 100 },
@@ -271,8 +282,9 @@ export default function Hero() {
           "+=.2"
         );
         tl.to(numbers[0], { yPercent: -100 }, "-=.6");
-        tl.from(char, { yPercent: 100, duration: 0.9 }, "<");
+        tl.fromTo(char, { yPercent: 100 }, { yPercent: 0, duration: 0.9 }, "<");
         tl.add(char7(), "<");
+        tl.add(char8_e(), "<.1");
         return tl;
       };
 
@@ -472,14 +484,14 @@ export default function Hero() {
       masterTl.add(char6(), 1.1);
       // Character 7 called inside 6
 
-      /* Anything */
+      /* Possible */
       masterTl.add(char8to9(), 1.5);
       masterTl.add(char10(), 1.7);
       masterTl.add(char11(), 2.0);
-      masterTl.add(char12(), 1.9);
-      masterTl.add(char13(), 2.4);
+      masterTl.add(char13(), 1.9);
+      masterTl.add(char12(), 2.2);
       // Character 14 called inside 13
-      masterTl.add(char15(), 2.2);
+      masterTl.add(char15(), 2.4);
       masterTl.add(buttonIn(), 1.0);
 
       // ─── 4. Subtitle with Animated Curly Braces ───
@@ -653,7 +665,8 @@ export default function Hero() {
   );
 
   return (
-    <section ref={containerRef} className="home-hero">
+    <section ref={containerRef} id="hero" className="home-hero relative">
+      <SectionTransition />
       {/* Global Shared SVG Defs and Noise Filters */}
       <svg
         style={{
@@ -681,22 +694,22 @@ export default function Hero() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="home-hero__inner">
           <div className="home-hero__heading">
-            <h1 className="sr-only">Animate Anything</h1>
+            <h1 className="sr-only">Redefine Possible</h1>
             <div
               id="home-hero-heading"
               className="home-hero__heading-text heading-xl"
               aria-hidden="true"
             >
-              {/* ─── Line 1: Animate ─── */}
+              {/* ─── Line 1: Redefine ─── */}
               <span
                 ref={heading1Ref}
                 className="home-hero__animate"
                 style={{ opacity: 1, visibility: "inherit" }}
               >
-                {/* 1. Letter 'A' */}
+                {/* 1. Letter 'R' */}
                 <span className="a">
                   <span className="clip" style={{ transformOrigin: "50% 100%" }}>
-                    <span>A</span>
+                    <span>R</span>
                   </span>
                 </span>
 
@@ -796,7 +809,7 @@ export default function Hero() {
                   </div>
                   <span className="clip">
                     <span>
-                      <span>n</span>
+                      <span>e</span>
                       <span
                         style={{
                           opacity: 1,
@@ -804,23 +817,23 @@ export default function Hero() {
                           transform: "rotateY(180deg)",
                         }}
                       >
-                        a
+                        e
                       </span>
                     </span>
                   </span>
                 </span>
 
-                {/* 3. Letter 'i' */}
+                {/* 3. Letter 'd' */}
                 <span className="i clip">
-                  <span>i</span>
+                  <span>d</span>
                 </span>
 
-                {/* 4. Letter 'm' */}
+                {/* 4. Letter 'e' */}
                 <span className="m clip">
-                  <span>m</span>
+                  <span>e</span>
                 </span>
 
-                {/* 5. Letter 'a' + Star Flair */}
+                {/* 5. Letter 'f' + Star Flair */}
                 <span className="a2" style={{ overflow: "hidden" }}>
                   <div className="home-hero__flair home-hero__flair--star">
                     <svg
@@ -876,14 +889,14 @@ export default function Hero() {
                     </svg>
                   </div>
                   <span className="clip">
-                    <span>a</span>
+                    <span>f</span>
                   </span>
                 </span>
 
-                {/* 6. Letter 't' + Odometer Digits */}
+                {/* 6. Letter 'i' + Odometer Digits */}
                 <span className="t">
                   <span className="clip">
-                    <span>t</span>
+                    <span>i</span>
                     <span style={{ opacity: 1, visibility: "inherit" }}>
                       <span>1</span>
                       <span>0</span>
@@ -892,36 +905,41 @@ export default function Hero() {
                   </span>
                 </span>
 
-                {/* 7. Letter 'e' */}
+                {/* 7. Letter 'n' */}
                 <span className="e clip">
+                  <span>n</span>
+                </span>
+
+                {/* 8. Letter 'e' */}
+                <span className="e2 clip">
                   <span>e</span>
                 </span>
               </span>
 
-              {/* ─── Line 2: anything ─── */}
+              {/* ─── Line 2: Possible ─── */}
               <span
                 ref={heading2Ref}
                 className="home-hero__anything"
                 style={{ opacity: 1, visibility: "inherit" }}
               >
-                {/* 8. Letter 'a' (Dual ticker) */}
+                {/* 8. Letter 'P' (Dual ticker) */}
                 <span className="a clip">
-                  <span>a</span>
-                  <span>a</span>
+                  <span>P</span>
+                  <span>P</span>
                 </span>
 
-                {/* 9. Letter 'n' (Dual ticker) */}
+                {/* 9. Letter 'o' (Dual ticker) */}
                 <span className="n clip">
-                  <span>n</span>
-                  <span>n</span>
+                  <span>o</span>
+                  <span>o</span>
                 </span>
 
-                {/* 10. Letter 'y' */}
+                {/* 10. Letter 's' */}
                 <span className="y">
-                  <span>y</span>
+                  <span>s</span>
                 </span>
 
-                {/* 11. Letter 't' + Lightning Bolt */}
+                {/* 11. Letter 's' + Lightning Bolt */}
                 <span className="t">
                   <div className="home-hero__flair home-hero__flair--bolt">
                     <svg
@@ -966,10 +984,15 @@ export default function Hero() {
                       </g>
                     </svg>
                   </div>
-                  <span>t</span>
+                  <span>s</span>
                 </span>
 
-                {/* 12. Letter 'h' + Worm Squiggle */}
+                {/* 12. Letter 'i' (Infinite 3D wobble) */}
+                <span className="i">
+                  <span style={{ transformStyle: "preserve-3d" }}>i</span>
+                </span>
+
+                {/* 13. Letter 'b' + Worm Squiggle */}
                 <span className="h">
                   <div
                     ref={squiggleRef}
@@ -984,23 +1007,18 @@ export default function Hero() {
                     />
                   </div>
                   <span className="clip">
-                    <span>h</span>
+                    <span>b</span>
                   </span>
                 </span>
 
-                {/* 13. Letter 'i' (Infinite 3D wobble) */}
-                <span className="i">
-                  <span style={{ transformStyle: "preserve-3d" }}>i</span>
-                </span>
-
-                {/* 14. Letter 'n' */}
+                {/* 14. Letter 'l' */}
                 <span className="n2 clip">
-                  <span>n</span>
+                  <span>l</span>
                 </span>
 
-                {/* 15. Letter 'g' */}
+                {/* 15. Letter 'e' */}
                 <span className="g">
-                  <span>g</span>
+                  <span>e</span>
                 </span>
               </span>
             </div>
@@ -1030,8 +1048,7 @@ export default function Hero() {
                 </svg>
               </div>
               <p className="subtitle__label">
-                GSAP – A wildly robust JavaScript animation library built for
-                professionals
+                HaXtreme – An elite real-world problem solving arena engineered for talent
               </p>
               <div
                 className="subtitle__brace"
@@ -1262,7 +1279,11 @@ export default function Hero() {
 
               {/* Action Button */}
               <a
-                href="#what-is-gsap"
+                href="#countdown"
+                onClick={(e) => {
+                  e.preventDefault();
+                  triggerSectionTransition("countdown");
+                }}
                 className="get-gsap-btn__button button button--stroke"
               >
                 <span className="get-gsap-btn__word">
