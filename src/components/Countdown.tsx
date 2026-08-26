@@ -238,7 +238,7 @@ export default function Countdown() {
       {/* ─── Center Standing Rocket: Dead Centered on Viewport ─── */}
       <div
         ref={rocketRef}
-        className="absolute left-1/2 -translate-x-1/2 bottom-0 h-[60vh] sm:h-[72vh] md:h-[82vh] lg:h-[93vh] max-h-[96vh] z-10 flex items-end justify-center pointer-events-none will-change-transform"
+        className="absolute left-1/2 -translate-x-1/2 bottom-0 h-[55vh] sm:h-[65vh] md:h-[78vh] lg:h-[93vh] max-h-[96vh] z-10 flex items-end justify-center pointer-events-none will-change-transform"
       >
         <img
           src="/hero-rocket.avif"
@@ -248,80 +248,80 @@ export default function Countdown() {
       </div>
 
       {/* ─── Main Content Container (Locked to max-w-[1385px]) ─── */}
-      <div className="w-full flex-1 max-w-[1800px] mx-auto px-4 sm:px-8 lg:px-12 flex flex-col lg:flex-row items-center justify-between relative z-15 pt-16 sm:pt-20 lg:pt-0 pb-20 sm:pb-24">
+      <div className="w-full flex-1 max-w-[1385px] mx-auto px-4 sm:px-8 lg:px-12 flex flex-col lg:flex-row items-center justify-start lg:justify-between relative z-15 pt-20 sm:pt-24 lg:pt-0 pb-20 sm:pb-24">
         
-        {/* Left Side: "Prepare for Liftoff." (Horizontally aligned with numbers) */}
+        {/* Left Side (Desktop) / Top Centered (Mobile): "Prepare for Liftoff." */}
         <div
           ref={leftTextRef}
-          className="w-full lg:w-[628px] flex lg:mt-7 flex-col justify-center items-center lg:items-start z-15 lg:pr-4"
+          className="w-full lg:w-[628px] flex flex-col justify-center items-center lg:items-start z-15 lg:pr-4"
         >
           <h2 className="w-full text-center lg:text-left text-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium font-['Handjet'] leading-none">
             Prepare for Liftoff.
           </h2>
         </div>
 
-        {/* Right Side: Exact Structure Digital Matrix Countdown Timer (Perfect Center Alignment) */}
+        {/* Right Side (Desktop) / Below Title Centered (Mobile): Exact Structure Digital Matrix Countdown Timer */}
         <div
           ref={timerRef}
-          className="w-full lg:w-auto mt-6 lg:mt-0 flex flex-col items-center lg:items-end justify-center z-15 lg:pl-4"
+          className="w-full lg:w-auto mt-4 sm:mt-6 lg:mt-0 flex justify-center lg:justify-end items-center z-15 lg:pl-4"
         >
-          {/* Labels Row aligned cleanly over each column */}
-          <div className="flex items-center justify-between w-full px-1 sm:px-2 mb-1 sm:mb-2">
-            <div className="flex-1 text-center text-black text-base sm:text-xl lg:text-2xl font-medium font-['Handjet'] leading-none">
-              DD
-            </div>
-            <div className="w-2 sm:w-2.5 lg:w-3" aria-hidden="true" />
-            <div className="flex-1 text-center text-black text-base sm:text-xl lg:text-2xl font-medium font-['Handjet'] leading-none">
-              HH
-            </div>
-            <div className="w-2 sm:w-2.5 lg:w-3" aria-hidden="true" />
-            <div className="flex-1 text-center text-black text-base sm:text-xl lg:text-2xl font-medium font-['Handjet'] leading-none">
-              MM
-            </div>
-            <div className="w-2 sm:w-2.5 lg:w-3" aria-hidden="true" />
-            <div className="flex-1 text-center text-black text-base sm:text-xl lg:text-2xl font-medium font-['Handjet'] leading-none">
-              SS
-            </div>
-          </div>
-
-          {/* Digits & Separators Row: All locked to the exact same horizontal center axis */}
-          <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 lg:gap-3">
+          <div className="inline-flex items-end justify-center gap-1.5 sm:gap-2.5 lg:gap-3">
             {/* DD */}
-            <div className="text-center text-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-['Doto'] leading-none tabular-nums">
-              {formattedDays}
+            <div className="inline-flex flex-col justify-end items-center gap-1 sm:gap-2">
+              <div className="text-black text-base sm:text-xl lg:text-2xl font-medium font-['Handjet'] leading-none">
+                DD
+              </div>
+              <div className="text-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-['Doto'] leading-none tabular-nums">
+                {formattedDays}
+              </div>
             </div>
 
             {/* Separator 1 */}
-            <div className="flex flex-col justify-center items-center gap-1.5 sm:gap-2 lg:gap-2.5">
-              <div className="w-1.5 sm:w-2.5 lg:w-3 h-1.5 sm:h-2.5 lg:h-3 bg-black" />
-              <div className="w-1.5 sm:w-2.5 lg:w-3 h-1.5 sm:h-2.5 lg:h-3 bg-black" />
+            <div className="w-1.5 sm:w-2.5 lg:w-3 inline-flex flex-col justify-center items-center gap-1.5 sm:gap-2 lg:gap-2.5 mb-2 sm:mb-3.5 lg:mb-4">
+              <div className="self-stretch h-1.5 sm:h-2.5 lg:h-3 relative bg-black" />
+              <div className="self-stretch h-1.5 sm:h-2.5 lg:h-3 relative bg-black" />
             </div>
 
             {/* HH */}
-            <div className="text-center text-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-['Doto'] leading-none tabular-nums">
-              {formattedHours}
+            <div className="inline-flex flex-col justify-end items-center gap-1 sm:gap-2">
+              <div className="text-black text-base sm:text-xl lg:text-2xl font-medium font-['Handjet'] leading-none">
+                HH
+              </div>
+              <div className="text-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-['Doto'] leading-none tabular-nums">
+                {formattedHours}
+              </div>
             </div>
 
             {/* Separator 2 */}
-            <div className="flex flex-col justify-center items-center gap-1.5 sm:gap-2 lg:gap-2.5">
-              <div className="w-1.5 sm:w-2.5 lg:w-3 h-1.5 sm:h-2.5 lg:h-3 bg-black" />
-              <div className="w-1.5 sm:w-2.5 lg:w-3 h-1.5 sm:h-2.5 lg:h-3 bg-black" />
+            <div className="w-1.5 sm:w-2.5 lg:w-3 inline-flex flex-col justify-center items-center gap-1.5 sm:gap-2 lg:gap-2.5 mb-2 sm:mb-3.5 lg:mb-4">
+              <div className="self-stretch h-1.5 sm:h-2.5 lg:h-3 relative bg-black" />
+              <div className="self-stretch h-1.5 sm:h-2.5 lg:h-3 relative bg-black" />
             </div>
 
             {/* MM */}
-            <div className="text-center text-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-['Doto'] leading-none tabular-nums">
-              {formattedMinutes}
+            <div className="inline-flex flex-col justify-end items-center gap-1 sm:gap-2">
+              <div className="text-black text-base sm:text-xl lg:text-2xl font-medium font-['Handjet'] leading-none">
+                MM
+              </div>
+              <div className="text-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-['Doto'] leading-none tabular-nums">
+                {formattedMinutes}
+              </div>
             </div>
 
             {/* Separator 3 */}
-            <div className="flex flex-col justify-center items-center gap-1.5 sm:gap-2 lg:gap-2.5">
-              <div className="w-1.5 sm:w-2.5 lg:w-3 h-1.5 sm:h-2.5 lg:h-3 bg-black" />
-              <div className="w-1.5 sm:w-2.5 lg:w-3 h-1.5 sm:h-2.5 lg:h-3 bg-black" />
+            <div className="w-1.5 sm:w-2.5 lg:w-3 inline-flex flex-col justify-center items-center gap-1.5 sm:gap-2 lg:gap-2.5 mb-2 sm:mb-3.5 lg:mb-4">
+              <div className="self-stretch h-1.5 sm:h-2.5 lg:h-3 relative bg-black" />
+              <div className="self-stretch h-1.5 sm:h-2.5 lg:h-3 relative bg-black" />
             </div>
 
             {/* SS */}
-            <div className="text-center text-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-['Doto'] leading-none tabular-nums">
-              {formattedSeconds}
+            <div className="inline-flex flex-col justify-end items-center gap-1 sm:gap-2">
+              <div className="text-black text-base sm:text-xl lg:text-2xl font-medium font-['Handjet'] leading-none">
+                SS
+              </div>
+              <div className="text-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-['Doto'] leading-none tabular-nums">
+                {formattedSeconds}
+              </div>
             </div>
           </div>
         </div>

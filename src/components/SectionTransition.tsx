@@ -16,26 +16,13 @@ const endPath = "M 0 105 V 0 Q 50 0 100 0 V 105 z";
 
 export function triggerSectionTransition(targetId: string = "countdown") {
   if (typeof window !== "undefined") {
-    const heroEl = document.getElementById("hero");
-    if (heroEl) {
-      const scrollTrigger = ScrollTrigger.getById("hero-transition");
-      if (scrollTrigger) {
-        if (targetId === "hero") {
-          window.scrollTo({
-            top: scrollTrigger.start,
-            behavior: "smooth",
-          });
-        } else {
-          window.scrollTo({
-            top: scrollTrigger.end,
-            behavior: "smooth",
-          });
-        }
-        return;
-      }
-    }
     const target = document.getElementById(targetId);
-    target?.scrollIntoView({ behavior: "smooth" });
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    } else {
+      const heroEl = document.getElementById("hero");
+      heroEl?.scrollIntoView({ behavior: "smooth" });
+    }
   }
 }
 
