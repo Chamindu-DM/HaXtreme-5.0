@@ -144,6 +144,21 @@
   width: 500%;
 }
 
+.home-hero__heading .home-hero__heading-text .home-hero__animate .n,
+.home-hero__heading .home-hero__heading-text .home-hero__animate .m,
+.home-hero__heading .home-hero__heading-text .home-hero__animate .e2 {
+  padding-right: 0.001em;
+  margin: 0 -0.001em;
+}
+
+.home-hero__heading .home-hero__heading-text .home-hero__animate .n .clip,
+.home-hero__heading .home-hero__heading-text .home-hero__animate .m.clip,
+.home-hero__heading .home-hero__heading-text .home-hero__animate .e2.clip {
+  padding-right: 0.01em;
+  margin: 0 -0.02em;
+}
+
+
 .home-hero__heading .home-hero__heading-text .home-hero__anything .a,
 .home-hero__heading .home-hero__heading-text .home-hero__anything .n {
   display: inline-block;

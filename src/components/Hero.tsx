@@ -471,6 +471,7 @@ export default function Hero() {
       const masterTl = gsap.timeline({
         id: "home-hero",
         defaults,
+        paused: true,
       });
 
       masterTl.set([heading1, heading2], { autoAlpha: 1 });
@@ -496,12 +497,14 @@ export default function Hero() {
 
       // ─── 4. Subtitle with Animated Curly Braces ───
       const subtitleEl = subtitleWrapRef.current;
+      let subtitleTl: gsap.core.Timeline | null = null;
       if (subtitleEl) {
-        const subtitleTl = gsap.timeline({
+        subtitleTl = gsap.timeline({
           defaults: {
             ease: "power3.out",
             duration: 0.3,
           },
+          paused: true,
         });
         gsap.set(subtitleEl, { autoAlpha: 1 });
         const label = subtitleEl.querySelector(".subtitle__label");
@@ -530,6 +533,14 @@ export default function Hero() {
             "<"
           );
       }
+
+      // Listen for loader completion
+      const startHero = () => {
+        masterTl.play();
+        if (subtitleTl) subtitleTl.play();
+      };
+
+      window.addEventListener("hero-start", startHero);
 
       // ─── 5. "Get GSAP" Button Particle Burst & Hover Interactions ───
       const btnBlock = buttonBlockRef.current;
@@ -649,6 +660,7 @@ export default function Hero() {
 
         return () => {
           btnBlock.removeEventListener("mouseenter", playBtnTimeline);
+          window.removeEventListener("hero-start", startHero);
           if (handleResize) window.removeEventListener("resize", handleResize);
           if (handleMouseMove)
             window.removeEventListener("mousemove", handleMouseMove);
@@ -656,6 +668,7 @@ export default function Hero() {
       }
 
       return () => {
+        window.removeEventListener("hero-start", startHero);
         if (handleResize) window.removeEventListener("resize", handleResize);
         if (handleMouseMove)
           window.removeEventListener("mousemove", handleMouseMove);
