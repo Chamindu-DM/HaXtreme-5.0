@@ -221,10 +221,10 @@ function ShaderPhotoCard({ src }: { src: string }) {
   }, [src]);
 
   return (
-    <div className="w-[85vw] sm:w-[65vw] md:w-[55vw] lg:w-[46vw] xl:w-[42vw] max-w-[640px] shrink-0 p-2.5 border border-dashed border-[#272d2a] hover:border-[#3a423e] transition-colors duration-300">
+    <div className="w-[92vw] sm:w-[75vw] md:w-[58vw] lg:w-[46vw] xl:w-[42vw] max-w-[680px] shrink-0 p-2 sm:p-2.5 border border-dashed border-[#272d2a] hover:border-[#3a423e] transition-colors duration-300">
       <div
         ref={containerRef}
-        className="relative w-full aspect-[16/10] sm:aspect-video overflow-hidden bg-[#131514] shadow-2xl"
+        className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-video overflow-hidden bg-[#131514] shadow-2xl rounded-sm"
       >
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
       </div>
@@ -311,7 +311,7 @@ export default function MemoryLane() {
         className="flex items-center gap-8 sm:gap-12 flex-nowrap will-change-transform pl-8 sm:pl-16 lg:pl-24 pr-16 sm:pr-24 lg:pr-32"
       >
         {/* Intro Narrative Card */}
-        <div className="w-[85vw] sm:w-[48vw] md:w-[35vw] lg:w-[26vw] max-w-[380px] shrink-0 flex flex-col justify-center space-y-6 pr-4 sm:pr-8">
+        <div className="w-[90vw] sm:w-[48vw] md:w-[35vw] lg:w-[26vw] max-w-[400px] shrink-0 flex flex-col justify-center space-y-6 pr-4 sm:pr-8">
           <h2
             className="text-5xl sm:text-6xl md:text-7xl font-bold text-white tracking-tight leading-[1.02]"
             style={{

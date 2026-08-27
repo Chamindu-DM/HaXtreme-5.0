@@ -32,11 +32,11 @@
 .home-hero {
   position: relative;
   width: 100%;
-  min-height: 90vh;
-  max-height: 90vh;
-  height: 90dvh;
+  min-height: 95vh;
+  max-height: 95vh;
+  height: 95dvh;
   padding-top: 72px;
-  padding-bottom: 20px;
+  padding-bottom: 70px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -304,9 +304,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 1.25rem;
   padding-top: 0.5rem;
-  padding-bottom: 0.25rem;
+  padding-bottom: 2rem;
+  margin-bottom: 1rem;
   position: relative;
   z-index: 10;
 }
@@ -315,6 +316,8 @@
   .home-hero__bottom-area {
     flex-direction: row;
     align-items: flex-end;
+    margin-bottom: 0;
+    padding-bottom: 0.25rem;
   }
 }
 
