@@ -32,11 +32,11 @@
 .home-hero {
   position: relative;
   width: 100%;
-  min-height: 100vh;
-  max-height: 100vh;
-  height: 100dvh;
+  min-height: 90vh;
+  max-height: 90vh;
+  height: 90dvh;
   padding-top: 72px;
-  padding-bottom: 180px;
+  padding-bottom: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -45,7 +45,16 @@
   box-sizing: border-box;
 }
 
-@media only screen and (max-height: 700px) {
+@media only screen and (min-width: 48rem) {
+  .home-hero {
+    min-height: 100vh;
+    max-height: 100vh;
+    height: 100dvh;
+    padding-bottom: 180px;
+  }
+}
+
+@media only screen and (max-height: 700px) and (min-width: 48rem) {
   .home-hero {
     min-height: 100vh;
     max-height: none;
