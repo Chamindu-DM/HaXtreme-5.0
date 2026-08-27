@@ -89,16 +89,15 @@
   z-index: 1;
   width: 100%;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: baseline;
-  flex-wrap: nowrap;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: 0.05em;
 }
 
 .home-hero__heading .home-hero__heading-text > span {
-  display: inline-flex;
+  display: flex;
   visibility: hidden;
-  width: auto;
+  width: 100%;
   align-items: baseline;
 }
 
@@ -189,9 +188,9 @@
   width: 100%;
 }
 
-/* ─── Typography Sizing (Calibrated to Fit Viewport Horizontally) ─── */
+/* ─── Typography Sizing (Mobile 2-Lines vs Desktop 1-Line) ─── */
 .heading-xl {
-  font-size: clamp(3.8rem, 10vw, 12.5rem);
+  font-size: clamp(4.25rem, 19.5vw, 8rem);
   font-weight: 600;
   letter-spacing: -0.035em;
   line-height: 0.9;
@@ -199,8 +198,27 @@
 }
 
 @media only screen and (min-width: 48rem) {
+  .home-hero__heading .home-hero__heading-text {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: nowrap;
+    row-gap: 0;
+  }
+
+  .home-hero__heading .home-hero__heading-text > span {
+    width: auto;
+    display: inline-flex;
+  }
+
+  .home-hero__heading .home-hero__heading-text > span:last-child {
+    justify-content: flex-end;
+  }
+
   .heading-xl {
     font-size: clamp(5rem, 11.2vw, 15rem);
+    letter-spacing: -0.035em;
+    line-height: 0.9;
   }
 }
 
@@ -210,7 +228,7 @@
   }
 }
 
-@media only screen and (max-height: 800px) {
+@media only screen and (max-height: 800px) and (min-width: 48rem) {
   .heading-xl {
     font-size: clamp(3.5rem, 9.2vw, 11.5rem);
   }

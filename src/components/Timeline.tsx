@@ -934,7 +934,6 @@ export default function Timeline({ className = "" }: { className?: string }) {
     const f21 = getPos(frame21Ref.current, container);
     const f22 = getPos(frame22Ref.current, container);
     const f30 = getPos(frame30Ref.current, container);
-    const f32 = getPos(frame32Ref.current, container);
     const f34 = getPos(frame34Ref.current, container);
     const f36 = getPos(frame36Ref.current, container);
 
