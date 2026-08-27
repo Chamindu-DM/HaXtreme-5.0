@@ -78,9 +78,7 @@ export default function Countdown() {
         ScrollTrigger.create({
           trigger: containerRef.current,
           start: "top top",
-          end: "+=100%",
-          pin: true,
-          pinSpacing: true,
+          end: "bottom top",
           snap: {
             snapTo: [0, 1],
             duration: { min: 0.2, max: 0.5 },
@@ -150,9 +148,7 @@ export default function Countdown() {
             id: "countdown-exit",
             trigger: containerRef.current,
             start: "top top",
-            end: "+=100%",
-            pin: true,
-            pinSpacing: true,
+            end: "bottom top",
             scrub: 0.5,
             snap: {
               snapTo: [0, 1],
@@ -247,15 +243,15 @@ export default function Countdown() {
         />
       </div>
 
-      {/* ─── Main Content Container (Locked to max-w-[1385px]) ─── */}
-      <div className="w-full flex-1 max-w-[1385px] mx-auto px-4 sm:px-8 lg:px-12 flex flex-col lg:flex-row items-center justify-start lg:justify-between relative z-15 pt-20 sm:pt-24 lg:pt-0 pb-20 sm:pb-24">
+      {/* ─── Main Content Container (Locked to max-w-[1800px]) ─── */}
+      <div className="w-full flex-1 max-w-[1800px] mx-auto px-4 sm:px-8 lg:px-12 flex flex-col lg:flex-row items-center justify-start lg:justify-between relative z-15 pt-20 sm:pt-24 lg:pt-0 pb-20 sm:pb-24">
         
         {/* Left Side (Desktop) / Top Centered (Mobile): "Prepare for Liftoff." */}
         <div
           ref={leftTextRef}
           className="w-full lg:w-[628px] flex flex-col justify-center items-center lg:items-start z-15 lg:pr-4"
         >
-          <h2 className="w-full text-center lg:text-left text-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium font-['Handjet'] leading-none">
+          <h2 className="w-full text-center mt-6 lg:text-left text-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium font-['Handjet'] leading-none">
             Prepare for Liftoff.
           </h2>
         </div>
@@ -277,7 +273,7 @@ export default function Countdown() {
             </div>
 
             {/* Separator 1 */}
-            <div className="w-1.5 sm:w-2.5 lg:w-3 inline-flex flex-col justify-center items-center gap-1.5 sm:gap-2 lg:gap-2.5 mb-2 sm:mb-3.5 lg:mb-4">
+            <div className="w-1.5 sm:w-2.5 lg:w-3 inline-flex flex-col justify-center items-center gap-1.5 sm:gap-2 lg:gap-2.5 mb-2 sm:mb-3.5 lg:mb-8">
               <div className="self-stretch h-1.5 sm:h-2.5 lg:h-3 relative bg-black" />
               <div className="self-stretch h-1.5 sm:h-2.5 lg:h-3 relative bg-black" />
             </div>
@@ -293,7 +289,7 @@ export default function Countdown() {
             </div>
 
             {/* Separator 2 */}
-            <div className="w-1.5 sm:w-2.5 lg:w-3 inline-flex flex-col justify-center items-center gap-1.5 sm:gap-2 lg:gap-2.5 mb-2 sm:mb-3.5 lg:mb-4">
+            <div className="w-1.5 sm:w-2.5 lg:w-3 inline-flex flex-col justify-center items-center gap-1.5 sm:gap-2 lg:gap-2.5 mb-2 sm:mb-3.5 lg:mb-8">
               <div className="self-stretch h-1.5 sm:h-2.5 lg:h-3 relative bg-black" />
               <div className="self-stretch h-1.5 sm:h-2.5 lg:h-3 relative bg-black" />
             </div>
@@ -309,7 +305,7 @@ export default function Countdown() {
             </div>
 
             {/* Separator 3 */}
-            <div className="w-1.5 sm:w-2.5 lg:w-3 inline-flex flex-col justify-center items-center gap-1.5 sm:gap-2 lg:gap-2.5 mb-2 sm:mb-3.5 lg:mb-4">
+            <div className="w-1.5 sm:w-2.5 lg:w-3 inline-flex flex-col justify-center items-center gap-1.5 sm:gap-2 lg:gap-2.5 mb-2 sm:mb-3.5 lg:mb-8">
               <div className="self-stretch h-1.5 sm:h-2.5 lg:h-3 relative bg-black" />
               <div className="self-stretch h-1.5 sm:h-2.5 lg:h-3 relative bg-black" />
             </div>

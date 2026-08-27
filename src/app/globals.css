@@ -29,6 +29,10 @@ body {
   font-family: "Roboto Mono", "Space Grotesk", monospace;
 }
 
+.font-space-mono {
+  font-family: "Space Mono", monospace;
+}
+
 .font-handjet {
   font-family: "Handjet", monospace;
 }

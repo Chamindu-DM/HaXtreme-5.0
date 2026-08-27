@@ -44,9 +44,7 @@ export default function SectionTransition() {
           id: "hero-transition",
           trigger: heroEl,
           start: "top top",
-          end: "+=100%",
-          pin: true,
-          pinSpacing: true,
+          end: "bottom top",
           snap: {
             snapTo: [0, 1],
             duration: { min: 0.2, max: 0.5 },
@@ -70,15 +68,13 @@ export default function SectionTransition() {
       // Initial state
       gsap.set(pathRef.current, { attr: { d: initialPath } });
 
-      // Master Scroll-Driven Pinning & Circular Arch Morph Timeline
+      // Master Scroll-Driven Circular Arch Morph Timeline
       const tl = gsap.timeline({
         scrollTrigger: {
           id: "hero-transition",
           trigger: heroEl,
           start: "top top",
-          end: "+=100%",
-          pin: true,
-          pinSpacing: true,
+          end: "bottom top",
           scrub: 0.5,
           snap: {
             snapTo: [0, 1],
