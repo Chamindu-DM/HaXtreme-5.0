@@ -21,9 +21,9 @@ export default function Home() {
       <WhatIs />
       <Guidelines />
       <Timeline />
-      <Partners />
       <Prizes />
       <MemoryLane />
+      <Partners />
       <ContactUs />
       <Footer />
     </main>

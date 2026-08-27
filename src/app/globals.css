@@ -144,3 +144,28 @@ body {
 .menu-link:hover .link-num {
   color: var(--s50);
 }
+
+/* Footer Wave Styles */
+.footer-container {
+  position: relative;
+  width: 100%;
+}
+
+.footer-container:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-blend-mode: color-dodge;
+  background-image: url("https://assets.codepen.io/16327/noise.png");
+  pointer-events: none;
+}
+
+#footer-img {
+  height: 100%;
+  width: 100%;
+  display: block;
+  overflow: visible;
+}
