@@ -11,12 +11,35 @@ interface Particle {
   img: HTMLImageElement;
 }
 
+const MEMORY_IMAGES = [
+  "/Memories/image 998.jpg",
+  "/Memories/image 999.jpg",
+  "/Memories/image 1000.jpg",
+  "/Memories/image 1045.jpg",
+  "/Memories/407304759_770490495091274_2613428125469826788_n 1.jpg",
+  "/Memories/407304759_770490495091274_2613428125469826788_n 4.jpg",
+  "/Memories/407308659_770490305091293_2712908387265516032_n 1.jpg",
+  "/Memories/407308659_770490305091293_2712908387265516032_n 2.jpg",
+  "/Memories/407353251_770491348424522_8014008165630634164_n 1.jpg",
+  "/Memories/407362513_770490528424604_1559419601375149637_n 1.jpg",
+  "/Memories/407362513_770490528424604_1559419601375149637_n 2.jpg",
+  "/Memories/407413189_770490661757924_2208827396625310375_n 1.jpg",
+  "/Memories/407413189_770490661757924_2208827396625310375_n 2.jpg",
+  "/Memories/401485383_770490771757913_7353613965438145222_n 1.jpg",
+];
+
 export default function Loader() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
+    // Preload Memory Lane photos in background while loader runs
+    MEMORY_IMAGES.forEach((src) => {
+      const memoryImg = new Image();
+      memoryImg.src = src;
+    });
+
     if (!canvasRef.current || !containerRef.current) return;
 
     const prefersReducedMotion = window.matchMedia(

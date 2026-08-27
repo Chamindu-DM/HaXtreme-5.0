@@ -32,11 +32,13 @@
 .home-hero {
   position: relative;
   width: 100%;
-  min-height: 95vh;
-  max-height: 95vh;
-  height: 95dvh;
-  padding-top: 72px;
-  padding-bottom: 70px;
+  min-height: 100svh;
+  max-height: 100dvh;
+  height: 100dvh;
+  padding-top: 40px;
+  padding-bottom: 200px;
+  padding-left: 16px;
+  padding-right: 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -50,7 +52,10 @@
     min-height: 100vh;
     max-height: 100vh;
     height: 100dvh;
+    padding-top: 72px;
     padding-bottom: 180px;
+    padding-left: 32px;
+    padding-right: 32px;
   }
 }
 
@@ -88,8 +93,8 @@
   width: 100%;
   margin-top: auto;
   margin-bottom: auto;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 
 .home-hero__heading .home-hero__heading-text {
@@ -199,7 +204,7 @@
 
 /* ─── Typography Sizing (Mobile 2-Lines vs Desktop 1-Line) ─── */
 .heading-xl {
-  font-size: clamp(4.25rem, 19.5vw, 8rem);
+  font-size: clamp(3.2rem, 14.5vw, 6rem);
   font-weight: 600;
   letter-spacing: -0.035em;
   line-height: 0.9;
@@ -304,10 +309,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  gap: 1.25rem;
-  padding-top: 0.5rem;
-  padding-bottom: 2rem;
-  margin-bottom: 1rem;
+  gap: 32px;
+  padding-top: 0px;
+  padding-bottom: 4px;
+  margin-top: 0px;
+  margin-bottom: 12px;
   position: relative;
   z-index: 10;
 }
@@ -316,26 +322,31 @@
   .home-hero__bottom-area {
     flex-direction: row;
     align-items: flex-end;
-    margin-bottom: 0;
-    padding-bottom: 0.25rem;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    gap: 16px;
   }
 }
 
 .home-hero__subtitle {
-  margin-bottom: 0;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 .home-hero__subtitle .subtitle {
   margin: 0 auto;
   max-width: max(15.625rem, min(6.87023vw + 14.0148rem, 17.3125rem));
-  padding: 0.625rem 1.5rem;
+  padding: 10px 24px;
   text-align: left;
 }
 
 @media only screen and (min-width: 48rem) {
   .home-hero__subtitle .subtitle {
-    margin-left: 0;
+    margin-left: 0px;
     max-width: max(22rem, min(12vw + 16rem, 30rem));
+    padding: 10px 24px;
   }
 }
 
@@ -415,7 +426,7 @@
   line-height: 1.04545;
   min-width: 12.5rem;
   overflow: hidden;
-  padding: .75rem 1.25rem;
+  padding: 12px 20px;
   position: relative;
   text-decoration: none;
   transition: none;

@@ -97,13 +97,13 @@ export default function Navbar() {
           0.05
         )
         .fromTo(
-          ".menu-svg-wrap",
-          { opacity: 0, scale: 0.8 },
+          ".menu-header-row",
+          { opacity: 0, y: -6 },
           {
             opacity: 1,
-            scale: 1,
-            duration: 0.35,
-            ease: "back.out(1.5)",
+            y: 0,
+            duration: 0.3,
+            ease: "power2.out",
           },
           0.1
         )
@@ -541,39 +541,59 @@ export default function Navbar() {
             boxShadow: isLight ? "0 10px 30px rgba(0, 0, 0, 0.12)" : "none",
           }}
         >
-          {/* Animated SVG Drawing in the middle of expanded menu */}
-          <div className="menu-svg-wrap flex flex-col items-center justify-center pt-2 pb-3 border-b border-white/10 mb-2">
-            <div className="relative w-12 h-12 flex items-center justify-center">
-              <svg
-                id="svg-stage-expanded"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="-1 -1 103 103"
-                fill="none"
-                strokeWidth="2.4"
-                className="w-10 h-10 flex-shrink-0 overflow-visible"
-              >
-                <defs>
-                  <linearGradient
-                    id="grad-expanded-1"
-                    x1="0"
-                    y1="0"
-                    x2="100"
-                    y2="100"
-                    gradientUnits="userSpaceOnUse"
-                  >
-                    <stop offset="0.2" stopColor="rgb(255, 135, 9)" />
-                    <stop offset="0.8" stopColor="rgb(247, 189, 248)" />
-                  </linearGradient>
-                </defs>
-                <path
-                  ref={pathRef}
-                  stroke="url(#grad-expanded-1)"
-                  d="M50.5 50.5h50v50s-19.2 1.3-37.2-16.7S56 35.4 35.5 15.5C18.5-1 .5.5.5.5v50h50s25.6-.6 38-18 12-32 12-32h-50v100H.5S.2 80.7 11.8 68.2 40 49.7 50.5 50.5Z"
-                />
-              </svg>
+          {/* Top Row: SVG Drawing on Left, Register Button on Right */}
+          <div
+            className={`menu-header-row flex items-center justify-between w-full pb-3 mb-2 border-b ${
+              isLight ? "border-black/10" : "border-white/10"
+            }`}
+          >
+            {/* Left: Animated Drawing SVG */}
+            <div className="flex items-center justify-center">
+              <div className="relative w-9 h-9 flex items-center justify-center">
+                <svg
+                  id="svg-stage-expanded"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="-1 -1 103 103"
+                  fill="none"
+                  strokeWidth="2.4"
+                  className="w-7 h-7 flex-shrink-0 overflow-visible"
+                >
+                  <defs>
+                    <linearGradient
+                      id="grad-expanded-1"
+                      x1="0"
+                      y1="0"
+                      x2="100"
+                      y2="100"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop offset="0.2" stopColor="rgb(255, 135, 9)" />
+                      <stop offset="0.8" stopColor="rgb(247, 189, 248)" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    ref={pathRef}
+                    stroke="url(#grad-expanded-1)"
+                    d="M50.5 50.5h50v50s-19.2 1.3-37.2-16.7S56 35.4 35.5 15.5C18.5-1 .5.5.5.5v50h50s25.6-.6 38-18 12-32 12-32h-50v100H.5S.2 80.7 11.8 68.2 40 49.7 50.5 50.5Z"
+                  />
+                </svg>
+              </div>
             </div>
+
+            {/* Right: Register Button */}
+            <a
+              href="#register"
+              onClick={closeMenu}
+              className="relative h-8 px-4 rounded-[40px] flex justify-center items-center gap-1.5 select-none shadow-md shadow-green-500/20 active:scale-95 transition-transform"
+              style={{ background: "var(--grad-macha)" }}
+            >
+              <span className="text-[#0e100f] text-xs font-bold tracking-wider font-['Helvetica_Neue','Inter',sans-serif] uppercase">
+                REGISTER
+              </span>
+            </a>
           </div>
 
+          {/* Navigation Links */}
           <nav className="flex flex-col">
             {navLinks.map((link) => (
               <a

@@ -259,7 +259,7 @@ export default function Countdown() {
         {/* Right Side (Desktop) / Below Title Centered (Mobile): Exact Structure Digital Matrix Countdown Timer */}
         <div
           ref={timerRef}
-          className="w-full lg:w-auto mt-4 sm:mt-6 lg:mt-0 flex justify-center lg:justify-end items-center z-15 lg:pl-4"
+          className="w-full lg:w-auto mt-4 sm:mt-6 lg:mt-0 flex flex-col items-center lg:items-end z-15 lg:pl-4"
         >
           <div className="inline-flex items-end justify-center gap-1.5 sm:gap-2.5 lg:gap-3">
             {/* DD */}
@@ -319,6 +319,16 @@ export default function Countdown() {
                 {formattedSeconds}
               </div>
             </div>
+          </div>
+
+          {/* White-Themed Space Mono Register Button (Mobile only) */}
+          <div className="mt-5 sm:mt-7 flex lg:hidden justify-center w-full">
+            <a
+              href="#register"
+              className="inline-flex items-center justify-center px-6 sm:px-8 py-2.5 sm:py-3 bg-white text-black font-space-mono text-xs sm:text-sm font-bold uppercase tracking-widest border-[0.5px] border-black rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all duration-200"
+            >
+              <span>Register</span>
+            </a>
           </div>
         </div>
       </div>
