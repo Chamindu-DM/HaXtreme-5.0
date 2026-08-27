@@ -204,7 +204,7 @@
 
 /* ─── Typography Sizing (Mobile 2-Lines vs Desktop 1-Line) ─── */
 .heading-xl {
-  font-size: clamp(48px, 14.5vw, 96px);
+  font-size: clamp(56px, 18vw, 115px);
   font-weight: 600;
   letter-spacing: -0.035em;
   line-height: 0.9;
