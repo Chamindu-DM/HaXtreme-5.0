@@ -17,7 +17,7 @@ const SPONSORS = [
   { name: "Partner", src: "/Sponsors/LOGO-01 (Primary).jpg" },
   { name: "Sponsor", src: "/Sponsors/Frame 1010106631.jpg" },
   { name: "Sponsor", src: "/Sponsors/IMG_8636 (1) (1) 1.jpg" },
-  { name: "Partner", src: "/Sponsors/WhatsApp Image 2024-09-29 at 22.05.55_c8a0d71a 1.jpg" },
+  { name: "Partner", src: "/Sponsors/mbl.png" },
   { name: "Partner", src: "/Sponsors/download-1.webp" },
   { name: "Sponsor", src: "/Sponsors/download-4.webp" },
   { name: "Partner", src: "/Sponsors/download-5.webp" },
