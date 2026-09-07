@@ -232,15 +232,17 @@ export default function Countdown() {
       </div>
 
       {/* ─── Center Standing Rocket: Dead Centered on Viewport ─── */}
-      <div
-        ref={rocketRef}
-        className="absolute left-1/2 -translate-x-1/2 bottom-0 h-[55vh] sm:h-[65vh] md:h-[78vh] lg:h-[93vh] max-h-[96vh] z-10 flex items-end justify-center pointer-events-none will-change-transform"
-      >
-        <img
-          src="/hero-rocket.avif"
-          alt="HaXtreme Rocket Launch"
-          className="h-full w-auto max-w-none object-contain object-bottom drop-shadow-sm"
-        />
+      <div className="absolute inset-x-0 bottom-0 flex justify-center items-end pointer-events-none z-10">
+        <div
+          ref={rocketRef}
+          className="h-[55vh] sm:h-[65vh] md:h-[78vh] lg:h-[93vh] max-h-[96vh] flex items-end justify-center will-change-transform"
+        >
+          <img
+            src="/hero-rocket.avif"
+            alt="HaXtreme Rocket Launch"
+            className="h-full w-auto max-w-none object-contain object-bottom drop-shadow-sm"
+          />
+        </div>
       </div>
 
       {/* ─── Main Content Container (Locked to max-w-[1800px]) ─── */}

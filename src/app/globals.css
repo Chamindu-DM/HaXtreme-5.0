@@ -2,6 +2,61 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Embedded Helvetica Neue Web Fonts (Windows / Cross-platform support) ─── */
+@font-face {
+  font-family: "Helvetica Neue";
+  src: url("/fonts/HelveticaNeue-Regular.woff") format("woff"),
+       url("/fonts/HelveticaNeue-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Helvetica Neue";
+  src: url("/fonts/HelveticaNeue-Medium.woff") format("woff"),
+       url("/fonts/HelveticaNeue-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Helvetica Neue";
+  src: url("/fonts/HelveticaNeue-Bold.woff") format("woff"),
+       url("/fonts/HelveticaNeue-Bold.ttf") format("truetype");
+  font-weight: 600 700 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Alias 'Helvetica' to embedded Helvetica Neue */
+@font-face {
+  font-family: "Helvetica";
+  src: url("/fonts/HelveticaNeue-Regular.woff") format("woff"),
+       url("/fonts/HelveticaNeue-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Helvetica";
+  src: url("/fonts/HelveticaNeue-Medium.woff") format("woff"),
+       url("/fonts/HelveticaNeue-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Helvetica";
+  src: url("/fonts/HelveticaNeue-Bold.woff") format("woff"),
+       url("/fonts/HelveticaNeue-Bold.ttf") format("truetype");
+  font-weight: 600 700 800;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --green: #0ae448;

@@ -1043,7 +1043,7 @@ export default function Hero() {
             <div className="home-hero__subtitle">
             <h3
               ref={subtitleWrapRef}
-              className="subtitle subtitle--large subtitle--left"
+              className="subtitle subtitle--large subtitle--center"
               data-block="subtitle"
               data-delay="2.5"
             >
