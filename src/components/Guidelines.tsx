@@ -71,35 +71,32 @@ export default function Guidelines() {
           },
         });
 
-        textTl.from(".guidelines-meta", {
-          y: 15,
-          autoAlpha: 0,
-          duration: 0.5,
-          ease: "power2.out",
-        });
+        if (textLines.length > 0) {
+          textTl.from(
+            textLines,
+            {
+              yPercent: 110,
+              autoAlpha: 0,
+              duration: 0.8,
+              stagger: 0.08,
+              ease: "power3.out",
+            }
+          );
+        }
 
-        textTl.from(
-          textLines,
-          {
-            yPercent: 110,
-            autoAlpha: 0,
-            duration: 0.8,
-            stagger: 0.08,
-            ease: "power3.out",
-          },
-          "-=0.2"
-        );
-
-        textTl.from(
-          ".guidelines-cta",
-          {
-            y: 20,
-            autoAlpha: 0,
-            duration: 0.6,
-            ease: "power2.out",
-          },
-          "-=0.3"
-        );
+        const cta = sectionRef.current?.querySelector(".guidelines-cta");
+        if (cta) {
+          textTl.from(
+            cta,
+            {
+              y: 20,
+              autoAlpha: 0,
+              duration: 0.6,
+              ease: "power2.out",
+            },
+            "-=0.3"
+          );
+        }
       }
 
       // ─── 2. SVG Morphing: Move only middle paper and front flap ───

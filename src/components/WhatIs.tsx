@@ -69,38 +69,34 @@ export default function WhatIs() {
           },
         });
 
-        // Meta tag reveal
-        textTl.from(".meta-reveal", {
-          y: 15,
-          autoAlpha: 0,
-          duration: 0.5,
-          ease: "power2.out",
-        });
-
         // Line-by-line staggered text reveal
-        textTl.from(
-          textLines,
-          {
-            yPercent: 115,
-            autoAlpha: 0,
-            duration: 0.85,
-            stagger: 0.08,
-            ease: "power3.out",
-          },
-          "-=0.2"
-        );
+        if (textLines.length > 0) {
+          textTl.from(
+            textLines,
+            {
+              yPercent: 115,
+              autoAlpha: 0,
+              duration: 0.85,
+              stagger: 0.08,
+              ease: "power3.out",
+            }
+          );
+        }
 
         // Logo reveal
-        textTl.from(
-          ".logo-reveal",
-          {
-            y: 20,
-            autoAlpha: 0,
-            duration: 0.6,
-            ease: "power2.out",
-          },
-          "-=0.3"
-        );
+        const logo = sectionRef.current?.querySelector(".logo-reveal");
+        if (logo) {
+          textTl.from(
+            logo,
+            {
+              y: 20,
+              autoAlpha: 0,
+              duration: 0.6,
+              ease: "power2.out",
+            },
+            "-=0.3"
+          );
+        }
       }
     },
     { scope: sectionRef }
@@ -142,7 +138,7 @@ export default function WhatIs() {
                   </span>{" "}
                   colaborate with{" "}
                   <span className="text-white font-medium">
-                    Computer Engineering Society (ComES)
+                    Computer Engineering Society (ComES) at the University of Ruhuna
                   </span>
                   .
                 </span>
@@ -157,10 +153,7 @@ export default function WhatIs() {
 
               <p className="block overflow-hidden">
                 <span className="block line-reveal text-gray-400">
-                  It is a high-stakes arena that brings together the brightest
-                  undergraduate minds from state and private universities across
-                  Sri Lanka to architect, build, and deploy innovative solutions to
-                  real-world problems.
+                  From optimizing algorithms to finding elegant solutions under pressure, HaXtreme is an arena where problem-solving skills meet speed, strategy, and precision.
                 </span>
               </p>
             </div>
