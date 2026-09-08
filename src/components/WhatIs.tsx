@@ -142,7 +142,7 @@ export default function WhatIs() {
                   </span>{" "}
                   colaborate with{" "}
                   <span className="text-white font-medium">
-                    Computer Engineering Society (ComES)
+                    Computer Engineering Society (ComES) at the University of Ruhuna
                   </span>
                   .
                 </span>
@@ -157,10 +157,7 @@ export default function WhatIs() {
 
               <p className="block overflow-hidden">
                 <span className="block line-reveal text-gray-400">
-                  It is a high-stakes arena that brings together the brightest
-                  undergraduate minds from state and private universities across
-                  Sri Lanka to architect, build, and deploy innovative solutions to
-                  real-world problems.
+                  From optimizing algorithms to finding elegant solutions under pressure, HaXtreme is an arena where problem-solving skills meet speed, strategy, and precision.
                 </span>
               </p>
             </div>
