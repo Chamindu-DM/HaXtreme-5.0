@@ -12,9 +12,6 @@ interface PathData {
   main1: string;
   box1Left: string;
   box1Right: string;
-  midPath: string;
-  box2Left: string;
-  box2Right: string;
 }
 
 function Frame({ innerRef, janRef }: { innerRef?: React.RefObject<HTMLDivElement | null>; janRef?: React.RefObject<HTMLParagraphElement | null> }) {
@@ -25,13 +22,13 @@ function Frame({ innerRef, janRef }: { innerRef?: React.RefObject<HTMLDivElement
     >
       <p
         ref={janRef}
-        className="[word-break:break-word] font-bold leading-[0.93] relative shrink-0 text-[42px] sm:text-[48px] text-white uppercase whitespace-nowrap will-change-transform"
+        className="[word-break:break-word] font-bold leading-[0.93] relative shrink-0 text-[32px] sm:text-[40px] md:text-[46px] text-white uppercase whitespace-nowrap will-change-transform"
         style={{
           fontFamily:
             '"Helvetica Neue", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
         }}
       >
-        Jan
+        Sep 15
       </p>
     </div>
   );
@@ -45,7 +42,7 @@ function Frame2({ desc1Ref }: { desc1Ref?: React.RefObject<HTMLParagraphElement 
           ref={desc1Ref}
           className="[word-break:break-word] flex-[1_0_0] font-space-mono leading-relaxed min-w-px not-italic relative text-[13px] sm:text-[14px] text-gray-300 will-change-transform"
         >
-          Registerations Opening
+          Registration Opening
         </p>
       </div>
     </div>
@@ -74,13 +71,13 @@ function Frame7({ febRef }: { febRef?: React.RefObject<HTMLParagraphElement | nu
     <div className="content-stretch flex flex-[1_0_0] items-end justify-end min-w-px p-[8px] relative overflow-hidden">
       <p
         ref={febRef}
-        className="[word-break:break-word] font-bold leading-[0.93] relative shrink-0 text-[42px] sm:text-[48px] text-white uppercase whitespace-nowrap will-change-transform"
+        className="[word-break:break-word] font-bold leading-[0.93] relative shrink-0 text-[32px] sm:text-[40px] md:text-[46px] text-white uppercase whitespace-nowrap will-change-transform"
         style={{
           fontFamily:
             '"Helvetica Neue", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
         }}
       >
-        Feb
+        Sep 19
       </p>
     </div>
   );
@@ -130,7 +127,7 @@ function Frame12({ desc2Ref }: { desc2Ref?: React.RefObject<HTMLParagraphElement
           ref={desc2Ref}
           className="[word-break:break-word] flex-[1_0_0] font-space-mono leading-relaxed min-w-px not-italic relative text-[13px] sm:text-[14px] text-right text-gray-300 will-change-transform"
         >
-          Registerations Opening
+          Webinar 1 (Online)
         </p>
       </div>
     </div>
@@ -151,13 +148,13 @@ function Frame14({ marRef }: { marRef?: React.RefObject<HTMLParagraphElement | n
     <div className="content-stretch flex flex-[1_0_0] items-end min-w-px p-[8px] relative overflow-hidden">
       <p
         ref={marRef}
-        className="[word-break:break-word] font-bold leading-[0.93] relative shrink-0 text-[42px] sm:text-[48px] text-white uppercase whitespace-nowrap will-change-transform"
+        className="[word-break:break-word] font-bold leading-[0.93] relative shrink-0 text-[32px] sm:text-[40px] md:text-[46px] text-white uppercase whitespace-nowrap will-change-transform"
         style={{
           fontFamily:
             '"Helvetica Neue", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
         }}
       >
-        mar
+        Sep 27
       </p>
     </div>
   );
@@ -199,7 +196,7 @@ function Frame17({ desc3Ref }: { desc3Ref?: React.RefObject<HTMLParagraphElement
           ref={desc3Ref}
           className="[word-break:break-word] flex-[1_0_0] font-space-mono leading-relaxed min-w-px not-italic relative text-[13px] sm:text-[14px] text-gray-300 will-change-transform"
         >
-          Registerations Opening
+          Webinar 2 (Online)
         </p>
       </div>
     </div>
@@ -238,13 +235,13 @@ function Frame20({ apr1LeftRef }: { apr1LeftRef?: React.RefObject<HTMLParagraphE
       <div className="content-stretch flex flex-[1_0_0] h-full items-end min-w-px pb-[8px] pt-[40px] px-[8px] relative overflow-hidden">
         <p
           ref={apr1LeftRef}
-          className="[word-break:break-word] font-bold leading-[0.93] relative shrink-0 text-[42px] sm:text-[48px] text-white uppercase whitespace-nowrap will-change-transform"
+          className="[word-break:break-word] font-bold leading-[0.93] relative shrink-0 text-[32px] sm:text-[40px] md:text-[46px] text-white uppercase whitespace-nowrap will-change-transform"
           style={{
             fontFamily:
               '"Helvetica Neue", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
           }}
         >
-          APR
+          Sep 30
         </p>
       </div>
     </div>
@@ -266,13 +263,13 @@ function Frame21({
       >
         <p
           ref={apr1RightRef}
-          className="[word-break:break-word] font-bold leading-[0.93] relative shrink-0 text-[42px] sm:text-[48px] text-white uppercase whitespace-nowrap will-change-transform"
+          className="[word-break:break-word] font-bold leading-[0.93] relative shrink-0 text-[32px] sm:text-[40px] md:text-[46px] text-white uppercase whitespace-nowrap will-change-transform"
           style={{
             fontFamily:
               '"Helvetica Neue", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
           }}
         >
-          APR
+          OCT 03
         </p>
       </div>
     </div>
@@ -303,7 +300,7 @@ function Frame24({ descBox1LRef }: { descBox1LRef?: React.RefObject<HTMLParagrap
         ref={descBox1LRef}
         className="[word-break:break-word] flex-[1_0_0] font-space-mono leading-relaxed min-w-px not-italic relative text-[13px] sm:text-[14px] text-gray-300 will-change-transform"
       >
-        Registerations Opening
+        Registration Closing
       </p>
     </div>
   );
@@ -316,7 +313,7 @@ function Frame25({ descBox1RRef }: { descBox1RRef?: React.RefObject<HTMLParagrap
         ref={descBox1RRef}
         className="[word-break:break-word] flex-[1_0_0] font-space-mono leading-relaxed min-w-px not-italic relative text-[13px] sm:text-[14px] text-right text-gray-300 will-change-transform"
       >
-        Registerations Opening
+        Online Round (All Teams)
       </p>
     </div>
   );
@@ -337,326 +334,70 @@ function Frame23({
   );
 }
 
-function Frame27({ jun1Ref }: { jun1Ref?: React.RefObject<HTMLParagraphElement | null> }) {
-  return (
-    <div className="flex flex-[1_0_0] flex-row items-center self-stretch overflow-hidden">
-      <div className="content-stretch flex flex-[1_0_0] h-full items-end min-w-px pb-[8px] pt-[40px] px-[8px] relative overflow-hidden">
-        <p
-          ref={jun1Ref}
-          className="[word-break:break-word] font-bold leading-[0.93] relative shrink-0 text-[42px] sm:text-[48px] text-white uppercase whitespace-nowrap will-change-transform"
-          style={{
-            fontFamily:
-              '"Helvetica Neue", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-          }}
-        >
-          Jun
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function Frame28({ jul1Ref }: { jul1Ref?: React.RefObject<HTMLParagraphElement | null> }) {
-  return (
-    <div className="flex flex-[1_0_0] flex-row items-center self-stretch overflow-hidden">
-      <div className="content-stretch flex flex-[1_0_0] h-full items-end justify-end min-w-px pb-[8px] pt-[40px] px-[8px] relative overflow-hidden">
-        <p
-          ref={jul1Ref}
-          className="[word-break:break-word] font-bold leading-[0.93] relative shrink-0 text-[42px] sm:text-[48px] text-white uppercase whitespace-nowrap will-change-transform"
-          style={{
-            fontFamily:
-              '"Helvetica Neue", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-          }}
-        >
-          jul
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function Frame26({
-  jun1Ref,
-  jul1Ref,
-}: {
-  jun1Ref?: React.RefObject<HTMLParagraphElement | null>;
-  jul1Ref?: React.RefObject<HTMLParagraphElement | null>;
-}) {
-  return (
-    <div className="content-stretch flex gap-[40px] items-center relative shrink-0 w-full overflow-hidden">
-      <Frame27 jun1Ref={jun1Ref} />
-      <Frame28 jul1Ref={jul1Ref} />
-    </div>
-  );
-}
-
 function Frame22({
   innerRef,
   descBox1LRef,
   descBox1RRef,
-  jun1Ref,
-  jul1Ref,
+  oct4Ref,
+  descOct4Ref,
+  finalDateRef,
+  finalDescRef,
 }: {
   innerRef?: React.RefObject<HTMLDivElement | null>;
   descBox1LRef?: React.RefObject<HTMLParagraphElement | null>;
   descBox1RRef?: React.RefObject<HTMLParagraphElement | null>;
-  jun1Ref?: React.RefObject<HTMLParagraphElement | null>;
-  jul1Ref?: React.RefObject<HTMLParagraphElement | null>;
+  oct4Ref?: React.RefObject<HTMLParagraphElement | null>;
+  descOct4Ref?: React.RefObject<HTMLParagraphElement | null>;
+  finalDateRef?: React.RefObject<HTMLParagraphElement | null>;
+  finalDescRef?: React.RefObject<HTMLParagraphElement | null>;
 }) {
   return (
     <div
       ref={innerRef}
-      className="aspect-[492/492] border-8 border-solid border-transparent content-stretch flex flex-col gap-[280px] items-start justify-center relative shrink-0 w-full"
+      className="aspect-[492/492] border-8 border-solid border-transparent content-stretch flex flex-col justify-between items-center relative shrink-0 w-full overflow-hidden"
     >
+      {/* Top Row: Left = Registration Closing, Right = Online Round */}
       <Frame23 descBox1LRef={descBox1LRef} descBox1RRef={descBox1RRef} />
-      <Frame26 jun1Ref={jun1Ref} jul1Ref={jul1Ref} />
-    </div>
-  );
-}
 
-function Frame30({
-  innerRef,
-  descMidLRef,
-}: {
-  innerRef?: React.RefObject<HTMLDivElement | null>;
-  descMidLRef?: React.RefObject<HTMLParagraphElement | null>;
-}) {
-  return (
-    <div className="flex flex-[1_0_0] flex-row items-center self-stretch overflow-hidden">
-      <div
-        ref={innerRef}
-        className="border-b-8 border-r-8 border-solid border-transparent content-stretch flex flex-[1_0_0] h-full items-end min-w-px pb-[40px] pl-[8px] pr-[40px] pt-[8px] relative overflow-hidden"
-      >
+      {/* Middle Milestone: Oct 04 Finalist Announcement */}
+      <div className="flex flex-col items-center justify-center text-center my-auto px-4 z-10">
         <p
-          ref={descMidLRef}
-          className="[word-break:break-word] flex-[1_0_0] font-space-mono leading-relaxed min-w-px not-italic relative text-[13px] sm:text-[14px] text-gray-300 will-change-transform"
-        >
-          Registerations Opening
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function Frame31({ descMidRRef }: { descMidRRef?: React.RefObject<HTMLParagraphElement | null> }) {
-  return (
-    <div className="flex flex-[1_0_0] flex-row items-center self-stretch overflow-hidden">
-      <div className="content-stretch flex flex-[1_0_0] h-full items-end min-w-px pb-[40px] pl-[40px] pr-[8px] pt-[8px] relative overflow-hidden">
-        <p
-          ref={descMidRRef}
-          className="[word-break:break-word] flex-[1_0_0] font-space-mono leading-relaxed min-w-px not-italic relative text-[13px] sm:text-[14px] text-right text-gray-300 will-change-transform"
-        >
-          Registerations Opening
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function Frame29({
-  innerRef,
-  descMidLRef,
-  descMidRRef,
-}: {
-  innerRef?: React.RefObject<HTMLDivElement | null>;
-  descMidLRef?: React.RefObject<HTMLParagraphElement | null>;
-  descMidRRef?: React.RefObject<HTMLParagraphElement | null>;
-}) {
-  return (
-    <div className="content-stretch flex items-center relative shrink-0 w-full overflow-hidden">
-      <Frame30 innerRef={innerRef} descMidLRef={descMidLRef} />
-      <Frame31 descMidRRef={descMidRRef} />
-    </div>
-  );
-}
-
-function Frame32({
-  innerRef,
-  apr2Ref,
-}: {
-  innerRef?: React.RefObject<HTMLDivElement | null>;
-  apr2Ref?: React.RefObject<HTMLParagraphElement | null>;
-}) {
-  return (
-    <div
-      ref={innerRef}
-      className="border-l-8 border-solid border-transparent content-stretch flex h-[101px] items-end pb-[8px] pt-[40px] px-[8px] relative shrink-0 w-full overflow-hidden"
-    >
-      <p
-        ref={apr2Ref}
-        className="[word-break:break-word] font-bold leading-[0.93] relative shrink-0 text-[42px] sm:text-[48px] text-white uppercase whitespace-nowrap will-change-transform"
-        style={{
-          fontFamily:
-            '"Helvetica Neue", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-        }}
-      >
-        APR
-      </p>
-    </div>
-  );
-}
-
-function Frame34({
-  innerRef,
-  descMid34Ref,
-}: {
-  innerRef?: React.RefObject<HTMLDivElement | null>;
-  descMid34Ref?: React.RefObject<HTMLParagraphElement | null>;
-}) {
-  return (
-    <div className="flex flex-[1_0_0] flex-row items-center self-stretch overflow-hidden">
-      <div
-        ref={innerRef}
-        className="border-r-8 border-solid border-t-8 border-transparent content-stretch flex flex-[1_0_0] h-full items-end min-w-px pb-[40px] pl-[8px] pr-[40px] pt-[8px] relative overflow-hidden"
-      >
-        <p
-          ref={descMid34Ref}
-          className="[word-break:break-word] flex-[1_0_0] font-space-mono leading-relaxed min-w-px not-italic relative text-[13px] sm:text-[14px] text-gray-300 will-change-transform"
-        >
-          Registerations Opening
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function Frame35() {
-  return (
-    <div className="flex flex-[1_0_0] flex-row items-center self-stretch">
-      <div className="content-stretch flex flex-[1_0_0] h-full items-end min-w-px pb-[40px] pl-[40px] pr-[8px] pt-[8px] relative" />
-    </div>
-  );
-}
-
-function Frame33({
-  innerRef,
-  descMid34Ref,
-}: {
-  innerRef?: React.RefObject<HTMLDivElement | null>;
-  descMid34Ref?: React.RefObject<HTMLParagraphElement | null>;
-}) {
-  return (
-    <div className="content-stretch flex items-center relative shrink-0 w-full overflow-hidden">
-      <Frame34 innerRef={innerRef} descMid34Ref={descMid34Ref} />
-      <Frame35 />
-    </div>
-  );
-}
-
-function Frame38({ descBox2LRef }: { descBox2LRef?: React.RefObject<HTMLParagraphElement | null> }) {
-  return (
-    <div className="content-stretch flex flex-[1_0_0] items-start min-w-px pb-[40px] pt-[8px] px-[8px] relative overflow-hidden">
-      <p
-        ref={descBox2LRef}
-        className="[word-break:break-word] flex-[1_0_0] font-space-mono leading-relaxed min-w-px not-italic relative text-[13px] sm:text-[14px] text-gray-300 will-change-transform"
-      >
-        Registerations Opening
-      </p>
-    </div>
-  );
-}
-
-function Frame39({ descBox2RRef }: { descBox2RRef?: React.RefObject<HTMLParagraphElement | null> }) {
-  return (
-    <div className="content-stretch flex flex-[1_0_0] items-start min-w-px pb-[40px] pt-[8px] px-[8px] relative overflow-hidden">
-      <p
-        ref={descBox2RRef}
-        className="[word-break:break-word] flex-[1_0_0] font-space-mono leading-relaxed min-w-px not-italic relative text-[13px] sm:text-[14px] text-right text-gray-300 will-change-transform"
-      >
-        Registerations Opening
-      </p>
-    </div>
-  );
-}
-
-function Frame37({
-  descBox2LRef,
-  descBox2RRef,
-}: {
-  descBox2LRef?: React.RefObject<HTMLParagraphElement | null>;
-  descBox2RRef?: React.RefObject<HTMLParagraphElement | null>;
-}) {
-  return (
-    <div className="content-stretch flex gap-[40px] items-center relative shrink-0 w-full overflow-hidden">
-      <Frame38 descBox2LRef={descBox2LRef} />
-      <Frame39 descBox2RRef={descBox2RRef} />
-    </div>
-  );
-}
-
-function Frame41({ jun2Ref }: { jun2Ref?: React.RefObject<HTMLParagraphElement | null> }) {
-  return (
-    <div className="flex flex-[1_0_0] flex-row items-center self-stretch overflow-hidden">
-      <div className="content-stretch flex flex-[1_0_0] h-full items-end min-w-px pb-[8px] pt-[40px] px-[8px] relative overflow-hidden">
-        <p
-          ref={jun2Ref}
-          className="[word-break:break-word] font-bold leading-[0.93] relative shrink-0 text-[42px] sm:text-[48px] text-white uppercase whitespace-nowrap will-change-transform"
+          ref={oct4Ref}
+          className="[word-break:break-word] font-bold leading-[0.93] text-[24px] sm:text-[30px] md:text-[34px] text-white uppercase whitespace-nowrap will-change-transform"
           style={{
             fontFamily:
               '"Helvetica Neue", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
           }}
         >
-          Jun
+          Oct 04
+        </p>
+        <p
+          ref={descOct4Ref}
+          className="[word-break:break-word] font-space-mono text-[12px] sm:text-[13px] text-gray-300 will-change-transform mt-1 text-center"
+        >
+          Finalist Announcement
         </p>
       </div>
-    </div>
-  );
-}
 
-function Frame42({ jul2Ref }: { jul2Ref?: React.RefObject<HTMLParagraphElement | null> }) {
-  return (
-    <div className="flex flex-[1_0_0] flex-row items-center self-stretch overflow-hidden">
-      <div className="content-stretch flex flex-[1_0_0] h-full items-end justify-end min-w-px pb-[8px] pt-[40px] px-[8px] relative overflow-hidden">
+      {/* Bottom Climax: Large Oct 10 Physical Final Round inside square bottom */}
+      <div className="w-full flex flex-col items-center justify-center text-center pb-4 sm:pb-6 px-4 z-10">
         <p
-          ref={jul2Ref}
-          className="[word-break:break-word] font-bold leading-[0.93] relative shrink-0 text-[42px] sm:text-[48px] text-white uppercase whitespace-nowrap will-change-transform"
+          ref={finalDateRef}
+          className="[word-break:break-word] font-bold leading-none text-[48px] sm:text-[60px] md:text-[72px] text-white uppercase whitespace-nowrap will-change-transform"
           style={{
             fontFamily:
               '"Helvetica Neue", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
           }}
         >
-          jul
+          Oct 10
+        </p>
+        <p
+          ref={finalDescRef}
+          className="[word-break:break-word] font-space-mono text-[13px] sm:text-[15px] md:text-[17px] text-[#0ae448] uppercase tracking-wider font-bold will-change-transform mt-2 text-center"
+        >
+          Physical Final Round
         </p>
       </div>
-    </div>
-  );
-}
-
-function Frame40({
-  jun2Ref,
-  jul2Ref,
-}: {
-  jun2Ref?: React.RefObject<HTMLParagraphElement | null>;
-  jul2Ref?: React.RefObject<HTMLParagraphElement | null>;
-}) {
-  return (
-    <div className="content-stretch flex gap-[40px] items-center relative shrink-0 w-full overflow-hidden">
-      <Frame41 jun2Ref={jun2Ref} />
-      <Frame42 jul2Ref={jul2Ref} />
-    </div>
-  );
-}
-
-function Frame36({
-  innerRef,
-  descBox2LRef,
-  descBox2RRef,
-  jun2Ref,
-  jul2Ref,
-}: {
-  innerRef?: React.RefObject<HTMLDivElement | null>;
-  descBox2LRef?: React.RefObject<HTMLParagraphElement | null>;
-  descBox2RRef?: React.RefObject<HTMLParagraphElement | null>;
-  jun2Ref?: React.RefObject<HTMLParagraphElement | null>;
-  jul2Ref?: React.RefObject<HTMLParagraphElement | null>;
-}) {
-  return (
-    <div
-      ref={innerRef}
-      className="aspect-[492/492] border-8 border-solid border-transparent content-stretch flex flex-col gap-[280px] items-start justify-center relative shrink-0 w-full"
-    >
-      <Frame37 descBox2LRef={descBox2LRef} descBox2RRef={descBox2RRef} />
-      <Frame40 jun2Ref={jun2Ref} jul2Ref={jul2Ref} />
     </div>
   );
 }
@@ -665,25 +406,15 @@ function Frame15(props: {
   frame18Ref: React.RefObject<HTMLDivElement | null>;
   frame21Ref: React.RefObject<HTMLDivElement | null>;
   frame22Ref: React.RefObject<HTMLDivElement | null>;
-  frame30Ref: React.RefObject<HTMLDivElement | null>;
-  frame32Ref: React.RefObject<HTMLDivElement | null>;
-  frame34Ref: React.RefObject<HTMLDivElement | null>;
-  frame36Ref: React.RefObject<HTMLDivElement | null>;
   desc3Ref: React.RefObject<HTMLParagraphElement | null>;
   apr1LeftRef: React.RefObject<HTMLParagraphElement | null>;
   apr1RightRef: React.RefObject<HTMLParagraphElement | null>;
   descBox1LRef: React.RefObject<HTMLParagraphElement | null>;
   descBox1RRef: React.RefObject<HTMLParagraphElement | null>;
-  jun1Ref: React.RefObject<HTMLParagraphElement | null>;
-  jul1Ref: React.RefObject<HTMLParagraphElement | null>;
-  descMidLRef: React.RefObject<HTMLParagraphElement | null>;
-  descMidRRef: React.RefObject<HTMLParagraphElement | null>;
-  apr2Ref: React.RefObject<HTMLParagraphElement | null>;
-  descMid34Ref: React.RefObject<HTMLParagraphElement | null>;
-  descBox2LRef: React.RefObject<HTMLParagraphElement | null>;
-  descBox2RRef: React.RefObject<HTMLParagraphElement | null>;
-  jun2Ref: React.RefObject<HTMLParagraphElement | null>;
-  jul2Ref: React.RefObject<HTMLParagraphElement | null>;
+  oct4Ref: React.RefObject<HTMLParagraphElement | null>;
+  descOct4Ref: React.RefObject<HTMLParagraphElement | null>;
+  finalDateRef: React.RefObject<HTMLParagraphElement | null>;
+  finalDescRef: React.RefObject<HTMLParagraphElement | null>;
 }) {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
@@ -693,18 +424,10 @@ function Frame15(props: {
         innerRef={props.frame22Ref}
         descBox1LRef={props.descBox1LRef}
         descBox1RRef={props.descBox1RRef}
-        jun1Ref={props.jun1Ref}
-        jul1Ref={props.jul1Ref}
-      />
-      <Frame29 innerRef={props.frame30Ref} descMidLRef={props.descMidLRef} descMidRRef={props.descMidRRef} />
-      <Frame32 innerRef={props.frame32Ref} apr2Ref={props.apr2Ref} />
-      <Frame33 innerRef={props.frame34Ref} descMid34Ref={props.descMid34Ref} />
-      <Frame36
-        innerRef={props.frame36Ref}
-        descBox2LRef={props.descBox2LRef}
-        descBox2RRef={props.descBox2RRef}
-        jun2Ref={props.jun2Ref}
-        jul2Ref={props.jul2Ref}
+        oct4Ref={props.oct4Ref}
+        descOct4Ref={props.descOct4Ref}
+        finalDateRef={props.finalDateRef}
+        finalDescRef={props.finalDescRef}
       />
     </div>
   );
@@ -718,10 +441,6 @@ function Frame4(props: {
   frame18Ref: React.RefObject<HTMLDivElement | null>;
   frame21Ref: React.RefObject<HTMLDivElement | null>;
   frame22Ref: React.RefObject<HTMLDivElement | null>;
-  frame30Ref: React.RefObject<HTMLDivElement | null>;
-  frame32Ref: React.RefObject<HTMLDivElement | null>;
-  frame34Ref: React.RefObject<HTMLDivElement | null>;
-  frame36Ref: React.RefObject<HTMLDivElement | null>;
   janRef: React.RefObject<HTMLParagraphElement | null>;
   desc1Ref: React.RefObject<HTMLParagraphElement | null>;
   febRef: React.RefObject<HTMLParagraphElement | null>;
@@ -732,22 +451,13 @@ function Frame4(props: {
   apr1RightRef: React.RefObject<HTMLParagraphElement | null>;
   descBox1LRef: React.RefObject<HTMLParagraphElement | null>;
   descBox1RRef: React.RefObject<HTMLParagraphElement | null>;
-  jun1Ref: React.RefObject<HTMLParagraphElement | null>;
-  jul1Ref: React.RefObject<HTMLParagraphElement | null>;
-  descMidLRef: React.RefObject<HTMLParagraphElement | null>;
-  descMidRRef: React.RefObject<HTMLParagraphElement | null>;
-  apr2Ref: React.RefObject<HTMLParagraphElement | null>;
-  descMid34Ref: React.RefObject<HTMLParagraphElement | null>;
-  descBox2LRef: React.RefObject<HTMLParagraphElement | null>;
-  descBox2RRef: React.RefObject<HTMLParagraphElement | null>;
-  jun2Ref: React.RefObject<HTMLParagraphElement | null>;
-  jul2Ref: React.RefObject<HTMLParagraphElement | null>;
+  oct4Ref: React.RefObject<HTMLParagraphElement | null>;
+  descOct4Ref: React.RefObject<HTMLParagraphElement | null>;
+  finalDateRef: React.RefObject<HTMLParagraphElement | null>;
+  finalDescRef: React.RefObject<HTMLParagraphElement | null>;
   main1PathRef: React.RefObject<SVGPathElement | null>;
   box1LeftPathRef: React.RefObject<SVGPathElement | null>;
   box1RightPathRef: React.RefObject<SVGPathElement | null>;
-  midPathRef: React.RefObject<SVGPathElement | null>;
-  box2LeftPathRef: React.RefObject<SVGPathElement | null>;
-  box2RightPathRef: React.RefObject<SVGPathElement | null>;
   paths: PathData | null;
   svgSize: { width: number; height: number };
 }) {
@@ -765,7 +475,7 @@ function Frame4(props: {
           viewBox={`0 0 ${props.svgSize.width || 480} ${props.svgSize.height || 1000}`}
           fill="none"
         >
-          {/* Main path from Jan to Box 1 */}
+          {/* Main path from Sep 15 to Box 1 */}
           <path
             ref={props.main1PathRef}
             d={props.paths.main1}
@@ -792,33 +502,6 @@ function Frame4(props: {
             strokeLinecap="square"
             strokeLinejoin="miter"
           />
-          {/* Mid path from Box 1 to Box 2 */}
-          <path
-            ref={props.midPathRef}
-            d={props.paths.midPath}
-            stroke="#0ae448"
-            strokeWidth="8"
-            strokeLinecap="square"
-            strokeLinejoin="miter"
-          />
-          {/* Box 2: Left Branch */}
-          <path
-            ref={props.box2LeftPathRef}
-            d={props.paths.box2Left}
-            stroke="#0ae448"
-            strokeWidth="8"
-            strokeLinecap="square"
-            strokeLinejoin="miter"
-          />
-          {/* Box 2: Right Branch */}
-          <path
-            ref={props.box2RightPathRef}
-            d={props.paths.box2Right}
-            stroke="#0ae448"
-            strokeWidth="8"
-            strokeLinecap="square"
-            strokeLinejoin="miter"
-          />
         </svg>
       )}
 
@@ -829,25 +512,15 @@ function Frame4(props: {
         frame18Ref={props.frame18Ref}
         frame21Ref={props.frame21Ref}
         frame22Ref={props.frame22Ref}
-        frame30Ref={props.frame30Ref}
-        frame32Ref={props.frame32Ref}
-        frame34Ref={props.frame34Ref}
-        frame36Ref={props.frame36Ref}
         desc3Ref={props.desc3Ref}
         apr1LeftRef={props.apr1LeftRef}
         apr1RightRef={props.apr1RightRef}
         descBox1LRef={props.descBox1LRef}
         descBox1RRef={props.descBox1RRef}
-        jun1Ref={props.jun1Ref}
-        jul1Ref={props.jul1Ref}
-        descMidLRef={props.descMidLRef}
-        descMidRRef={props.descMidRRef}
-        apr2Ref={props.apr2Ref}
-        descMid34Ref={props.descMid34Ref}
-        descBox2LRef={props.descBox2LRef}
-        descBox2RRef={props.descBox2RRef}
-        jun2Ref={props.jun2Ref}
-        jul2Ref={props.jul2Ref}
+        oct4Ref={props.oct4Ref}
+        descOct4Ref={props.descOct4Ref}
+        finalDateRef={props.finalDateRef}
+        finalDescRef={props.finalDescRef}
       />
     </div>
   );
@@ -861,9 +534,6 @@ export default function Timeline({ className = "" }: { className?: string }) {
   const main1PathRef = useRef<SVGPathElement | null>(null);
   const box1LeftPathRef = useRef<SVGPathElement | null>(null);
   const box1RightPathRef = useRef<SVGPathElement | null>(null);
-  const midPathRef = useRef<SVGPathElement | null>(null);
-  const box2LeftPathRef = useRef<SVGPathElement | null>(null);
-  const box2RightPathRef = useRef<SVGPathElement | null>(null);
 
   // Frame Border Coordinate Refs
   const frameRef = useRef<HTMLDivElement | null>(null);
@@ -872,10 +542,6 @@ export default function Timeline({ className = "" }: { className?: string }) {
   const frame18Ref = useRef<HTMLDivElement | null>(null);
   const frame21Ref = useRef<HTMLDivElement | null>(null);
   const frame22Ref = useRef<HTMLDivElement | null>(null);
-  const frame30Ref = useRef<HTMLDivElement | null>(null);
-  const frame32Ref = useRef<HTMLDivElement | null>(null);
-  const frame34Ref = useRef<HTMLDivElement | null>(null);
-  const frame36Ref = useRef<HTMLDivElement | null>(null);
 
   // Text & Month Refs for sliding animations
   const janRef = useRef<HTMLParagraphElement | null>(null);
@@ -888,19 +554,13 @@ export default function Timeline({ className = "" }: { className?: string }) {
   const apr1RightRef = useRef<HTMLParagraphElement | null>(null);
   const descBox1LRef = useRef<HTMLParagraphElement | null>(null);
   const descBox1RRef = useRef<HTMLParagraphElement | null>(null);
-  const jun1Ref = useRef<HTMLParagraphElement | null>(null);
-  const jul1Ref = useRef<HTMLParagraphElement | null>(null);
-  const descMidLRef = useRef<HTMLParagraphElement | null>(null);
-  const descMidRRef = useRef<HTMLParagraphElement | null>(null);
-  const apr2Ref = useRef<HTMLParagraphElement | null>(null);
-  const descMid34Ref = useRef<HTMLParagraphElement | null>(null);
-  const descBox2LRef = useRef<HTMLParagraphElement | null>(null);
-  const descBox2RRef = useRef<HTMLParagraphElement | null>(null);
-  const jun2Ref = useRef<HTMLParagraphElement | null>(null);
-  const jul2Ref = useRef<HTMLParagraphElement | null>(null);
+  const oct4Ref = useRef<HTMLParagraphElement | null>(null);
+  const descOct4Ref = useRef<HTMLParagraphElement | null>(null);
+  const finalDateRef = useRef<HTMLParagraphElement | null>(null);
+  const finalDescRef = useRef<HTMLParagraphElement | null>(null);
 
   const [paths, setPaths] = useState<PathData | null>(null);
-  const [svgSize, setSvgSize] = useState({ width: 480, height: 2000 });
+  const [svgSize, setSvgSize] = useState({ width: 480, height: 1200 });
 
   // Calculate layout coordinates using getBoundingClientRect relative to container
   const getPos = (el: HTMLElement | null, container: HTMLElement | null) => {
@@ -933,9 +593,6 @@ export default function Timeline({ className = "" }: { className?: string }) {
     const f18 = getPos(frame18Ref.current, container);
     const f21 = getPos(frame21Ref.current, container);
     const f22 = getPos(frame22Ref.current, container);
-    const f30 = getPos(frame30Ref.current, container);
-    const f34 = getPos(frame34Ref.current, container);
-    const f36 = getPos(frame36Ref.current, container);
 
     const leftX = halfS;
     const rightX = W - halfS;
@@ -945,12 +602,7 @@ export default function Timeline({ className = "" }: { className?: string }) {
     const topY1 = f22.top + halfS;
     const botY1 = f22.bottom - halfS;
 
-    // Box 2 center X & Ys
-    const cx2 = f34.right > 0 ? f34.right - halfS : W / 2;
-    const topY2 = f36.top + halfS;
-    const botY2 = f36.bottom - halfS;
-
-    // 1. Main 1 path (Jan to top center of Box 1)
+    // 1. Main 1 path (Sep 15 to top center of Box 1)
     const main1 = [
       `M ${leftX} ${f1.top + halfS}`,
       `L ${leftX} ${f5.top + halfS}`,
@@ -980,34 +632,8 @@ export default function Timeline({ className = "" }: { className?: string }) {
       `L ${cx1} ${botY1}`,
     ].join(" ");
 
-    // 4. Mid path (Box 1 bottom to Box 2 top)
-    const midPath = [
-      `M ${cx1} ${botY1}`,
-      `L ${cx1} ${f30.bottom - halfS}`,
-      `L ${leftX} ${f30.bottom - halfS}`,
-      `L ${leftX} ${f34.top + halfS}`,
-      `L ${cx2} ${f34.top + halfS}`,
-      `L ${cx2} ${topY2}`,
-    ].join(" ");
-
-    // 5. Box 2 Left path
-    const box2Left = [
-      `M ${cx2} ${topY2}`,
-      `L ${leftX} ${topY2}`,
-      `L ${leftX} ${botY2}`,
-      `L ${cx2} ${botY2}`,
-    ].join(" ");
-
-    // 6. Box 2 Right path
-    const box2Right = [
-      `M ${cx2} ${topY2}`,
-      `L ${rightX} ${topY2}`,
-      `L ${rightX} ${botY2}`,
-      `L ${cx2} ${botY2}`,
-    ].join(" ");
-
-    setPaths({ main1, box1Left, box1Right, midPath, box2Left, box2Right });
-    setSvgSize({ width: W, height: container.offsetHeight || 2000 });
+    setPaths({ main1, box1Left, box1Right });
+    setSvgSize({ width: W, height: container.offsetHeight || 1200 });
   };
 
   useEffect(() => {
@@ -1045,9 +671,6 @@ export default function Timeline({ className = "" }: { className?: string }) {
       !main1PathRef.current ||
       !box1LeftPathRef.current ||
       !box1RightPathRef.current ||
-      !midPathRef.current ||
-      !box2LeftPathRef.current ||
-      !box2RightPathRef.current ||
       !sectionRef.current
     )
       return;
@@ -1056,27 +679,18 @@ export default function Timeline({ className = "" }: { className?: string }) {
       const p1 = main1PathRef.current;
       const pB1L = box1LeftPathRef.current;
       const pB1R = box1RightPathRef.current;
-      const pMid = midPathRef.current;
-      const pB2L = box2LeftPathRef.current;
-      const pB2R = box2RightPathRef.current;
 
-      if (!p1 || !pB1L || !pB1R || !pMid || !pB2L || !pB2R) return;
+      if (!p1 || !pB1L || !pB1R) return;
 
       const len1 = p1.getTotalLength() || 1000;
       const lenB1L = pB1L.getTotalLength() || 800;
       const lenB1R = pB1R.getTotalLength() || 800;
-      const lenMid = pMid.getTotalLength() || 600;
-      const lenB2L = pB2L.getTotalLength() || 800;
-      const lenB2R = pB2R.getTotalLength() || 800;
 
       // Initialize line strokes
       const allPaths = [
         { el: p1, len: len1 },
         { el: pB1L, len: lenB1L },
         { el: pB1R, len: lenB1R },
-        { el: pMid, len: lenMid },
-        { el: pB2L, len: lenB2L },
-        { el: pB2R, len: lenB2R },
       ];
 
       allPaths.forEach(({ el, len }) => {
@@ -1086,41 +700,39 @@ export default function Timeline({ className = "" }: { className?: string }) {
         });
       });
 
-      // Initialize months (slide up from behind the path: y: 28 -> 0)
+      // Initialize slide up items (y: 28 -> 0)
       const monthEls = [
         janRef.current,
         febRef.current,
         marRef.current,
         apr1LeftRef.current,
         apr1RightRef.current,
-        jun1Ref.current,
-        jul1Ref.current,
-        apr2Ref.current,
-        jun2Ref.current,
-        jul2Ref.current,
+        oct4Ref.current,
       ];
 
       monthEls.forEach((el) => {
         if (el) gsap.set(el, { opacity: 0, y: 28 });
       });
 
-      // Initialize descriptions (slide down from behind the path: y: -28 -> 0)
+      // Initialize descriptions (y: -28 -> 0)
       const descEls = [
         desc1Ref.current,
         desc2Ref.current,
         desc3Ref.current,
         descBox1LRef.current,
         descBox1RRef.current,
-        descMidLRef.current,
-        descMidRRef.current,
-        descMid34Ref.current,
-        descBox2LRef.current,
-        descBox2RRef.current,
+        descOct4Ref.current,
       ];
 
       descEls.forEach((el) => {
         if (el) gsap.set(el, { opacity: 0, y: -28 });
       });
+
+      // Initialize grand finale (Physical Final Round inside square bottom)
+      const finalEls = [finalDateRef.current, finalDescRef.current].filter(Boolean);
+      if (finalEls.length > 0) {
+        gsap.set(finalEls, { opacity: 0, y: 24, scale: 0.92 });
+      }
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -1133,7 +745,7 @@ export default function Timeline({ className = "" }: { className?: string }) {
       });
 
       // ==========================================
-      // STEP 1: Main 1 (Jan -> Box 1)
+      // STEP 1: Main 1 (Sep 15 -> Sep 30)
       // ==========================================
       tl.to(p1, {
         strokeDashoffset: 0,
@@ -1141,7 +753,7 @@ export default function Timeline({ className = "" }: { className?: string }) {
         ease: "none",
       });
 
-      // Jan month & Jan description start at the EXACT SAME TIME
+      // Sep 15: Month & Description
       if (janRef.current) {
         tl.to(
           janRef.current,
@@ -1157,7 +769,7 @@ export default function Timeline({ className = "" }: { className?: string }) {
         );
       }
 
-      // Feb month & Feb description start at the EXACT SAME TIME
+      // Sep 19: Webinar 1 (Online)
       if (febRef.current) {
         tl.to(
           febRef.current,
@@ -1173,7 +785,7 @@ export default function Timeline({ className = "" }: { className?: string }) {
         );
       }
 
-      // Mar month & Mar description start at the EXACT SAME TIME
+      // Sep 27: Webinar 2 (Online)
       if (marRef.current) {
         tl.to(
           marRef.current,
@@ -1189,11 +801,17 @@ export default function Timeline({ className = "" }: { className?: string }) {
         );
       }
 
-      // APR 1 (left & right)
-      const apr1Els = [apr1LeftRef.current, apr1RightRef.current].filter(Boolean);
-      if (apr1Els.length > 0) {
+      // Sep 30: Top-left of square
+      if (apr1LeftRef.current) {
         tl.to(
-          apr1Els,
+          apr1LeftRef.current,
+          { opacity: 1, y: 0, duration: 0.15 * len1, ease: "power2.out" },
+          0.88 * len1
+        );
+      }
+      if (descBox1LRef.current) {
+        tl.to(
+          descBox1LRef.current,
           { opacity: 1, y: 0, duration: 0.15 * len1, ease: "power2.out" },
           0.88 * len1
         );
@@ -1202,7 +820,7 @@ export default function Timeline({ className = "" }: { className?: string }) {
       const tBox1 = len1;
 
       // ==========================================
-      // STEP 2: Box 1 (Dual branch left & right)
+      // STEP 2: Box 1 (Square Drawing)
       // ==========================================
       tl.to(
         pB1L,
@@ -1223,107 +841,54 @@ export default function Timeline({ className = "" }: { className?: string }) {
         tBox1
       );
 
-      // Box 1 Descriptions & Box 1 Months start at the EXACT SAME TIME
-      const descBox1Els = [descBox1LRef.current, descBox1RRef.current].filter(Boolean);
-      if (descBox1Els.length > 0) {
+      // Oct 03: Top-right of square
+      if (apr1RightRef.current) {
         tl.to(
-          descBox1Els,
-          { opacity: 1, y: 0, duration: 0.35 * lenB1L, ease: "power2.out" },
-          tBox1 + 0.10 * lenB1L
+          apr1RightRef.current,
+          { opacity: 1, y: 0, duration: 0.25 * lenB1R, ease: "power2.out" },
+          tBox1 + 0.05 * lenB1R
+        );
+      }
+      if (descBox1RRef.current) {
+        tl.to(
+          descBox1RRef.current,
+          { opacity: 1, y: 0, duration: 0.25 * lenB1R, ease: "power2.out" },
+          tBox1 + 0.05 * lenB1R
         );
       }
 
-      const box1MonthEls = [jun1Ref.current, jul1Ref.current].filter(Boolean);
-      if (box1MonthEls.length > 0) {
+      // Oct 04: Middle of square
+      if (oct4Ref.current) {
         tl.to(
-          box1MonthEls,
-          { opacity: 1, y: 0, duration: 0.35 * lenB1L, ease: "power2.out" },
-          tBox1 + 0.10 * lenB1L
+          oct4Ref.current,
+          { opacity: 1, y: 0, duration: 0.3 * lenB1L, ease: "power2.out" },
+          tBox1 + 0.40 * lenB1L
         );
       }
-
-      const tMid = tBox1 + lenB1L;
+      if (descOct4Ref.current) {
+        tl.to(
+          descOct4Ref.current,
+          { opacity: 1, y: 0, duration: 0.3 * lenB1L, ease: "power2.out" },
+          tBox1 + 0.40 * lenB1L
+        );
+      }
 
       // ==========================================
-      // STEP 3: Mid Path (Box 1 -> Box 2)
+      // STEP 3: Grand Finale — Full square completed!
+      // Large Oct 10 Physical Final Round appears inside square bottom
       // ==========================================
-      tl.to(
-        pMid,
-        {
-          strokeDashoffset: 0,
-          duration: lenMid,
-          ease: "none",
-        },
-        tMid
-      );
-
-      // Descriptions below Box 1 (Frame 30 & 31)
-      const descMidEls = [descMidLRef.current, descMidRRef.current].filter(Boolean);
-      if (descMidEls.length > 0) {
+      if (finalEls.length > 0) {
         tl.to(
-          descMidEls,
-          { opacity: 1, y: 0, duration: 0.30 * lenMid, ease: "power2.out" },
-          tMid + 0.05 * lenMid
-        );
-      }
-
-      // APR 2 Month (Frame 32) & Description (Frame 34) start at the EXACT SAME TIME
-      if (apr2Ref.current) {
-        tl.to(
-          apr2Ref.current,
-          { opacity: 1, y: 0, duration: 0.30 * lenMid, ease: "power2.out" },
-          tMid + 0.50 * lenMid
-        );
-      }
-
-      if (descMid34Ref.current) {
-        tl.to(
-          descMid34Ref.current,
-          { opacity: 1, y: 0, duration: 0.30 * lenMid, ease: "power2.out" },
-          tMid + 0.50 * lenMid
-        );
-      }
-
-      const tBox2 = tMid + lenMid;
-
-      // ==========================================
-      // STEP 4: Box 2 (Dual branch left & right)
-      // ==========================================
-      tl.to(
-        pB2L,
-        {
-          strokeDashoffset: 0,
-          duration: lenB2L,
-          ease: "none",
-        },
-        tBox2
-      );
-      tl.to(
-        pB2R,
-        {
-          strokeDashoffset: 0,
-          duration: lenB2R,
-          ease: "none",
-        },
-        tBox2
-      );
-
-      // Box 2 Descriptions & Box 2 Months start at the EXACT SAME TIME
-      const descBox2Els = [descBox2LRef.current, descBox2RRef.current].filter(Boolean);
-      if (descBox2Els.length > 0) {
-        tl.to(
-          descBox2Els,
-          { opacity: 1, y: 0, duration: 0.35 * lenB2L, ease: "power2.out" },
-          tBox2 + 0.10 * lenB2L
-        );
-      }
-
-      const box2MonthEls = [jun2Ref.current, jul2Ref.current].filter(Boolean);
-      if (box2MonthEls.length > 0) {
-        tl.to(
-          box2MonthEls,
-          { opacity: 1, y: 0, duration: 0.35 * lenB2L, ease: "power2.out" },
-          tBox2 + 0.10 * lenB2L
+          finalEls,
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.4 * lenB1L,
+            stagger: 0.08,
+            ease: "back.out(1.5)",
+          },
+          tBox1 + lenB1L * 0.90
         );
       }
 
@@ -1376,10 +941,6 @@ export default function Timeline({ className = "" }: { className?: string }) {
               frame18Ref={frame18Ref}
               frame21Ref={frame21Ref}
               frame22Ref={frame22Ref}
-              frame30Ref={frame30Ref}
-              frame32Ref={frame32Ref}
-              frame34Ref={frame34Ref}
-              frame36Ref={frame36Ref}
               janRef={janRef}
               desc1Ref={desc1Ref}
               febRef={febRef}
@@ -1390,22 +951,13 @@ export default function Timeline({ className = "" }: { className?: string }) {
               apr1RightRef={apr1RightRef}
               descBox1LRef={descBox1LRef}
               descBox1RRef={descBox1RRef}
-              jun1Ref={jun1Ref}
-              jul1Ref={jul1Ref}
-              descMidLRef={descMidLRef}
-              descMidRRef={descMidRRef}
-              apr2Ref={apr2Ref}
-              descMid34Ref={descMid34Ref}
-              descBox2LRef={descBox2LRef}
-              descBox2RRef={descBox2RRef}
-              jun2Ref={jun2Ref}
-              jul2Ref={jul2Ref}
+              oct4Ref={oct4Ref}
+              descOct4Ref={descOct4Ref}
+              finalDateRef={finalDateRef}
+              finalDescRef={finalDescRef}
               main1PathRef={main1PathRef}
               box1LeftPathRef={box1LeftPathRef}
               box1RightPathRef={box1RightPathRef}
-              midPathRef={midPathRef}
-              box2LeftPathRef={box2LeftPathRef}
-              box2RightPathRef={box2RightPathRef}
               paths={paths}
               svgSize={svgSize}
             />

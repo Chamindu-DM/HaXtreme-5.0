@@ -9,6 +9,7 @@ export default function Footer() {
           src="/Logo.png"
           alt="HaXtreme 5.0 Partners and Organizers"
           fill
+          sizes="(max-width: 640px) 220px, (max-width: 768px) 340px, (max-width: 1024px) 420px, 480px"
           className="object-contain"
           priority
         />

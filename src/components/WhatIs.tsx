@@ -69,38 +69,34 @@ export default function WhatIs() {
           },
         });
 
-        // Meta tag reveal
-        textTl.from(".meta-reveal", {
-          y: 15,
-          autoAlpha: 0,
-          duration: 0.5,
-          ease: "power2.out",
-        });
-
         // Line-by-line staggered text reveal
-        textTl.from(
-          textLines,
-          {
-            yPercent: 115,
-            autoAlpha: 0,
-            duration: 0.85,
-            stagger: 0.08,
-            ease: "power3.out",
-          },
-          "-=0.2"
-        );
+        if (textLines.length > 0) {
+          textTl.from(
+            textLines,
+            {
+              yPercent: 115,
+              autoAlpha: 0,
+              duration: 0.85,
+              stagger: 0.08,
+              ease: "power3.out",
+            }
+          );
+        }
 
         // Logo reveal
-        textTl.from(
-          ".logo-reveal",
-          {
-            y: 20,
-            autoAlpha: 0,
-            duration: 0.6,
-            ease: "power2.out",
-          },
-          "-=0.3"
-        );
+        const logo = sectionRef.current?.querySelector(".logo-reveal");
+        if (logo) {
+          textTl.from(
+            logo,
+            {
+              y: 20,
+              autoAlpha: 0,
+              duration: 0.6,
+              ease: "power2.out",
+            },
+            "-=0.3"
+          );
+        }
       }
     },
     { scope: sectionRef }
