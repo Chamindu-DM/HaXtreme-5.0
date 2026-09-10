@@ -5,6 +5,8 @@ import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { triggerSectionTransition } from "./SectionTransition";
+import RegistrationModal from "./RegistrationModal";
+import PhotoboothModal from "./PhotoboothModal";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP);
@@ -17,6 +19,7 @@ const navLinks = [
   { name: "Memory Lane", href: "#memory-lane", num: "04" },
   { name: "Partners", href: "#partners", num: "05" },
   { name: "Contact", href: "#contact-us", num: "06" },
+  { name: "Photobooth", href: "#photobooth", num: "07" },
 ];
 
 const registerChars = "REGISTER".split("");
@@ -34,6 +37,8 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLight, setIsLight] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const [showRegistration, setShowRegistration] = useState(false);
+  const [showPhotobooth, setShowPhotobooth] = useState(false);
   const lastScrollYRef = useRef(0);
 
   useEffect(() => {
@@ -369,6 +374,9 @@ export default function Navbar() {
                   if (link.href === "#hero") {
                     e.preventDefault();
                     triggerSectionTransition("hero");
+                  } else if (link.href === "#photobooth") {
+                    e.preventDefault();
+                    setShowPhotobooth(true);
                   }
                 }}
               >
@@ -396,6 +404,7 @@ export default function Navbar() {
               id="btnAuto"
               type="button"
               onMouseEnter={handleButtonMouseEnter}
+              onClick={() => setShowRegistration(true)}
               className="mag-btn relative h-10 px-6 rounded-[40px] flex justify-center items-center gap-2 cursor-pointer select-none shadow-md shadow-green-500/15 hover:shadow-green-500/30 will-change-transform overflow-hidden border-none"
             >
               <div
@@ -581,16 +590,19 @@ export default function Navbar() {
             </div>
 
             {/* Right: Register Button */}
-            <a
-              href="#register"
-              onClick={closeMenu}
+            <button
+              type="button"
+              onClick={() => {
+                closeMenu();
+                setShowRegistration(true);
+              }}
               className="relative h-8 px-4 rounded-[40px] flex justify-center items-center gap-1.5 select-none shadow-md shadow-green-500/20 active:scale-95 transition-transform"
               style={{ background: "var(--grad-macha)" }}
             >
               <span className="text-[#0e100f] text-xs font-bold tracking-wider font-['Helvetica_Neue','Inter',sans-serif] uppercase">
                 REGISTER
               </span>
-            </a>
+            </button>
           </div>
 
           {/* Navigation Links */}
@@ -607,8 +619,12 @@ export default function Navbar() {
                     ? "1px solid rgba(0, 0, 0, 0.08)"
                     : undefined,
                 }}
-                onClick={() => {
+                onClick={(e) => {
                   closeMenu();
+                  if (link.href === "#photobooth") {
+                    e.preventDefault();
+                    setShowPhotobooth(true);
+                  }
                 }}
               >
                 <span className="font-medium text-sm">{link.name}</span>
@@ -623,6 +639,16 @@ export default function Navbar() {
           </nav>
         </div>
       </div>
+
+      {/* ─── Modals ─── */}
+      <RegistrationModal
+        isOpen={showRegistration}
+        onClose={() => setShowRegistration(false)}
+      />
+      <PhotoboothModal
+        isOpen={showPhotobooth}
+        onClose={() => setShowPhotobooth(false)}
+      />
     </header>
   );
 }

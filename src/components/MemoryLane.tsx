@@ -103,12 +103,12 @@ function ShaderPhotoCard({ src }: { src: string }) {
     const el = containerRef.current;
     if (!el) return;
 
-    // Keep active WebGL contexts bounded: only create context when card is in or near viewport
+    // Track when card is near or within viewport horizontally
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsInView(entry.isIntersecting);
       },
-      { rootMargin: "250px" }
+      { rootMargin: "400px" }
     );
 
     observer.observe(el);
@@ -221,12 +221,12 @@ function ShaderPhotoCard({ src }: { src: string }) {
     };
 
     const img = new Image();
-    // Do NOT set crossOrigin for local same-origin assets (avoids CORS rejection)
     img.src = src;
     if (img.complete && img.naturalWidth > 0) {
       onTextureLoaded();
     } else {
       img.onload = onTextureLoaded;
+      img.onerror = () => setIsReady(false);
     }
 
     const resizeObserver = new ResizeObserver(resize);
@@ -254,6 +254,7 @@ function ShaderPhotoCard({ src }: { src: string }) {
     gsap.ticker.add(renderLoop);
 
     return () => {
+      setIsReady(false);
       canvas.removeEventListener("webglcontextlost", handleContextLost);
       resizeObserver.disconnect();
       gsap.ticker.remove(renderLoop);
@@ -263,10 +264,6 @@ function ShaderPhotoCard({ src }: { src: string }) {
         gl.deleteShader(vert);
         gl.deleteShader(frag);
         gl.deleteBuffer(positionBuffer);
-        const loseExt = gl.getExtension("WEBGL_lose_context");
-        if (loseExt) {
-          loseExt.loseContext();
-        }
       }
     };
   }, [isInView, src]);
@@ -277,23 +274,22 @@ function ShaderPhotoCard({ src }: { src: string }) {
         ref={containerRef}
         className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-video overflow-hidden bg-[#131514] shadow-2xl rounded-sm"
       >
-        {/* Solid dark backdrop & standard image: sharp display with zero broken image placeholders */}
+        {/* Base photo: always rendered and visible */}
         <img
           src={src}
           alt="HaXtreme Memory"
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
           loading="eager"
-          onError={(e) => {
-            e.currentTarget.style.opacity = "0";
-          }}
         />
-        {/* WebGL Shader Canvas: transitions smoothly in once shader is compiled & rendered */}
-        <canvas
-          ref={canvasRef}
-          className={`absolute inset-0 w-full h-full block transition-opacity duration-300 pointer-events-none ${
-            isReady ? "opacity-100" : "opacity-0"
-          }`}
-        />
+        {/* WebGL Canvas: only mounted when card is in or near viewport */}
+        {isInView && (
+          <canvas
+            ref={canvasRef}
+            className={`absolute inset-0 w-full h-full block transition-opacity duration-300 pointer-events-none ${
+              isReady ? "opacity-100" : "opacity-0"
+            }`}
+          />
+        )}
       </div>
     </div>
   );
@@ -340,17 +336,15 @@ export default function MemoryLane() {
             const norm = raw / divisor;
             const strength = Math.min(1, Math.abs(norm));
 
-            if (Math.abs(strength) > Math.abs(velocityProxy.s)) {
-              velocityProxy.v = norm;
-              velocityProxy.s = strength;
-              gsap.to(velocityProxy, {
-                v: 0,
-                s: 0,
-                duration: 0.9,
-                ease: "sine.inOut",
-                overwrite: true,
-              });
-            }
+            velocityProxy.v = norm;
+            velocityProxy.s = strength;
+            gsap.to(velocityProxy, {
+              v: 0,
+              s: 0,
+              duration: 0.7,
+              ease: "power2.out",
+              overwrite: "auto",
+            });
           },
         },
       });
