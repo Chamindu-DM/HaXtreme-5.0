@@ -1,3 +1,4 @@
+import InteractiveBackground from "@/components/InteractiveBackground";
 import Loader from "@/components/Loader";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -14,6 +15,7 @@ import Footer from "@/components/Footer";
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-between">
+      <InteractiveBackground />
       <Loader />
       <Navbar />
       <Hero />

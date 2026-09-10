@@ -10,20 +10,20 @@ if (typeof window !== "undefined") {
 }
 
 const MEMORY_IMAGES = [
-  "/Memories/image-998.jpg",
-  "/Memories/image-999.jpg",
-  "/Memories/image-1000.jpg",
-  "/Memories/image-1045.jpg",
-  "/Memories/407304759_770490495091274_2613428125469826788_n-1.jpg",
-  "/Memories/407304759_770490495091274_2613428125469826788_n-4.jpg",
-  "/Memories/407308659_770490305091293_2712908387265516032_n-1.jpg",
-  "/Memories/407308659_770490305091293_2712908387265516032_n-2.jpg",
-  "/Memories/407353251_770491348424522_8014008165630634164_n-1.jpg",
-  "/Memories/407362513_770490528424604_1559419601375149637_n-1.jpg",
-  "/Memories/407362513_770490528424604_1559419601375149637_n-2.jpg",
-  "/Memories/407413189_770490661757924_2208827396625310375_n-1.jpg",
-  "/Memories/407413189_770490661757924_2208827396625310375_n-2.jpg",
-  "/Memories/401485383_770490771757913_7353613965438145222_n-1.jpg",
+  "/Memories/image-998.webp",
+  "/Memories/image-999.webp",
+  "/Memories/image-1000.webp",
+  "/Memories/image-1045.webp",
+  "/Memories/407304759_770490495091274_2613428125469826788_n-1.webp",
+  "/Memories/407304759_770490495091274_2613428125469826788_n-4.webp",
+  "/Memories/407308659_770490305091293_2712908387265516032_n-1.webp",
+  "/Memories/407308659_770490305091293_2712908387265516032_n-2.webp",
+  "/Memories/407353251_770491348424522_8014008165630634164_n-1.webp",
+  "/Memories/407362513_770490528424604_1559419601375149637_n-1.webp",
+  "/Memories/407362513_770490528424604_1559419601375149637_n-2.webp",
+  "/Memories/407413189_770490661757924_2208827396625310375_n-1.webp",
+  "/Memories/407413189_770490661757924_2208827396625310375_n-2.webp",
+  "/Memories/401485383_770490771757913_7353613965438145222_n-1.webp",
 ];
 
 // Shared velocity proxy for all canvas instances
@@ -279,7 +279,8 @@ function ShaderPhotoCard({ src }: { src: string }) {
           src={src}
           alt="HaXtreme Memory"
           className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
-          loading="eager"
+          loading="lazy"
+          decoding="async"
         />
         {/* WebGL Canvas: only mounted when card is in or near viewport */}
         {isInView && (
@@ -368,7 +369,7 @@ export default function MemoryLane() {
     <section
       ref={sectionRef}
       id="memory-lane"
-      className="w-full relative h-screen bg-[#0e100f] text-white overflow-hidden select-none flex items-center"
+      className="w-full relative h-screen bg-transparent text-white overflow-hidden select-none flex items-center"
     >
       {/* Horizontal Scrolling Gallery Strip */}
       <div

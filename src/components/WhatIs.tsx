@@ -106,7 +106,7 @@ export default function WhatIs() {
     <section
       ref={sectionRef}
       id="what-is"
-      className="w-full min-h-screen relative flex items-center justify-center bg-[#0e100f] text-white py-12 sm:py-16 select-none"
+      className="w-full min-h-screen relative flex items-center justify-center bg-transparent text-white py-12 sm:py-16 select-none"
     >
       <div className="w-full max-w-[1440px] mx-auto px-6 sm:px-8 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
