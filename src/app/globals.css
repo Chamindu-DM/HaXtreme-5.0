@@ -224,3 +224,134 @@ body {
   display: block;
   overflow: visible;
 }
+
+/* ─── Modal Overlay Animations ─── */
+.modal-overlay-enter {
+  animation: modalOverlayIn 0.25s ease-out forwards;
+}
+
+.modal-overlay-exit {
+  animation: modalOverlayOut 0.2s ease-in forwards;
+}
+
+@keyframes modalOverlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalOverlayOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.modal-card-enter {
+  animation: modalCardIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalCardIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ─── Form Input Styles ─── */
+.form-input {
+  width: 100%;
+  background: #0e100f;
+  border: 1.5px solid #42433d;
+  border-radius: 10px;
+  color: #ededed;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  font-family: "Helvetica Neue", "Inter", sans-serif;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+.form-input::placeholder {
+  color: #7c7c6f;
+}
+
+.form-input:focus {
+  border-color: #0ae448;
+  box-shadow: 0 0 0 2px rgba(10, 228, 72, 0.15);
+}
+
+.form-input.error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15);
+}
+
+.form-label {
+  display: block;
+  font-family: "Space Mono", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #bbbaa6;
+  margin-bottom: 0.4rem;
+}
+
+/* ─── Custom Range Slider ─── */
+input[type="range"].photobooth-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: #42433d;
+  border-radius: 2px;
+  outline: none;
+}
+
+input[type="range"].photobooth-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0ae448;
+  cursor: pointer;
+  border: 2px solid #0e100f;
+  box-shadow: 0 0 8px rgba(10, 228, 72, 0.4);
+}
+
+input[type="range"].photobooth-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0ae448;
+  cursor: pointer;
+  border: 2px solid #0e100f;
+  box-shadow: 0 0 8px rgba(10, 228, 72, 0.4);
+}
+
+/* ─── Scrollbar for modals ─── */
+.modal-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.modal-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-scrollbar::-webkit-scrollbar-thumb {
+  background: #42433d;
+  border-radius: 3px;
+}
+
+.modal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #7c7c6f;
+}
