@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -26,276 +27,6 @@ const MEMORY_IMAGES = [
   "/Memories/401485383_770490771757913_7353613965438145222_n-1.webp",
 ];
 
-// Shared velocity proxy for all canvas instances
-const velocityProxy = { v: 0, s: 0 };
-const clamp = gsap.utils.clamp(-2000, 2000);
-
-const VERT_SHADER = `
-  attribute vec2 aPosition;
-  varying vec2 vUv;
-  varying vec2 vUvCover;
-  uniform vec2 uTextureSize;
-  uniform vec2 uQuadSize;
-
-  void main(){
-    vUv = aPosition * 0.5 + 0.5;
-    vUv.y = 1.0 - vUv.y; // Flip Y for WebGL texture coords
-
-    float texR = uTextureSize.y > 0.0 ? (uTextureSize.x / uTextureSize.y) : 1.0;
-    float quadR = uQuadSize.y > 0.0 ? (uQuadSize.x / uQuadSize.y) : 1.0;
-    vec2 s = vec2(1.0);
-    if (quadR > texR) {
-      s.y = texR / quadR;
-    } else {
-      s.x = quadR / texR;
-    }
-    vUvCover = vUv * s + (1.0 - s) * 0.5;
-
-    gl_Position = vec4(aPosition, 0.0, 1.0);
-  }
-`;
-
-const FRAG_SHADER = `
-  precision highp float;
-
-  uniform sampler2D uTexture;
-  uniform vec2 uTextureSize;
-  uniform vec2 uQuadSize;
-  uniform float uTime;
-  uniform float uScrollVelocity;
-  uniform float uVelocityStrength;
-
-  varying vec2 vUv;
-  varying vec2 vUvCover;
-
-  void main() {
-    vec2 texCoords = vUvCover;
-
-    // Baseline ambient ripple + dynamic velocity surge
-    float amt = 0.010 + 0.038 * uVelocityStrength;
-
-    // wave oscillation
-    float t = uTime * 1.1;
-    texCoords.y += sin((texCoords.x * 7.5) + t) * amt;
-    texCoords.x += cos((texCoords.y * 5.5) - t * 0.8) * amt * 0.6;
-
-    // chromatic aberration based on scroll direction
-    float dir = sign(uScrollVelocity);
-    if (dir == 0.0) dir = 1.0;
-    vec2 tc = texCoords;
-
-    float ca = 0.004 + 0.018 * uVelocityStrength;
-    float r = texture2D(uTexture, tc + vec2( ca * 0.50 * dir, 0.0)).r;
-    float g = texture2D(uTexture, tc + vec2( ca * 0.25 * dir, 0.0)).g;
-    float b = texture2D(uTexture, tc + vec2(-ca * 0.35 * dir, 0.0)).b;
-
-    gl_FragColor = vec4(r, g, b, 1.0);
-  }
-`;
-
-function ShaderPhotoCard({ src }: { src: string }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isInView, setIsInView] = useState(false);
-  const [isReady, setIsReady] = useState(false);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    // Track when card is near or within viewport horizontally
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting);
-      },
-      { rootMargin: "400px" }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!isInView) {
-      setIsReady(false);
-      return;
-    }
-
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
-    if (!canvas || !container) return;
-
-    let gl: WebGLRenderingContext | null = null;
-    try {
-      gl = canvas.getContext("webgl", {
-        alpha: true,
-        antialias: true,
-        premultipliedAlpha: false,
-      });
-    } catch {
-      gl = null;
-    }
-    if (!gl) return;
-
-    const handleContextLost = (e: Event) => {
-      e.preventDefault();
-      setIsReady(false);
-    };
-    canvas.addEventListener("webglcontextlost", handleContextLost);
-
-    function createShader(type: number, source: string) {
-      if (!gl) return null;
-      const shader = gl.createShader(type);
-      if (!shader) return null;
-      gl.shaderSource(shader, source);
-      gl.compileShader(shader);
-      return shader;
-    }
-
-    const vert = createShader(gl.VERTEX_SHADER, VERT_SHADER);
-    const frag = createShader(gl.FRAGMENT_SHADER, FRAG_SHADER);
-    if (!vert || !frag) return;
-
-    const program = gl.createProgram();
-    if (!program) return;
-    gl.attachShader(program, vert);
-    gl.attachShader(program, frag);
-    gl.linkProgram(program);
-    gl.useProgram(program);
-
-    // Quad geometry (-1 to 1)
-    const positionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
-      gl.STATIC_DRAW
-    );
-
-    const aPosition = gl.getAttribLocation(program, "aPosition");
-    gl.enableVertexAttribArray(aPosition);
-    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
-
-    // Uniform locations
-    const uTextureSize = gl.getUniformLocation(program, "uTextureSize");
-    const uQuadSize = gl.getUniformLocation(program, "uQuadSize");
-    const uTime = gl.getUniformLocation(program, "uTime");
-    const uScrollVelocity = gl.getUniformLocation(program, "uScrollVelocity");
-    const uVelocityStrength = gl.getUniformLocation(program, "uVelocityStrength");
-
-    // Texture loading
-    const texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-
-    let isTextureLoaded = false;
-    let texWidth = 1;
-    let texHeight = 1;
-
-    function resize() {
-      if (!canvas || !container || !gl) return;
-      const rect = container.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const w = Math.max(1, Math.floor(rect.width * dpr));
-      const h = Math.max(1, Math.floor(rect.height * dpr));
-
-      if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w;
-        canvas.height = h;
-      }
-      gl.viewport(0, 0, w, h);
-    }
-
-    const onTextureLoaded = () => {
-      if (!gl) return;
-      texWidth = img.naturalWidth || 1;
-      texHeight = img.naturalHeight || 1;
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-      isTextureLoaded = true;
-      resize();
-      setIsReady(true);
-    };
-
-    const img = new Image();
-    img.src = src;
-    if (img.complete && img.naturalWidth > 0) {
-      onTextureLoaded();
-    } else {
-      img.onload = onTextureLoaded;
-      img.onerror = () => setIsReady(false);
-    }
-
-    const resizeObserver = new ResizeObserver(resize);
-    resizeObserver.observe(container);
-
-    let lastTime = performance.now();
-    let totalTime = 0;
-
-    const renderLoop = (now: number) => {
-      if (!gl || !canvas || !isTextureLoaded) return;
-      const dt = (now - lastTime) * 0.001;
-      lastTime = now;
-      totalTime += dt;
-
-      gl.useProgram(program);
-      gl.uniform2f(uTextureSize, texWidth, texHeight);
-      gl.uniform2f(uQuadSize, canvas.width, canvas.height);
-      gl.uniform1f(uTime, totalTime);
-      gl.uniform1f(uScrollVelocity, velocityProxy.v);
-      gl.uniform1f(uVelocityStrength, velocityProxy.s);
-
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-    };
-
-    gsap.ticker.add(renderLoop);
-
-    return () => {
-      setIsReady(false);
-      canvas.removeEventListener("webglcontextlost", handleContextLost);
-      resizeObserver.disconnect();
-      gsap.ticker.remove(renderLoop);
-      if (gl) {
-        gl.deleteTexture(texture);
-        gl.deleteProgram(program);
-        gl.deleteShader(vert);
-        gl.deleteShader(frag);
-        gl.deleteBuffer(positionBuffer);
-      }
-    };
-  }, [isInView, src]);
-
-  return (
-    <div className="w-[92vw] sm:w-[75vw] md:w-[58vw] lg:w-[46vw] xl:w-[42vw] max-w-[680px] shrink-0 p-2 sm:p-2.5 border border-dashed border-[#272d2a] hover:border-[#3a423e] transition-colors duration-300">
-      <div
-        ref={containerRef}
-        className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-video overflow-hidden bg-[#131514] shadow-2xl rounded-sm"
-      >
-        {/* Base photo: always rendered and visible */}
-        <img
-          src={src}
-          alt="HaXtreme Memory"
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
-          loading="lazy"
-          decoding="async"
-        />
-        {/* WebGL Canvas: only mounted when card is in or near viewport */}
-        {isInView && (
-          <canvas
-            ref={canvasRef}
-            className={`absolute inset-0 w-full h-full block transition-opacity duration-300 pointer-events-none ${
-              isReady ? "opacity-100" : "opacity-0"
-            }`}
-          />
-        )}
-      </div>
-    </div>
-  );
-}
-
 export default function MemoryLane() {
   const sectionRef = useRef<HTMLElement>(null);
   const stripRef = useRef<HTMLDivElement>(null);
@@ -312,9 +43,10 @@ export default function MemoryLane() {
 
       if (prefersReducedMotion) return;
 
-      const getScrollLength = () => Math.max(0, pinWrap.scrollWidth - window.innerWidth);
+      const getScrollLength = () =>
+        Math.max(0, pinWrap.scrollWidth - window.innerWidth);
 
-      // Master Horizontal Scroll and Velocity Tracking
+      // Master Horizontal Scroll
       const tween = gsap.to(pinWrap, {
         x: () => -getScrollLength(),
         ease: "none",
@@ -328,25 +60,6 @@ export default function MemoryLane() {
           scrub: 1,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          onUpdate(self) {
-            const raw = clamp(self.getVelocity());
-            const isTouch =
-              typeof window !== "undefined" &&
-              ("ontouchstart" in window || navigator.maxTouchPoints > 0);
-            const divisor = isTouch ? 300 : 900;
-            const norm = raw / divisor;
-            const strength = Math.min(1, Math.abs(norm));
-
-            velocityProxy.v = norm;
-            velocityProxy.s = strength;
-            gsap.to(velocityProxy, {
-              v: 0,
-              s: 0,
-              duration: 0.7,
-              ease: "power2.out",
-              overwrite: "auto",
-            });
-          },
         },
       });
 
@@ -402,8 +115,23 @@ export default function MemoryLane() {
         </div>
 
         {/* Horizontal Photo Cards */}
-        {MEMORY_IMAGES.map((src) => (
-          <ShaderPhotoCard key={src} src={src} />
+        {MEMORY_IMAGES.map((src, index) => (
+          <div
+            key={src}
+            className="w-[92vw] sm:w-[75vw] md:w-[58vw] lg:w-[46vw] xl:w-[42vw] max-w-[680px] shrink-0 p-2 sm:p-2.5 border border-dashed border-[#272d2a] hover:border-[#3a423e] transition-colors duration-300"
+          >
+            <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-video overflow-hidden bg-[#131514] shadow-2xl rounded-sm">
+              <Image
+                src={src}
+                alt={`HaXtreme Memory ${index + 1}`}
+                fill
+                sizes="(max-width: 640px) 92vw, (max-width: 768px) 75vw, (max-width: 1024px) 58vw, (max-width: 1280px) 46vw, 680px"
+                className="object-cover select-none pointer-events-none"
+                priority={index < 3}
+                draggable={false}
+              />
+            </div>
+          </div>
         ))}
       </div>
     </section>

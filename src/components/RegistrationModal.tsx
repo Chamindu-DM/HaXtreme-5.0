@@ -183,8 +183,12 @@ export default function RegistrationModal({ isOpen, onClose, onSuccess }: Regist
       setIsSuccess(true);
       if (onSuccess) onSuccess(teamInfo.teamName);
 
-    } catch (error: any) {
-      setSubmitError(error.message || "An error occurred during submission.");
+    } catch (error: unknown) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "An error occurred during submission."
+      );
     } finally {
       setIsSubmitting(false);
     }

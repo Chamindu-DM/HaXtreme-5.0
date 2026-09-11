@@ -81,7 +81,7 @@ export default function InteractiveBackground() {
     };
   }, []);
 
-  // ─── 2. Cursor Spotlight with Radial Gradient Mask ───
+  // ─── 2. Desktop Cursor Spotlight with Radial Gradient Mask (Disabled on Mobile) ───
   useEffect(() => {
     const lightLayer = lightLayerRef.current;
     if (!lightLayer) return;
@@ -91,6 +91,9 @@ export default function InteractiveBackground() {
     let lastY = -9999;
 
     const updateMask = (x: number, y: number) => {
+      // Don't run hover effect on mobile viewports (< 768px)
+      if (window.innerWidth < 768) return;
+
       // Large radius area (responsive: between 320px and 440px based on screen size)
       const radius = Math.max(320, Math.min(Math.round(window.innerWidth * 0.28), 440));
       
@@ -102,6 +105,7 @@ export default function InteractiveBackground() {
     };
 
     const handlePointerMove = (e: PointerEvent) => {
+      if (window.innerWidth < 768) return;
       lastX = e.clientX;
       lastY = e.clientY;
 
@@ -119,41 +123,13 @@ export default function InteractiveBackground() {
       }
     };
 
-    const handleTouchStart = (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        const touch = e.touches[0];
-        updateMask(touch.clientX, touch.clientY);
-      }
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        const touch = e.touches[0];
-        updateMask(touch.clientX, touch.clientY);
-      }
-    };
-
-    const handleTouchEnd = () => {
-      if (lightLayer) {
-        lightLayer.style.opacity = "0";
-      }
-    };
-
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     document.documentElement.addEventListener("mouseleave", handlePointerLeave);
-    window.addEventListener("touchstart", handleTouchStart, { passive: true });
-    window.addEventListener("touchmove", handleTouchMove, { passive: true });
-    window.addEventListener("touchend", handleTouchEnd, { passive: true });
-    window.addEventListener("touchcancel", handleTouchEnd, { passive: true });
 
     return () => {
       if (rafId !== null) cancelAnimationFrame(rafId);
       window.removeEventListener("pointermove", handlePointerMove);
       document.documentElement.removeEventListener("mouseleave", handlePointerLeave);
-      window.removeEventListener("touchstart", handleTouchStart);
-      window.removeEventListener("touchmove", handleTouchMove);
-      window.removeEventListener("touchend", handleTouchEnd);
-      window.removeEventListener("touchcancel", handleTouchEnd);
     };
   }, []);
 
@@ -165,37 +141,63 @@ export default function InteractiveBackground() {
       }`}
       aria-hidden="true"
     >
-      {/* ─── Layer 1 (Bottom): Dim.png filling the viewport ─── */}
-      <Image
-        src={dimImg}
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        placeholder="blur"
-        className="object-cover object-center pointer-events-none select-none"
-      />
+      {/* ─── Mobile Viewport Background (< md): Rotated 90 degrees filling screen without hover ─── */}
+      <div className="block md:hidden absolute inset-0 w-full h-full overflow-hidden">
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 pointer-events-none select-none"
+          style={{
+            width: "100dvh",
+            height: "100dvw",
+            minWidth: "100vh",
+            minHeight: "100vw",
+          }}
+        >
+          <Image
+            src={dimImg}
+            alt=""
+            fill
+            priority
+            sizes="100vh"
+            placeholder="blur"
+            className="object-cover object-center pointer-events-none select-none"
+          />
+        </div>
+      </div>
 
-      {/* ─── Layer 2 (Top): Light.png masked with radial gradient ─── */}
-      <div
-        ref={lightLayerRef}
-        className="absolute inset-0 w-full h-full pointer-events-none select-none transition-opacity duration-300 ease-out"
-        style={{
-          opacity: 0,
-          WebkitMaskRepeat: "no-repeat",
-          maskRepeat: "no-repeat",
-          WebkitMaskSize: "100% 100%",
-          maskSize: "100% 100%",
-        }}
-      >
+      {/* ─── Desktop Viewport Background (md+): Standard Orientation + Spotlight Hover ─── */}
+      <div className="hidden md:block absolute inset-0 w-full h-full">
+        {/* Layer 1 (Bottom): Dim.webp filling desktop viewport */}
         <Image
-          src={lightImg}
+          src={dimImg}
           alt=""
           fill
           priority
           sizes="100vw"
+          placeholder="blur"
           className="object-cover object-center pointer-events-none select-none"
         />
+
+        {/* Layer 2 (Top): Light.webp revealed via radial gradient spotlight */}
+        <div
+          ref={lightLayerRef}
+          className="absolute inset-0 w-full h-full pointer-events-none select-none transition-opacity duration-300 ease-out"
+          style={{
+            opacity: 0,
+            WebkitMaskRepeat: "no-repeat",
+            maskRepeat: "no-repeat",
+            WebkitMaskSize: "100% 100%",
+            maskSize: "100% 100%",
+          }}
+        >
+          <Image
+            src={lightImg}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center pointer-events-none select-none"
+          />
+        </div>
       </div>
     </div>
   );
