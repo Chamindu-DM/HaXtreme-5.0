@@ -2,8 +2,16 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "../components/GSAP_Hero/hero.css";
 
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
+  ? process.env.NEXT_PUBLIC_SITE_URL
+  : process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "https://haxtreme.ieeeuor.org";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://haxtreme.ieeeuor.org"),
+  metadataBase: new URL(baseUrl),
   title: "HaXtreme 5.0 | Redefine Possible",
   description:
     "HaXtreme 5.0 is the premier competitive programming and hackathon arena organized by the IEEE Student Branch of University of Ruhuna in collaboration with the Computer Engineering Society (ComES). Bringing together top undergraduate minds across Sri Lanka to architect, build, and deploy innovative solutions.",
@@ -30,13 +38,13 @@ export const metadata: Metadata = {
     title: "HaXtreme 5.0 | Redefine Possible",
     description:
       "The premier competitive programming and hackathon arena organized by the IEEE Student Branch of University of Ruhuna in collaboration with ComES.",
-    url: "https://haxtreme.ieeeuor.org",
+    url: baseUrl,
     siteName: "HaXtreme 5.0",
     images: [
       {
         url: "/LinkPreview.png",
-        width: 1200,
-        height: 630,
+        width: 1920,
+        height: 1080,
         alt: "HaXtreme 5.0 | Redefine Possible",
       },
     ],
