@@ -694,7 +694,10 @@ export default function RegisterPageClient() {
                     <div className="grid grid-cols-2 gap-2 p-1 bg-[#0e100f] border border-[#34352F]">
                       <button
                         type="button"
-                        onClick={() => setCategory("University")}
+                        onClick={() => {
+                          setCategory("University");
+                          setCustomInstitution("");
+                        }}
                         className={`py-2 px-3 font-['Space_Mono',monospace] text-xs font-bold uppercase transition-all rounded-none ${
                           category === "University"
                             ? "bg-[#0ae448] text-black"
@@ -706,7 +709,10 @@ export default function RegisterPageClient() {
 
                       <button
                         type="button"
-                        onClick={() => setCategory("School")}
+                        onClick={() => {
+                          setCategory("School");
+                          setUniversity("");
+                        }}
                         className={`py-2 px-3 font-['Space_Mono',monospace] text-xs font-bold uppercase transition-all rounded-none ${
                           category === "School"
                             ? "bg-[#0ae448] text-black"
@@ -721,7 +727,7 @@ export default function RegisterPageClient() {
                   {/* Section 1: Team Details */}
                   <div className="space-y-4 pt-4 border-t border-[#242622]">
                     <h3 className="font-['Space_Mono',monospace] text-xs font-bold text-[#0ae448] uppercase tracking-wider">
-                      01. Team Details
+                      01 // Team Details
                     </h3>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -742,46 +748,64 @@ export default function RegisterPageClient() {
                         )}
                       </div>
 
-                      <div>
-                        <label className="form-label" htmlFor="university">
-                          {category === "University" ? "University *" : "Select University or Other *"}
-                        </label>
-                        <select
-                          id="university"
-                          value={university}
-                          onChange={(e) => setUniversity(e.target.value)}
-                          className={`form-input text-[#ededed] bg-[#0e100f] rounded-none ${fieldErrors.institution ? "error" : ""}`}
-                          required
-                        >
-                          <option value="" disabled>Select your university</option>
-                          {UNIVERSITIES.map((u) => (
-                            <option key={u} value={u} className="bg-[#191919] text-[#ededed]">
-                              {u}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
+                      {category === "University" ? (
+                        <div>
+                          <label className="form-label" htmlFor="university">University *</label>
+                          <select
+                            id="university"
+                            value={university}
+                            onChange={(e) => setUniversity(e.target.value)}
+                            className={`form-input text-[#ededed] bg-[#0e100f] rounded-none ${fieldErrors.institution ? "error" : ""}`}
+                            required
+                          >
+                            <option value="" disabled>Select your university</option>
+                            {UNIVERSITIES.map((u) => (
+                              <option key={u} value={u} className="bg-[#191919] text-[#ededed]">
+                                {u}
+                              </option>
+                            ))}
+                          </select>
+                          {fieldErrors.institution && university !== "Other / School Institution" && (
+                            <p className="text-red-400 text-xs mt-1">{fieldErrors.institution}</p>
+                          )}
+                        </div>
+                      ) : (
+                        <div>
+                          <label className="form-label" htmlFor="customInstitution">School Name *</label>
+                          <input
+                            id="customInstitution"
+                            type="text"
+                            maxLength={100}
+                            value={customInstitution}
+                            onChange={(e) => setCustomInstitution(e.target.value)}
+                            placeholder="e.g. Richmond College, Galle"
+                            className={`form-input rounded-none ${fieldErrors.institution ? "error" : ""}`}
+                            required
+                          />
+                          {fieldErrors.institution && (
+                            <p className="text-red-400 text-xs mt-1">{fieldErrors.institution}</p>
+                          )}
+                        </div>
+                      )}
                     </div>
 
-                    {(university === "Other / School Institution" || category === "School") && (
+                    {category === "University" && university === "Other / School Institution" && (
                       <div>
-                        <label className="form-label" htmlFor="customInstitution">
-                          {category === "School" ? "School Name *" : "Institution Name *"}
-                        </label>
+                        <label className="form-label" htmlFor="customInstitution">Institution Name *</label>
                         <input
                           id="customInstitution"
                           type="text"
                           maxLength={100}
                           value={customInstitution}
                           onChange={(e) => setCustomInstitution(e.target.value)}
-                          placeholder={category === "School" ? "e.g. Royal College, Colombo" : "Enter full institution name"}
+                          placeholder="Enter full institution name"
                           className={`form-input rounded-none ${fieldErrors.institution ? "error" : ""}`}
                           required
                         />
+                        {fieldErrors.institution && (
+                          <p className="text-red-400 text-xs mt-1">{fieldErrors.institution}</p>
+                        )}
                       </div>
-                    )}
-                    {fieldErrors.institution && (
-                      <p className="text-red-400 text-xs mt-1">{fieldErrors.institution}</p>
                     )}
                   </div>
 
