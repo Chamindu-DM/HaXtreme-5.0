@@ -36,15 +36,13 @@ export async function POST(request: Request) {
     }
 
     if (teamAsLeader) {
-      const isQualified =
-        teamAsLeader.status === "qualified" || teamAsLeader.status === "finalist";
-
       return NextResponse.json({
         success: true,
         teamName: teamAsLeader.team_name,
         participantName: teamAsLeader.leader_name,
         status: teamAsLeader.status,
-        qualified: isQualified,
+        qualified: false,
+        message: "Virtual Photobooth unlocks strictly after the Online Preliminary Round.",
       });
     }
 
@@ -66,15 +64,13 @@ export async function POST(request: Request) {
         ? memberData.teams[0]
         : memberData.teams;
 
-      const isQualified =
-        teamObj?.status === "qualified" || teamObj?.status === "finalist";
-
       return NextResponse.json({
         success: true,
         teamName: teamObj?.team_name || "Team",
         participantName: memberData.member_name,
         status: teamObj?.status || "registered",
-        qualified: isQualified,
+        qualified: false,
+        message: "Virtual Photobooth unlocks strictly after the Online Preliminary Round.",
       });
     }
 

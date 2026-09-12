@@ -18,6 +18,7 @@ export interface TeamSessionData {
   member3: TeamMemberSession;
   status: "registered" | "qualified" | "finalist";
   preliminaryRoundCompleted?: boolean;
+  hackerrankUsername?: string;
   registeredAt?: string;
 }
 
@@ -59,6 +60,8 @@ export function normalizeTeamSession(data: any): TeamSessionData | null {
       },
       status: data.status || "registered",
       preliminaryRoundCompleted: !!data.preliminaryRoundCompleted,
+      hackerrankUsername:
+        data.hackerrankUsername || data.hackerrank_username || data.hackerrank || undefined,
       registeredAt: data.registeredAt || data.created_at,
     };
   }
@@ -92,6 +95,8 @@ export function normalizeTeamSession(data: any): TeamSessionData | null {
     },
     status: data.status || "registered",
     preliminaryRoundCompleted: !!data.preliminaryRoundCompleted,
+    hackerrankUsername:
+      data.hackerrankUsername || data.hackerrank_username || data.hackerrank || undefined,
     registeredAt: data.created_at || data.registeredAt,
   };
 }

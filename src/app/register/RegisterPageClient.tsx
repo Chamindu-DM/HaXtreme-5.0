@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Photobooth from "@/components/Photobooth";
 import { setTeamSession, getTeamSession, clearTeamSession, TeamSessionData } from "@/lib/auth";
 import {
   validateTeamName,
@@ -82,7 +81,6 @@ export default function RegisterPageClient() {
   const router = useRouter();
   const [view, setView] = useState<"register" | "signin" | "dashboard">("register");
   const [isHandbookOpen, setIsHandbookOpen] = useState(false);
-  const [isPhotoboothOpen, setIsPhotoboothOpen] = useState(false);
 
   // Form State
   const [category, setCategory] = useState<"University" | "School">("University");
@@ -434,21 +432,6 @@ export default function RegisterPageClient() {
     setView("register");
   };
 
-  const handleToggleDemoStatus = () => {
-    if (!currentTeam) return;
-    const nextStatus: "registered" | "qualified" =
-      currentTeam.status === "registered" ? "qualified" : "registered";
-
-    const updated = { ...currentTeam, status: nextStatus };
-    setCurrentTeam(updated);
-    try {
-      const session = getTeamSession();
-      if (session) {
-        setTeamSession({ ...session, status: nextStatus });
-      }
-    } catch {}
-  };
-
   return (
     <div className="min-h-screen flex flex-col bg-[#0E100F] text-[#ededed] font-['Helvetica_Neue','Inter',sans-serif] selection:bg-[#0ae448] selection:text-black relative">
       <Navbar />
@@ -546,16 +529,7 @@ export default function RegisterPageClient() {
                 {currentTeam && (
                   <div className="mt-2 flex items-center justify-between font-['Space_Mono',monospace]">
                     <span>Status: <span className="text-white uppercase">{currentTeam.status}</span></span>
-                    {currentTeam.status !== "registered" ? (
-                      <button
-                        onClick={() => setIsPhotoboothOpen(true)}
-                        className="text-[#0ae448] hover:underline font-bold"
-                      >
-                        Launch Photobooth &rarr;
-                      </button>
-                    ) : (
-                      <span className="text-amber-400">Locked</span>
-                    )}
+                    <span className="text-amber-400">Locked (Unlocks after Preliminary Round)</span>
                   </div>
                 )}
               </div>
@@ -658,7 +632,7 @@ export default function RegisterPageClient() {
                   {/* Section 1: Team Details */}
                   <div className="space-y-4 pt-4 border-t border-[#242622]">
                     <h3 className="font-['Space_Mono',monospace] text-xs font-bold text-[#0ae448] uppercase tracking-wider">
-                      01 // Team Details
+                      01. Team Details
                     </h3>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1145,9 +1119,6 @@ export default function RegisterPageClient() {
                     <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight uppercase">
                       Team Portal Sign In
                     </h2>
-                    <p className="text-xs text-[#7c7c6f] mt-1">
-                      Check qualifier standing and access the Virtual Photobooth
-                    </p>
                   </div>
 
                   <button
@@ -1317,48 +1288,13 @@ export default function RegisterPageClient() {
 
                 {/* Photobooth Status Card */}
                 <div className="mt-6 p-5 bg-[#0e100f] border border-[#242622] text-center space-y-3 rounded-none">
-                  {currentTeam.status === "registered" ? (
-                    <div className="space-y-2">
-                      <h3 className="text-sm font-bold text-white uppercase font-['Space_Mono',monospace]">
-                        Photobooth Access Locked
-                      </h3>
-                      <p className="text-xs text-[#bbbaa6] max-w-md mx-auto leading-relaxed">
-                        To unlock your team&apos;s custom virtual frame, your team must complete at least one task at the online round and final.
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      <h3 className="text-base font-bold text-white uppercase font-['Space_Mono',monospace]">
-                        Virtual Photobooth Unlocked
-                      </h3>
-                      <p className="text-xs text-[#bbbaa6] max-w-md mx-auto leading-relaxed">
-                        Your team has qualified. Generate and download your official branded HaXtreme 5.0 team frame.
-                      </p>
-
-                      <button
-                        type="button"
-                        onClick={() => setIsPhotoboothOpen(true)}
-                        className="px-6 py-2.5 font-extrabold text-black uppercase tracking-wider font-['Space_Mono',monospace] text-xs shadow-lg hover:brightness-110 transition-all border border-[#0ae448] rounded-none inline-flex items-center gap-2"
-                        style={{ background: "var(--grad-macha)" }}
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <span>Open Photobooth</span>
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Subtle Developer status simulator */}
-                  <div className="pt-2">
-                    <button
-                      type="button"
-                      onClick={handleToggleDemoStatus}
-                      className="text-[10px] text-[#555] hover:text-[#7c7c6f] font-['Space_Mono',monospace] transition-colors"
-                    >
-                      (Testing: Toggle qualification status)
-                    </button>
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-bold text-white uppercase font-['Space_Mono',monospace]">
+                      Photobooth Access Locked
+                    </h3>
+                    <p className="text-xs text-[#bbbaa6] max-w-md mx-auto leading-relaxed font-['Space_Mono',monospace]">
+                      The Virtual Photobooth unlocks strictly after the Online Preliminary Round. Complete the competition round tasks to generate your official HaXtreme 5.0 team pass.
+                    </p>
                   </div>
                 </div>
 
@@ -1447,39 +1383,6 @@ export default function RegisterPageClient() {
                 Close
               </button>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Photobooth Modal */}
-      {isPhotoboothOpen && currentTeam && (
-        <div
-          className="fixed inset-0 z-[3000] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md modal-overlay-enter"
-          onClick={() => setIsPhotoboothOpen(false)}
-        >
-          <div
-            className="bg-[#141615] border border-[#242622] max-w-xl w-full max-h-[92vh] overflow-y-auto modal-scrollbar p-6 modal-card-enter shadow-2xl relative rounded-none"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#242622]">
-              <h3 className="text-sm font-bold text-white uppercase font-['Space_Mono',monospace] flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-[#0ae448]" />
-                <span>Virtual Photobooth // Team {canonicalizeText(currentTeam.team_name)}</span>
-              </h3>
-              <button
-                onClick={() => setIsPhotoboothOpen(false)}
-                className="w-7 h-7 border border-[#34352F] text-[#bbbaa6] hover:text-white flex items-center justify-center rounded-none"
-              >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            <Photobooth
-              teamName={currentTeam.team_name}
-              participantName={currentTeam.leader_name}
-            />
           </div>
         </div>
       )}

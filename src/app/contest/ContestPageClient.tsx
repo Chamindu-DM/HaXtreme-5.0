@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Photobooth from "@/components/Photobooth";
 import {
   getTeamSession,
   setTeamSession,
@@ -20,6 +19,9 @@ const HACKERRANK_CONTEST_URL =
 
 const OC_CONTACT_EMAIL = "info.haxtreme@gmail.com";
 
+// Official contest start time: October 3, 2026 09:00:00 AM Sri Lanka Time (UTC+05:30)
+const CONTEST_START_TIMESTAMP = new Date("2026-10-03T09:00:00+05:30").getTime();
+
 export default function ContestPageClient() {
   const router = useRouter();
   const [team, setTeam] = useState<TeamSessionData | null>(null);
@@ -31,12 +33,21 @@ export default function ContestPageClient() {
   const [signInLoading, setSignInLoading] = useState(false);
   const [signInError, setSignInError] = useState<string | null>(null);
 
-  // Photobooth modal state
-  const [isPhotoboothOpen, setIsPhotoboothOpen] = useState(false);
+  // HackerRank team account state
+  const [hrInput, setHrInput] = useState("");
+  const [isEditingHr, setIsEditingHr] = useState(false);
+  const [isSavingHr, setIsSavingHr] = useState(false);
+  const [hrError, setHrError] = useState<string | null>(null);
+  const [hrSuccess, setHrSuccess] = useState<string | null>(null);
+
+  const isContestActive = Date.now() >= CONTEST_START_TIMESTAMP;
 
   useEffect(() => {
     const session = getTeamSession();
     setTeam(session);
+    if (session?.hackerrankUsername) {
+      setHrInput(session.hackerrankUsername);
+    }
     setIsLoading(false);
   }, []);
 
@@ -46,16 +57,63 @@ export default function ContestPageClient() {
     router.push("/register");
   };
 
-  const handleToggleStatusForTesting = () => {
+  const handleSaveHackerRank = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!team) return;
-    const nextStatus: "registered" | "qualified" =
-      team.status === "registered" ? "qualified" : "registered";
-    const updated: TeamSessionData = {
-      ...team,
-      status: nextStatus,
-    };
-    setTeam(updated);
-    setTeamSession(updated);
+
+    const trimmed = hrInput.trim();
+    if (!trimmed) {
+      setHrError("Please enter your team's HackerRank username.");
+      return;
+    }
+
+    const usernameRegex = /^[a-zA-Z0-9_-]{2,50}$/;
+    if (!usernameRegex.test(trimmed)) {
+      setHrError("Must be 2-50 characters containing letters, numbers, hyphens, or underscores.");
+      return;
+    }
+
+    if (isContestActive) {
+      setHrError("The contest has commenced. HackerRank username is locked and cannot be changed.");
+      return;
+    }
+
+    setIsSavingHr(true);
+    setHrError(null);
+    setHrSuccess(null);
+
+    try {
+      const res = await fetch("/api/team/hackerrank", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          teamId: team.id,
+          email: team.leader?.email,
+          hackerrankUsername: trimmed,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setHrError(data.error || "Failed to register HackerRank username.");
+        return;
+      }
+
+      const updated: TeamSessionData = {
+        ...team,
+        hackerrankUsername: trimmed,
+      };
+      setTeam(updated);
+      setTeamSession(updated);
+      setIsEditingHr(false);
+      setHrSuccess("HackerRank username successfully registered for your team.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Failed to connect to server.";
+      setHrError(msg);
+    } finally {
+      setIsSavingHr(false);
+    }
   };
 
   // Direct login for unauthenticated visitors on /contest
@@ -120,7 +178,7 @@ export default function ContestPageClient() {
       <Navbar />
 
       {/* Top Header Banner */}
-      <section className="w-full pt-16 pb-8 px-4 sm:px-6 lg:px-8 border-b border-[#242622] bg-[#0E100F]">
+      <section className="w-full pt-16 pb-8 px-4 sm:px-6 lg:px-0 border-b border-[#242622] bg-[#0E100F]">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
@@ -155,7 +213,7 @@ export default function ContestPageClient() {
       </section>
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-0 py-10">
         {!team ? (
           /* Unauthenticated Fallback Card */
           <div className="max-w-md mx-auto bg-[#141615] border border-[#242622] p-6 sm:p-8 shadow-2xl rounded-none">
@@ -264,7 +322,7 @@ export default function ContestPageClient() {
               </div>
 
               {/* HackerRank Contest Arena Card */}
-              <div className="pt-6">
+              <div className="pt-6 space-y-4">
                 <div className="p-6 bg-[#0e100f] border border-[#242622] rounded-none flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                   <div className="space-y-2 max-w-2xl">
                     <div className="flex items-center gap-2">
@@ -274,7 +332,7 @@ export default function ContestPageClient() {
                       </h3>
                     </div>
                     <p className="text-xs text-[#bbbaa6] leading-relaxed font-['Space_Mono',monospace]">
-                      The official competitive programming round is hosted on HackerRank. Ensure all team members have valid HackerRank accounts before entering.
+                      The official competitive programming round is hosted on HackerRank. All members of the team must compete using only ONE shared HackerRank account.
                     </p>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 text-[11px] font-['Space_Mono',monospace] text-[#7c7c6f]">
                       <span>[PLATFORM]: HackerRank</span>
@@ -309,6 +367,140 @@ export default function ContestPageClient() {
                       </svg>
                     </a>
                   </div>
+                </div>
+
+                {/* Team Shared HackerRank Account Card */}
+                <div className="p-6 bg-[#0e100f] border border-[#242622] rounded-none space-y-4">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-[#242622]">
+                    <div>
+                      <h4 className="text-xs font-bold text-white uppercase font-['Space_Mono',monospace] flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 bg-[#0ae448]" />
+                        <span>Team HackerRank Account</span>
+                      </h4>
+                      <p className="text-[11px] text-[#7c7c6f] font-['Space_Mono',monospace] mt-1">
+                        All members of the team use only one HackerRank account. Must be entered before contest and cannot be changed during contest.
+                      </p>
+                    </div>
+
+                    <div>
+                      {isContestActive ? (
+                        <span className="text-[10px] font-['Space_Mono',monospace] text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-none uppercase">
+                          Contest Active // Locked
+                        </span>
+                      ) : team.hackerrankUsername && !isEditingHr ? (
+                        <span className="text-[10px] font-['Space_Mono',monospace] text-[#0ae448] bg-[#0ae448]/10 border border-[#0ae448]/30 px-2.5 py-1 rounded-none uppercase">
+                          Handle Saved
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-['Space_Mono',monospace] text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-none uppercase">
+                          Pending Submission
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Registered State Display */}
+                  {team.hackerrankUsername && !isEditingHr ? (
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 bg-[#141615] border border-[#242622]">
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-['Space_Mono',monospace] text-[#7c7c6f] uppercase tracking-wider block">
+                          Official Team Handle
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-base font-bold font-['Space_Mono',monospace] text-[#0ae448]">
+                            @{team.hackerrankUsername}
+                          </span>
+                          <a
+                            href={`https://www.hackerrank.com/profile/${encodeURIComponent(team.hackerrankUsername)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[11px] text-[#bbbaa6] hover:text-white underline font-['Space_Mono',monospace]"
+                          >
+                            (Verify on HackerRank)
+                          </a>
+                        </div>
+                      </div>
+
+                      {!isContestActive ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setHrInput(team.hackerrankUsername || "");
+                            setIsEditingHr(true);
+                            setHrError(null);
+                            setHrSuccess(null);
+                          }}
+                          className="px-4 py-2 border border-[#34352F] hover:border-[#0ae448] text-xs font-['Space_Mono',monospace] text-[#bbbaa6] hover:text-white uppercase transition-colors rounded-none"
+                        >
+                          Change Username
+                        </button>
+                      ) : (
+                        <div className="text-[11px] font-['Space_Mono',monospace] text-[#7c7c6f]">
+                          [LOCKED DURING CONTEST]
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    /* Entry / Edit Form */
+                    <form onSubmit={handleSaveHackerRank} className="space-y-3">
+                      <div className="flex flex-col sm:flex-row items-stretch gap-3">
+                        <div className="relative flex-1">
+                          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-['Space_Mono',monospace] text-[#7c7c6f]">
+                            @
+                          </span>
+                          <input
+                            type="text"
+                            value={hrInput}
+                            onChange={(e) => setHrInput(e.target.value.trim())}
+                            disabled={isSavingHr || isContestActive}
+                            placeholder="hackerrank_username"
+                            className="w-full bg-[#141615] border border-[#34352F] rounded-none pl-8 pr-4 py-2.5 text-white text-xs font-['Space_Mono',monospace] focus:border-[#0ae448] outline-none disabled:opacity-50"
+                            required
+                          />
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="submit"
+                            disabled={isSavingHr || isContestActive || !hrInput.trim()}
+                            className="px-6 py-2.5 bg-[#0ae448] hover:brightness-110 text-black font-extrabold uppercase tracking-wider text-xs font-['Space_Mono',monospace] transition-all rounded-none disabled:opacity-40"
+                          >
+                            {isSavingHr ? "Saving..." : "Save Username"}
+                          </button>
+
+                          {team.hackerrankUsername && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setIsEditingHr(false);
+                                setHrInput(team.hackerrankUsername || "");
+                                setHrError(null);
+                              }}
+                              className="px-4 py-2.5 border border-[#34352F] text-xs font-['Space_Mono',monospace] text-[#bbbaa6] hover:text-white uppercase transition-colors rounded-none"
+                            >
+                              Cancel
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      {hrError && (
+                        <p className="text-xs text-red-400 font-['Space_Mono',monospace]">
+                          [ERROR]: {hrError}
+                        </p>
+                      )}
+
+                      {hrSuccess && (
+                        <p className="text-xs text-[#0ae448] font-['Space_Mono',monospace]">
+                          [SUCCESS]: {hrSuccess}
+                        </p>
+                      )}
+
+                      <p className="text-[11px] text-[#7c7c6f] font-['Space_Mono',monospace] leading-relaxed">
+                        Important: All 3 team members must submit answers using this single account. Handle modification will be permanently disabled once the contest begins.
+                      </p>
+                    </form>
+                  )}
                 </div>
               </div>
             </div>
@@ -417,7 +609,7 @@ export default function ContestPageClient() {
               </div>
             </div>
 
-            {/* Virtual Photobooth Card (Gated on Preliminary Round) */}
+            {/* Virtual Photobooth Card (Strictly Locked Until Preliminary Round) */}
             <div className="bg-[#141615] border border-[#242622] p-6 sm:p-8 rounded-none space-y-4">
               <div className="pb-4 border-b border-[#242622] flex items-center justify-between">
                 <div>
@@ -430,99 +622,27 @@ export default function ContestPageClient() {
                 </div>
 
                 <div>
-                  {team.status === "registered" ? (
-                    <span className="text-[10px] font-['Space_Mono',monospace] text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-none uppercase">
-                      Locked
-                    </span>
-                  ) : (
-                    <span className="text-[10px] font-['Space_Mono',monospace] text-[#0ae448] bg-[#0ae448]/10 border border-[#0ae448]/30 px-2.5 py-1 rounded-none uppercase">
-                      Unlocked
-                    </span>
-                  )}
+                  <span className="text-[10px] font-['Space_Mono',monospace] text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-none uppercase flex items-center gap-1.5">
+                    <svg className="w-3 h-3 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <span>Locked</span>
+                  </span>
                 </div>
               </div>
 
-              {team.status === "registered" ? (
-                /* Photobooth Locked State */
-                <div className="p-5 bg-[#0e100f] border border-[#242622] text-center space-y-3 rounded-none">
-                  <h4 className="text-xs font-bold text-white uppercase font-['Space_Mono',monospace]">
-                    Access Locked Until Round Completion
-                  </h4>
-                  <p className="text-xs text-[#bbbaa6] font-['Space_Mono',monospace] max-w-lg mx-auto leading-relaxed">
-                    The Virtual Photobooth unlocks only after the Online Preliminary Round. Complete the competition round tasks to generate your official HaXtreme 5.0 team pass.
-                  </p>
-                </div>
-              ) : (
-                /* Photobooth Unlocked State */
-                <div className="p-5 bg-[#0e100f] border border-[#242622] text-center space-y-4 rounded-none">
-                  <div>
-                    <h4 className="text-xs font-bold text-[#0ae448] uppercase font-['Space_Mono',monospace]">
-                      Qualification Confirmed
-                    </h4>
-                    <p className="text-xs text-[#bbbaa6] font-['Space_Mono',monospace] max-w-lg mx-auto leading-relaxed mt-1">
-                      Your team has completed the preliminary requirements. Generate, customize, and export your official branded HaXtreme 5.0 photo frame.
-                    </p>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => setIsPhotoboothOpen(true)}
-                    className="px-8 py-3 bg-[#0ae448] hover:brightness-110 text-black font-extrabold uppercase tracking-wider text-xs font-['Space_Mono',monospace] transition-all rounded-none inline-flex items-center gap-2 shadow-lg shadow-green-500/20"
-                  >
-                    <span>Open Photobooth</span>
-                  </button>
-                </div>
-              )}
-
-              {/* Developer Test Simulator */}
-              <div className="pt-2 text-center">
-                <button
-                  type="button"
-                  onClick={handleToggleStatusForTesting}
-                  className="text-[10px] text-[#555] hover:text-[#7c7c6f] font-['Space_Mono',monospace] transition-colors"
-                >
-                  (Testing: Toggle Online Preliminary Round Completion)
-                </button>
+              <div className="p-5 bg-[#0e100f] border border-[#242622] text-center space-y-3 rounded-none">
+                <h4 className="text-xs font-bold text-white uppercase font-['Space_Mono',monospace]">
+                  Access Locked Until Round Completion
+                </h4>
+                <p className="text-xs text-[#bbbaa6] font-['Space_Mono',monospace] max-w-lg mx-auto leading-relaxed">
+                  The Virtual Photobooth unlocks strictly after the conclusion of the Online Preliminary Round. Complete the competition round tasks to generate your official HaXtreme 5.0 team pass.
+                </p>
               </div>
             </div>
           </div>
         )}
       </main>
-
-      {/* Photobooth Modal */}
-      {isPhotoboothOpen && team && (
-        <div
-          className="fixed inset-0 z-[3000] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md"
-          onClick={() => setIsPhotoboothOpen(false)}
-        >
-          <div
-            className="bg-[#141615] border border-[#242622] max-w-xl w-full max-h-[92vh] overflow-y-auto modal-scrollbar p-6 shadow-2xl relative rounded-none"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#242622]">
-              <h3 className="text-sm font-bold text-white uppercase font-['Space_Mono',monospace] flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-[#0ae448]" />
-                <span>Virtual Photobooth // Team {canonicalizeText(team.teamName)}</span>
-              </h3>
-              <button
-                onClick={() => setIsPhotoboothOpen(false)}
-                className="w-7 h-7 border border-[#34352F] text-[#bbbaa6] hover:text-white flex items-center justify-center rounded-none"
-                aria-label="Close Photobooth"
-              >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            <Photobooth
-              teamName={team.teamName}
-              participantName={team.leader?.name || ""}
-              status={team.status}
-            />
-          </div>
-        </div>
-      )}
 
       <Footer />
     </div>

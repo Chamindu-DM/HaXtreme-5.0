@@ -18,6 +18,7 @@ create table if not exists teams (
   leader_ieee_member boolean default false,
   leader_ieee_number text,
   password_hash text,
+  hackerrank_username text,
   -- Status values:
   --   'registered'  → initial registration
   --   'qualified'   → completed at least one online round task (unlocks photobooth)
@@ -31,6 +32,7 @@ alter table teams add column if not exists category text not null default 'Unive
 alter table teams add column if not exists leader_ieee_member boolean default false;
 alter table teams add column if not exists leader_ieee_number text;
 alter table teams add column if not exists password_hash text;
+alter table teams add column if not exists hackerrank_username text;
 
 -- ─── Team Members Table ───
 create table if not exists team_members (
@@ -79,9 +81,17 @@ create policy "Anyone can read team members"
   on team_members for select
   using (true);
 
+-- Allow updating team details (e.g. hackerrank_username)
+drop policy if exists "Anyone can update teams" on teams;
+create policy "Anyone can update teams"
+  on teams for update
+  using (true)
+  with check (true);
+
 -- ─── Indexes ───
 create index if not exists idx_teams_leader_email on teams(leader_email);
 create index if not exists idx_teams_team_name on teams(team_name);
+create index if not exists idx_teams_hackerrank_username on teams(hackerrank_username);
 create index if not exists idx_team_members_team_id on team_members(team_id);
 create index if not exists idx_team_members_email on team_members(member_email);
 

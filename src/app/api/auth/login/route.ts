@@ -103,6 +103,7 @@ export async function POST(request: Request) {
         ieeeNumber: m3?.member_ieee_number || undefined,
       },
       status: teamData.status || "registered",
+      hackerrankUsername: teamData.hackerrank_username || undefined,
       registeredAt: teamData.created_at,
     };
 

@@ -84,7 +84,7 @@ export default function PhotoboothModal({ isOpen, onClose }: PhotoboothModalProp
         setParticipantName(data.participantName);
       } else {
         setMessage({
-          text: "Your team hasn't qualified yet. Complete at least one task in the online round to unlock the photobooth.",
+          text: "The Virtual Photobooth unlocks strictly after the Online Preliminary Round. Complete the competition round tasks to access the photobooth.",
           type: 'info',
         });
       }
