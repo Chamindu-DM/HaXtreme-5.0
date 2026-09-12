@@ -531,16 +531,10 @@ export default function RegisterPageClient() {
       <Navbar />
 
       {/* Top Header Bar */}
-      <section className="relative w-full pt-28 pb-8 px-4 sm:px-6 lg:px-8 border-b border-[#242622] bg-[#0E100F]">
+      <section className="relative w-full pt-16 pb-8 px-4 sm:px-6 lg:px-8 border-b border-[#242622] bg-[#0E100F]">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="w-2 h-2 bg-[#0ae448]" />
-              <span className="font-['Space_Mono',monospace] text-xs text-[#0ae448] tracking-widest uppercase">
-                HaXtreme 5.0
-              </span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight uppercase">
+            <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight uppercase">
               Join <span className="text-[#0ae448]">HaXtreme</span>
             </h1>
           </div>
@@ -569,7 +563,7 @@ export default function RegisterPageClient() {
       </section>
 
       {/* Main Two-Column Layout */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-0 py-8 lg:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
           {/* Left Column: Competition Rules & Guidelines */}
