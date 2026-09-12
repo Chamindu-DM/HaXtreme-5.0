@@ -219,8 +219,8 @@ export function validateIeeeNumber(raw: unknown, label = "IEEE Membership Number
  */
 export function validateInstitution(
   raw: unknown,
-  allowedList: string[],
-  isOther: boolean
+  allowedList: string[] = [],
+  isOther = true
 ): ValidationResult {
   const sanitized = canonicalizeText(raw);
 
@@ -228,7 +228,7 @@ export function validateInstitution(
     return { valid: false, sanitized, error: "Institution / University selection is required." };
   }
 
-  if (!isOther) {
+  if (!isOther && allowedList.length > 0) {
     if (!allowedList.includes(sanitized)) {
       return { valid: false, sanitized, error: "Please select a valid institution from the list." };
     }

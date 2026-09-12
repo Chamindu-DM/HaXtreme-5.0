@@ -8,6 +8,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { triggerSectionTransition } from "./SectionTransition";
 import RegistrationModal from "./RegistrationModal";
+import { getTeamSession, onAuthChange } from "@/lib/auth";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP);
@@ -23,6 +24,7 @@ const navLinks = [
 ];
 
 const registerChars = "REGISTER".split("");
+const contestChars = "CONTEST".split("");
 
 export default function Navbar() {
   const router = useRouter();
@@ -40,9 +42,18 @@ export default function Navbar() {
   const [isLight, setIsLight] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [showRegistration, setShowRegistration] = useState(false);
+  const [hasSession, setHasSession] = useState(false);
   const lastScrollYRef = useRef(0);
 
   useEffect(() => {
+    // Check initial auth session
+    const updateSession = () => {
+      const session = getTeamSession();
+      setHasSession(!!session);
+    };
+    updateSession();
+    const unsubscribeAuth = onAuthChange(updateSession);
+
     const handleThemeChange = (e: Event) => {
       const customEvent = e as CustomEvent<{ theme?: string }>;
       setIsLight(customEvent.detail?.theme === "light");
@@ -69,6 +80,7 @@ export default function Navbar() {
     handleScroll();
 
     return () => {
+      unsubscribeAuth();
       window.removeEventListener("theme-change", handleThemeChange);
       window.removeEventListener("scroll", handleScroll);
     };
@@ -405,7 +417,9 @@ export default function Navbar() {
               type="button"
               onMouseEnter={handleButtonMouseEnter}
               onClick={() => {
-                if (pathname === "/register") {
+                if (hasSession) {
+                  router.push("/contest");
+                } else if (pathname === "/register") {
                   const el = document.getElementById("registration-form");
                   if (el) el.scrollIntoView({ behavior: "smooth" });
                 } else {
@@ -428,9 +442,9 @@ export default function Navbar() {
                   className="roll-line roll-line-1 flex items-center justify-center"
                   style={{ transformStyle: "preserve-3d" }}
                 >
-                  {registerChars.map((char, i) => (
+                  {(hasSession ? contestChars : registerChars).map((char, i) => (
                     <span
-                      key={i}
+                      key={`l1-${hasSession ? "c" : "r"}-${i}`}
                       className="char-line-1 inline-block text-[#0e100f] text-xs font-bold tracking-wider font-['Helvetica_Neue','Inter',sans-serif] uppercase"
                     >
                       {char}
@@ -442,9 +456,9 @@ export default function Navbar() {
                   className="roll-line roll-line-2 absolute inset-0 flex items-center justify-center"
                   style={{ transformStyle: "preserve-3d" }}
                 >
-                  {registerChars.map((char, i) => (
+                  {(hasSession ? contestChars : registerChars).map((char, i) => (
                     <span
-                      key={i}
+                      key={`l2-${hasSession ? "c" : "r"}-${i}`}
                       className="char-line-2 inline-block text-[#0e100f] text-xs font-bold tracking-wider font-['Helvetica_Neue','Inter',sans-serif] uppercase"
                     >
                       {char}
@@ -596,15 +610,15 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Right: Register Button */}
+            {/* Right: Register / Contest Button */}
             <Link
-              href="/register"
+              href={hasSession ? "/contest" : "/register"}
               onClick={closeMenu}
               className="relative h-8 px-4 rounded-[40px] flex justify-center items-center gap-1.5 select-none shadow-md shadow-green-500/20 active:scale-95 transition-transform"
               style={{ background: "var(--grad-macha)" }}
             >
               <span className="text-[#0e100f] text-xs font-bold tracking-wider font-['Helvetica_Neue','Inter',sans-serif] uppercase">
-                REGISTER
+                {hasSession ? "CONTEST" : "REGISTER"}
               </span>
             </Link>
           </div>

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Photobooth from './Photobooth';
-import { supabase } from "@/lib/supabase";
 
 interface PhotoboothModalProps {
   isOpen: boolean;
@@ -43,9 +42,9 @@ export default function PhotoboothModal({ isOpen, onClose }: PhotoboothModalProp
   useEffect(() => {
     if (!isOpen) {
       setTimeout(() => {
+        setEmail('');
         setVerifiedTeamName(null);
         setParticipantName(null);
-        setEmail('');
         setMessage(null);
       }, 300);
     }
@@ -64,53 +63,31 @@ export default function PhotoboothModal({ isOpen, onClose }: PhotoboothModalProp
     setMessage(null);
 
     try {
-      // First try to find as leader
-      const { data: teamAsLeader } = await supabase
-        .from('teams')
-        .select('team_name, leader_name, status')
-        .eq('leader_email', email.trim())
-        .single();
+      const res = await fetch('/api/auth/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim() }),
+      });
 
-      if (teamAsLeader) {
-        if (teamAsLeader.status === 'qualified' || teamAsLeader.status === 'finalist') {
-          setVerifiedTeamName(teamAsLeader.team_name);
-          setParticipantName(teamAsLeader.leader_name);
-          return;
-        } else {
-          setMessage({ 
-            text: "Your team hasn't qualified yet. Complete at least one task in the online round to unlock the photobooth.", 
-            type: 'info' 
-          });
-          return;
-        }
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setMessage({
+          text: data.error || 'No registration found with this email.',
+          type: 'error',
+        });
+        return;
       }
 
-      // If not leader, try members
-      const { data: teamAsMember } = await supabase
-        .from('team_members')
-        .select('member_name, team_id, teams(team_name, status)')
-        .eq('member_email', email.trim())
-        .single();
-
-      if (teamAsMember && teamAsMember.teams) {
-        const teamData = Array.isArray(teamAsMember.teams) ? teamAsMember.teams[0] : teamAsMember.teams;
-        
-        if (teamData.status === 'qualified' || teamData.status === 'finalist') {
-          setVerifiedTeamName(teamData.team_name);
-          setParticipantName(teamAsMember.member_name);
-          return;
-        } else {
-          setMessage({ 
-            text: "Your team hasn't qualified yet. Complete at least one task in the online round to unlock the photobooth.", 
-            type: 'info' 
-          });
-          return;
-        }
+      if (data.qualified) {
+        setVerifiedTeamName(data.teamName);
+        setParticipantName(data.participantName);
+      } else {
+        setMessage({
+          text: "Your team hasn't qualified yet. Complete at least one task in the online round to unlock the photobooth.",
+          type: 'info',
+        });
       }
-
-      // Not found
-      setMessage({ text: "No registration found with this email.", type: 'error' });
-      
     } catch (error) {
       console.error("Verification error:", error);
       setMessage({ text: "An error occurred during verification. Please try again.", type: 'error' });

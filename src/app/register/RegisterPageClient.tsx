@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Photobooth from "@/components/Photobooth";
-import { supabase } from "@/lib/supabase";
+import { setTeamSession, getTeamSession, clearTeamSession, TeamSessionData } from "@/lib/auth";
 import {
   validateTeamName,
   validatePersonName,
@@ -15,7 +16,6 @@ import {
   validateIeeeNumber,
   validatePassword,
   canonicalizeText,
-  escapeHtml,
 } from "@/lib/security";
 
 export const UNIVERSITIES = [
@@ -77,15 +77,9 @@ interface TeamData {
   created_at?: string;
 }
 
-// Client-side SHA-256 hashing for credential storage
-async function hashPassword(password: string): Promise<string> {
-  const enc = new TextEncoder().encode(password);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", enc);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-}
 
 export default function RegisterPageClient() {
+  const router = useRouter();
   const [view, setView] = useState<"register" | "signin" | "dashboard">("register");
   const [isHandbookOpen, setIsHandbookOpen] = useState(false);
   const [isPhotoboothOpen, setIsPhotoboothOpen] = useState(false);
@@ -141,14 +135,35 @@ export default function RegisterPageClient() {
   // Load existing session on mount
   useEffect(() => {
     try {
-      const saved = sessionStorage.getItem("haxtreme_team_session");
+      const saved = getTeamSession();
       if (saved) {
-        const parsed = JSON.parse(saved);
-        setCurrentTeam(parsed);
-        setView("dashboard");
+        const mapped: TeamData = {
+          id: saved.id || "",
+          team_name: saved.teamName,
+          category: saved.category,
+          institution: saved.institution,
+          leader_name: saved.leader.name,
+          leader_email: saved.leader.email,
+          leader_phone: saved.leader.phone,
+          leader_ieee_member: saved.leader.isIeeeMember,
+          leader_ieee_number: saved.leader.ieeeNumber,
+          member2_name: saved.member2.name,
+          member2_email: saved.member2.email,
+          member2_phone: saved.member2.phone,
+          member2_ieee: saved.member2.isIeeeMember,
+          member2_ieee_number: saved.member2.ieeeNumber,
+          member3_name: saved.member3.name,
+          member3_email: saved.member3.email,
+          member3_phone: saved.member3.phone,
+          member3_ieee: saved.member3.isIeeeMember,
+          member3_ieee_number: saved.member3.ieeeNumber,
+          status: saved.status,
+          created_at: saved.registeredAt,
+        };
+        setCurrentTeam(mapped);
       }
     } catch {
-      // Ignore sessionStorage error
+      // Ignore session read error
     }
   }, []);
 
@@ -266,118 +281,72 @@ export default function RegisterPageClient() {
     setLoading(true);
 
     try {
-      const passwordHash = await hashPassword(password);
-      const generatedId = crypto.randomUUID ? crypto.randomUUID() : `team-${Date.now()}`;
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          category,
+          teamName: teamValidation.sanitized,
+          institution: instValidation.sanitized,
+          leaderName: leaderNameVal.sanitized,
+          leaderEmail: cleanLeaderEmail,
+          leaderPhone: leaderPhoneVal.sanitized,
+          leaderIeee: Boolean(leaderIeee),
+          leaderIeeeNumber: cleanLeaderIeeeNum || undefined,
+          member2Name: m2NameVal.sanitized,
+          member2Email: cleanM2Email,
+          member2Phone: m2PhoneVal.sanitized,
+          member2Ieee: Boolean(member2Ieee),
+          member2IeeeNumber: cleanM2IeeeNum || undefined,
+          member3Name: cleanM3Name,
+          member3Email: cleanM3Email,
+          member3Phone: m3PhoneVal.sanitized,
+          member3Ieee: Boolean(member3Ieee),
+          member3IeeeNumber: cleanM3IeeeNum || undefined,
+          password,
+          agreedToRules,
+        }),
+      });
 
-      const newTeam: TeamData = {
-        id: generatedId,
-        team_name: teamValidation.sanitized,
-        category,
-        institution: instValidation.sanitized,
-        leader_name: leaderNameVal.sanitized,
-        leader_email: cleanLeaderEmail,
-        leader_phone: leaderPhoneVal.sanitized,
-        leader_ieee_member: Boolean(leaderIeee),
-        leader_ieee_number: cleanLeaderIeeeNum || undefined,
-        member2_name: m2NameVal.sanitized,
-        member2_email: cleanM2Email,
-        member2_phone: m2PhoneVal.sanitized,
-        member2_ieee: Boolean(member2Ieee),
-        member2_ieee_number: cleanM2IeeeNum || undefined,
-        member3_name: cleanM3Name,
-        member3_email: cleanM3Email,
-        member3_phone: m3PhoneVal.sanitized,
-        member3_ieee: Boolean(member3Ieee),
-        member3_ieee_number: cleanM3IeeeNum || undefined,
-        status: "registered",
-        created_at: new Date().toISOString(),
+      const resData = await response.json();
+
+      if (!response.ok || !resData.success) {
+        setFormError(resData.error || "Registration failed. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      const sessionData: TeamSessionData = resData.team;
+      setTeamSession(sessionData);
+
+      const mapped: TeamData = {
+        id: sessionData.id || "",
+        team_name: sessionData.teamName,
+        category: sessionData.category,
+        institution: sessionData.institution,
+        leader_name: sessionData.leader.name,
+        leader_email: sessionData.leader.email,
+        leader_phone: sessionData.leader.phone,
+        leader_ieee_member: sessionData.leader.isIeeeMember,
+        leader_ieee_number: sessionData.leader.ieeeNumber,
+        member2_name: sessionData.member2.name,
+        member2_email: sessionData.member2.email,
+        member2_phone: sessionData.member2.phone,
+        member2_ieee: sessionData.member2.isIeeeMember,
+        member2_ieee_number: sessionData.member2.ieeeNumber,
+        member3_name: sessionData.member3.name,
+        member3_email: sessionData.member3.email,
+        member3_phone: sessionData.member3.phone,
+        member3_ieee: sessionData.member3.isIeeeMember,
+        member3_ieee_number: sessionData.member3.ieeeNumber,
+        status: sessionData.status,
+        created_at: sessionData.registeredAt,
       };
+      setCurrentTeam(mapped);
 
-      let supabaseSuccess = false;
-      try {
-        const { data: teamInsert, error: teamErr } = await supabase
-          .from("teams")
-          .insert({
-            team_name: newTeam.team_name,
-            category: newTeam.category,
-            institution: newTeam.institution,
-            leader_name: newTeam.leader_name,
-            leader_email: newTeam.leader_email,
-            leader_phone: newTeam.leader_phone,
-            leader_ieee_member: newTeam.leader_ieee_member,
-            leader_ieee_number: newTeam.leader_ieee_number || null,
-            password_hash: passwordHash,
-            status: "registered",
-          })
-          .select()
-          .single();
-
-        if (teamErr) {
-          if (teamErr.code === "23505") {
-            setFormError("A team with this Team Name or Leader Email is already registered.");
-            setLoading(false);
-            return;
-          }
-        } else if (teamInsert) {
-          newTeam.id = teamInsert.id;
-          supabaseSuccess = true;
-
-          const membersToInsert = [
-            {
-              team_id: teamInsert.id,
-              member_order: 2,
-              member_name: newTeam.member2_name,
-              member_email: newTeam.member2_email,
-              member_phone: newTeam.member2_phone,
-              member_ieee_member: newTeam.member2_ieee,
-              member_ieee_number: newTeam.member2_ieee_number || null,
-            },
-            {
-              team_id: teamInsert.id,
-              member_order: 3,
-              member_name: newTeam.member3_name,
-              member_email: newTeam.member3_email,
-              member_phone: newTeam.member3_phone,
-              member_ieee_member: newTeam.member3_ieee,
-              member_ieee_number: newTeam.member3_ieee_number || null,
-            },
-          ];
-
-          await supabase.from("team_members").insert(membersToInsert);
-        }
-      } catch (err) {
-        console.warn("Supabase connection offline; falling back to local storage", err);
-      }
-
-      // Local storage persistence fallback
-      try {
-        const existing = JSON.parse(localStorage.getItem("haxtreme_registered_teams") || "[]");
-        const exists = existing.find(
-          (t: TeamData) =>
-            t.team_name.toLowerCase() === newTeam.team_name.toLowerCase() ||
-            t.leader_email.toLowerCase() === newTeam.leader_email.toLowerCase()
-        );
-        if (exists && !supabaseSuccess) {
-          setFormError("A team with this name or leader email is already registered.");
-          setLoading(false);
-          return;
-        }
-        localStorage.setItem(
-          "haxtreme_registered_teams",
-          JSON.stringify([...existing, { ...newTeam, passwordHash }])
-        );
-      } catch {
-        // Ignore localStorage error
-      }
-
-      setCurrentTeam(newTeam);
-      try {
-        sessionStorage.setItem("haxtreme_team_session", JSON.stringify(newTeam));
-      } catch {}
-
-      setFormSuccess(`Registration complete. Welcome, Team ${escapeHtml(newTeam.team_name)}.`);
+      setFormSuccess("Registration complete. Redirecting to Contest Portal...");
       setTimeout(() => {
-        setView("dashboard");
+        router.push("/contest");
       }, 1000);
     } catch (err: unknown) {
       const errorMsg = err instanceof Error ? err.message : "An unexpected error occurred.";
@@ -405,88 +374,52 @@ export default function RegisterPageClient() {
     setSignInLoading(true);
 
     try {
-      const hashedInput = await hashPassword(signInPassword);
-      const normalizedEmail = emailVal.sanitized;
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: emailVal.sanitized,
+          password: signInPassword,
+        }),
+      });
 
-      let foundTeam: TeamData | null = null;
+      const resData = await response.json();
 
-      try {
-        const { data, error } = await supabase
-          .from("teams")
-          .select("*")
-          .eq("leader_email", normalizedEmail)
-          .single();
-
-        if (data && !error) {
-          if (data.password_hash && data.password_hash !== hashedInput) {
-            setSignInError("Invalid email or password.");
-            setSignInLoading(false);
-            return;
-          }
-
-          const { data: memberRows } = await supabase
-            .from("team_members")
-            .select("*")
-            .eq("team_id", data.id);
-
-          const m2 = memberRows?.find((m) => m.member_order === 2);
-          const m3 = memberRows?.find((m) => m.member_order === 3);
-
-          foundTeam = {
-            id: data.id,
-            team_name: data.team_name,
-            category: data.category || "University",
-            institution: data.institution,
-            leader_name: data.leader_name,
-            leader_email: data.leader_email,
-            leader_phone: data.leader_phone,
-            leader_ieee_member: data.leader_ieee_member,
-            leader_ieee_number: data.leader_ieee_number,
-            member2_name: m2?.member_name,
-            member2_email: m2?.member_email,
-            member2_phone: m2?.member_phone,
-            member2_ieee: m2?.member_ieee_member,
-            member2_ieee_number: m2?.member_ieee_number,
-            member3_name: m3?.member_name,
-            member3_email: m3?.member_email,
-            member3_phone: m3?.member_phone,
-            member3_ieee: m3?.member_ieee_member,
-            member3_ieee_number: m3?.member_ieee_number,
-            status: data.status || "registered",
-          };
-        }
-      } catch (err) {
-        console.warn("Supabase query error; using local storage", err);
-      }
-
-      if (!foundTeam) {
-        try {
-          const stored = JSON.parse(localStorage.getItem("haxtreme_registered_teams") || "[]");
-          const localMatch = stored.find(
-            (t: TeamData & { passwordHash?: string }) =>
-              t.leader_email.toLowerCase() === normalizedEmail
-          );
-
-          if (localMatch) {
-            if (localMatch.passwordHash && localMatch.passwordHash !== hashedInput) {
-              setSignInError("Invalid email or password.");
-              setSignInLoading(false);
-              return;
-            }
-            foundTeam = localMatch;
-          }
-        } catch {}
-      }
-
-      if (!foundTeam) {
-        setSignInError("No registered team found with this Leader email address.");
+      if (!response.ok || !resData.success) {
+        setSignInError(resData.error || "Invalid email or password.");
         setSignInLoading(false);
         return;
       }
 
-      setCurrentTeam(foundTeam);
-      sessionStorage.setItem("haxtreme_team_session", JSON.stringify(foundTeam));
-      setView("dashboard");
+      const sessionData: TeamSessionData = resData.team;
+      setTeamSession(sessionData);
+
+      const mapped: TeamData = {
+        id: sessionData.id || "",
+        team_name: sessionData.teamName,
+        category: sessionData.category,
+        institution: sessionData.institution,
+        leader_name: sessionData.leader.name,
+        leader_email: sessionData.leader.email,
+        leader_phone: sessionData.leader.phone,
+        leader_ieee_member: sessionData.leader.isIeeeMember,
+        leader_ieee_number: sessionData.leader.ieeeNumber,
+        member2_name: sessionData.member2.name,
+        member2_email: sessionData.member2.email,
+        member2_phone: sessionData.member2.phone,
+        member2_ieee: sessionData.member2.isIeeeMember,
+        member2_ieee_number: sessionData.member2.ieeeNumber,
+        member3_name: sessionData.member3.name,
+        member3_email: sessionData.member3.email,
+        member3_phone: sessionData.member3.phone,
+        member3_ieee: sessionData.member3.isIeeeMember,
+        member3_ieee_number: sessionData.member3.ieeeNumber,
+        status: sessionData.status,
+        created_at: sessionData.registeredAt,
+      };
+
+      setCurrentTeam(mapped);
+      router.push("/contest");
     } catch (err: unknown) {
       const errorMsg = err instanceof Error ? err.message : "Sign in failed.";
       setSignInError(errorMsg);
@@ -497,9 +430,7 @@ export default function RegisterPageClient() {
 
   const handleSignOut = () => {
     setCurrentTeam(null);
-    try {
-      sessionStorage.removeItem("haxtreme_team_session");
-    } catch {}
+    clearTeamSession();
     setView("register");
   };
 
@@ -511,19 +442,11 @@ export default function RegisterPageClient() {
     const updated = { ...currentTeam, status: nextStatus };
     setCurrentTeam(updated);
     try {
-      sessionStorage.setItem("haxtreme_team_session", JSON.stringify(updated));
-      const stored = JSON.parse(localStorage.getItem("haxtreme_registered_teams") || "[]");
-      const updatedList = stored.map((t: TeamData) =>
-        t.team_name === updated.team_name ? { ...t, status: nextStatus } : t
-      );
-      localStorage.setItem("haxtreme_registered_teams", JSON.stringify(updatedList));
+      const session = getTeamSession();
+      if (session) {
+        setTeamSession({ ...session, status: nextStatus });
+      }
     } catch {}
-
-    supabase
-      .from("teams")
-      .update({ status: nextStatus })
-      .eq("id", currentTeam.id)
-      .then(() => {});
   };
 
   return (
@@ -551,12 +474,20 @@ export default function RegisterPageClient() {
             </Link>
 
             {currentTeam && (
-              <button
-                onClick={handleSignOut}
-                className="px-3.5 py-1.5 border border-red-500/30 text-xs font-['Space_Mono',monospace] uppercase text-red-400 hover:bg-red-500/10 transition-colors rounded-none"
-              >
-                Sign Out ({canonicalizeText(currentTeam.team_name)})
-              </button>
+              <>
+                <Link
+                  href="/contest"
+                  className="px-3.5 py-1.5 font-bold text-black bg-[#0ae448] text-xs font-['Space_Mono',monospace] uppercase hover:brightness-110 transition-all rounded-none"
+                >
+                  Contest Portal
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="px-3.5 py-1.5 border border-red-500/30 text-xs font-['Space_Mono',monospace] uppercase text-red-400 hover:bg-red-500/10 transition-colors rounded-none"
+                >
+                  Sign Out
+                </button>
+              </>
             )}
           </div>
         </div>

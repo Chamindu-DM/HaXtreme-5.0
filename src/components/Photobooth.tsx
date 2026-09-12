@@ -3,31 +3,62 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { validateImageFile, canonicalizeText } from "@/lib/security";
 
-interface PhotoboothProps {
+export interface PhotoboothProps {
   teamName: string;
   participantName?: string;
+  rank?: number | string;
+  totalTeams?: number | string;
+  status?: string;
 }
 
-export default function Photobooth({ teamName, participantName }: PhotoboothProps) {
+// Exact dimensions from Figma node 3218:1764
+const CANVAS_WIDTH = 1112;
+const CANVAS_HEIGHT = 1273;
+const PHOTO_X = 16;
+const PHOTO_Y = 88;
+const PHOTO_SIZE = 1080;
+
+export default function Photobooth({
+  teamName,
+  participantName,
+  rank,
+  totalTeams,
+  status = "FINALIST",
+}: PhotoboothProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [userImage, setUserImage] = useState<HTMLImageElement | null>(null);
   const [frameImage, setFrameImage] = useState<HTMLImageElement | null>(null);
+  const [frameLoaded, setFrameLoaded] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [dragOffsetStart, setDragOffsetStart] = useState({ x: 0, y: 0 });
   const [canShare, setCanShare] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
-  // Load frame image on mount
+  // Load the exact Figma frame overlay
   useEffect(() => {
     const img = new Image();
     img.crossOrigin = "anonymous";
-    img.src = "/frames/haxtreme-frame.png";
-    img.onload = () => setFrameImage(img);
+    img.src = "/frames/haxtreme-frame-v1.png";
+    img.onload = () => {
+      setFrameImage(img);
+      setFrameLoaded(true);
+    };
+    img.onerror = () => {
+      // Fallback to haxtreme-frame.png if v1 fails
+      const fallback = new Image();
+      fallback.crossOrigin = "anonymous";
+      fallback.src = "/frames/haxtreme-frame.png";
+      fallback.onload = () => {
+        setFrameImage(fallback);
+        setFrameLoaded(true);
+      };
+    };
 
     if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
       setCanShare(true);
@@ -39,7 +70,6 @@ export default function Photobooth({ teamName, participantName }: PhotoboothProp
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // OWASP Security: File upload validation (MIME, size, magic bytes)
     const validation = await validateImageFile(file);
     if (!validation.valid) {
       setUploadError(validation.error || "Invalid image file.");
@@ -67,88 +97,183 @@ export default function Photobooth({ teamName, participantName }: PhotoboothProp
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Clear and fill background
-    ctx.fillStyle = "#0E100F";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // 1. Background fill
+    ctx.fillStyle = "#050505";
+    ctx.fillRect(0, 0, CANVAS_WIDTH, 1184);
 
-    // Draw user image if available
+    // Bottom sponsor bar area background
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(0, 1184, CANVAS_WIDTH, CANVAS_HEIGHT - 1184);
+
+    // 2. User image rendering (clipped strictly to 1080x1080 area)
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(PHOTO_X, PHOTO_Y, PHOTO_SIZE, PHOTO_SIZE);
+    ctx.clip();
+
     if (userImage) {
-      ctx.save();
-
-      // Calculate cover fit
-      const canvasAspect = canvas.width / canvas.height;
       const imgAspect = userImage.width / userImage.height;
+      let baseW = PHOTO_SIZE;
+      let baseH = PHOTO_SIZE;
 
-      let drawWidth = canvas.width;
-      let drawHeight = canvas.height;
-
-      if (canvasAspect > imgAspect) {
-        drawHeight = canvas.width / imgAspect;
+      if (imgAspect > 1) {
+        baseW = PHOTO_SIZE * imgAspect;
       } else {
-        drawWidth = canvas.height * imgAspect;
+        baseH = PHOTO_SIZE / imgAspect;
       }
 
-      // Apply zoom and offset
-      const finalWidth = drawWidth * zoom;
-      const finalHeight = drawHeight * zoom;
+      const finalW = baseW * zoom;
+      const finalH = baseH * zoom;
 
-      const x = (canvas.width - finalWidth) / 2 + offset.x;
-      const y = (canvas.height - finalHeight) / 2 + offset.y;
+      const imgX = PHOTO_X + (PHOTO_SIZE - finalW) / 2 + offset.x;
+      const imgY = PHOTO_Y + (PHOTO_SIZE - finalH) / 2 + offset.y;
 
-      ctx.drawImage(userImage, x, y, finalWidth, finalHeight);
-      ctx.restore();
-    }
+      ctx.drawImage(userImage, imgX, imgY, finalW, finalH);
+    } else {
+      // Sleek placeholder when no user photo uploaded
+      ctx.fillStyle = "#111311";
+      ctx.fillRect(PHOTO_X, PHOTO_Y, PHOTO_SIZE, PHOTO_SIZE);
 
-    // Draw frame overlay
-    if (frameImage) {
-      ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
-    }
+      // Decorative corner brackets
+      ctx.strokeStyle = "#42433d";
+      ctx.lineWidth = 2;
+      const margin = 40;
+      const len = 30;
 
-    // Draw text with sanitized content (prevent control character exploits)
-    ctx.textAlign = "center";
+      // Top-left
+      ctx.beginPath();
+      ctx.moveTo(PHOTO_X + margin, PHOTO_Y + margin + len);
+      ctx.lineTo(PHOTO_X + margin, PHOTO_Y + margin);
+      ctx.lineTo(PHOTO_X + margin + len, PHOTO_Y + margin);
+      ctx.stroke();
 
-    // Draw team name (truncated to max 40 chars)
-    const sanitizedTeam = canonicalizeText(teamName).substring(0, 40).toUpperCase();
-    ctx.font = 'bold 42px "Space Mono", monospace';
-    ctx.fillStyle = "#0ae448";
-    ctx.shadowColor = "rgba(10,228,72,0.5)";
-    ctx.shadowBlur = 12;
-    ctx.fillText(sanitizedTeam, canvas.width / 2, canvas.height - 120);
+      // Top-right
+      ctx.beginPath();
+      ctx.moveTo(PHOTO_X + PHOTO_SIZE - margin - len, PHOTO_Y + margin);
+      ctx.lineTo(PHOTO_X + PHOTO_SIZE - margin, PHOTO_Y + margin);
+      ctx.lineTo(PHOTO_X + PHOTO_SIZE - margin, PHOTO_Y + margin + len);
+      ctx.stroke();
 
-    // Draw participant name if provided
-    if (participantName) {
-      const sanitizedParticipant = canonicalizeText(participantName).substring(0, 60);
-      ctx.shadowBlur = 0;
+      // Bottom-left
+      ctx.beginPath();
+      ctx.moveTo(PHOTO_X + margin, PHOTO_Y + PHOTO_SIZE - margin - len);
+      ctx.lineTo(PHOTO_X + margin, PHOTO_Y + PHOTO_SIZE - margin);
+      ctx.lineTo(PHOTO_X + margin + len, PHOTO_Y + PHOTO_SIZE - margin);
+      ctx.stroke();
+
+      // Bottom-right
+      ctx.beginPath();
+      ctx.moveTo(PHOTO_X + PHOTO_SIZE - margin - len, PHOTO_Y + PHOTO_SIZE - margin);
+      ctx.lineTo(PHOTO_X + PHOTO_SIZE - margin, PHOTO_Y + PHOTO_SIZE - margin);
+      ctx.lineTo(PHOTO_X + PHOTO_SIZE - margin, PHOTO_Y + PHOTO_SIZE - margin - len);
+      ctx.stroke();
+
+      // Placeholder prompt
       ctx.font = '24px "Space Mono", monospace';
-      ctx.fillStyle = "#bbbaa6";
-      ctx.fillText(sanitizedParticipant, canvas.width / 2, canvas.height - 70);
+      ctx.fillStyle = "#7c7c6f";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("SELECT OR DROP TEAM PHOTO", PHOTO_X + PHOTO_SIZE / 2, PHOTO_Y + PHOTO_SIZE / 2 - 20);
+      ctx.font = '18px "Space Mono", monospace';
+      ctx.fillStyle = "#4a4b44";
+      ctx.fillText("DRAG TO PAN // SLIDER TO ZOOM", PHOTO_X + PHOTO_SIZE / 2, PHOTO_Y + PHOTO_SIZE / 2 + 22);
     }
-  }, [userImage, frameImage, zoom, offset, teamName, participantName]);
+
+    // 3. Bottom vignette gradient inside photo viewport (y from 633 to 1168)
+    const gradient = ctx.createLinearGradient(0, 633, 0, PHOTO_Y + PHOTO_SIZE);
+    gradient.addColorStop(0, "rgba(0, 0, 0, 0)");
+    gradient.addColorStop(0.35, "rgba(0, 0, 0, 0.4)");
+    gradient.addColorStop(0.7, "rgba(0, 0, 0, 0.85)");
+    gradient.addColorStop(1, "rgba(0, 0, 0, 0.98)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(PHOTO_X, 633, PHOTO_SIZE, PHOTO_Y + PHOTO_SIZE - 633);
+
+    ctx.restore();
+
+    // 4. Draw master Figma frame overlay (Header + Borders + Sponsor Bar)
+    if (frameImage) {
+      ctx.drawImage(frameImage, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    }
+
+    // 5. Draw dynamic text overlay at the bottom of the photo box
+    ctx.save();
+    ctx.font = 'bold 24px "Space Mono", monospace';
+    ctx.textBaseline = "middle";
+
+    const textY = PHOTO_Y + PHOTO_SIZE - 28;
+
+    // Left text: "THINK. CODE. CONQUER."
+    let leftX = PHOTO_X + 24;
+    const leftParts = [
+      { text: "THINK", color: "#f2f2f2" },
+      { text: ".", color: "#00ff1d" },
+      { text: " CODE", color: "#f2f2f2" },
+      { text: ".", color: "#00ff1d" },
+      { text: " CONQUER", color: "#f2f2f2" },
+      { text: ".", color: "#00ff1d" },
+    ];
+    for (const part of leftParts) {
+      ctx.fillStyle = part.color;
+      ctx.fillText(part.text, leftX, textY);
+      leftX += ctx.measureText(part.text).width;
+    }
+
+    // Right text: "Team {Name} • [Rank] / [All teams]" or "Team {Name} • FINALIST"
+    const safeTeam = canonicalizeText(teamName || "Team").substring(0, 22);
+    const rightParts: { text: string; color: string }[] = [
+      { text: `Team ${safeTeam} `, color: "#f2f2f2" },
+      { text: "•", color: "#00ff1d" },
+    ];
+
+    if (rank) {
+      rightParts.push({ text: ` ${rank} / ${totalTeams || "All teams"}`, color: "#f2f2f2" });
+    } else if (participantName) {
+      const safeParticipant = canonicalizeText(participantName).substring(0, 18);
+      rightParts.push({ text: ` ${safeParticipant}`, color: "#f2f2f2" });
+    } else {
+      rightParts.push({ text: ` ${status.toUpperCase()}`, color: "#f2f2f2" });
+    }
+
+    const totalRightWidth = rightParts.reduce(
+      (sum, part) => sum + ctx.measureText(part.text).width,
+      0
+    );
+    let rightX = PHOTO_X + PHOTO_SIZE - 24 - totalRightWidth;
+
+    for (const part of rightParts) {
+      ctx.fillStyle = part.color;
+      ctx.fillText(part.text, rightX, textY);
+      rightX += ctx.measureText(part.text).width;
+    }
+
+    ctx.restore();
+  }, [userImage, frameImage, zoom, offset, teamName, participantName, rank, totalTeams, status]);
 
   useEffect(() => {
     requestAnimationFrame(drawCanvas);
-  }, [drawCanvas]);
+  }, [drawCanvas, frameLoaded]);
 
-  // Drag logic
+  // Drag interaction logic with screen-to-canvas coordinate transformation
   const handleDragStart = (clientX: number, clientY: number) => {
     if (!userImage) return;
     setIsDragging(true);
-    setDragStart({ x: clientX - offset.x, y: clientY - offset.y });
+    setDragStart({ x: clientX, y: clientY });
+    setDragOffsetStart({ x: offset.x, y: offset.y });
   };
 
   const handleDragMove = (clientX: number, clientY: number) => {
     if (!isDragging || !userImage) return;
-
     const container = containerRef.current;
     if (!container) return;
 
     const rect = container.getBoundingClientRect();
-    const scaleX = 1080 / rect.width;
-    const scaleY = 1080 / rect.height;
+    const scale = CANVAS_WIDTH / rect.width;
+    const dx = (clientX - dragStart.x) * scale;
+    const dy = (clientY - dragStart.y) * scale;
 
     setOffset({
-      x: (clientX - dragStart.x * scaleX) / scaleX,
-      y: (clientY - dragStart.y * scaleY) / scaleY,
+      x: dragOffsetStart.x + dx,
+      y: dragOffsetStart.y + dy,
     });
   };
 
@@ -156,11 +281,9 @@ export default function Photobooth({ teamName, participantName }: PhotoboothProp
     setIsDragging(false);
   };
 
-  // Mouse events
   const onMouseDown = (e: React.MouseEvent) => handleDragStart(e.clientX, e.clientY);
   const onMouseMove = (e: React.MouseEvent) => handleDragMove(e.clientX, e.clientY);
 
-  // Touch events
   const onTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
     handleDragStart(touch.clientX, touch.clientY);
@@ -170,7 +293,7 @@ export default function Photobooth({ teamName, participantName }: PhotoboothProp
     handleDragMove(touch.clientX, touch.clientY);
   };
 
-  // Prevent default touch behavior to stop scrolling
+  // Prevent browser touch scroll while dragging inside photobooth
   useEffect(() => {
     const container = containerRef.current;
     const preventDefault = (e: TouchEvent) => {
@@ -192,7 +315,7 @@ export default function Photobooth({ teamName, participantName }: PhotoboothProp
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const safeTeam = canonicalizeText(teamName).replace(/[^a-zA-Z0-9_-]/g, "_");
+    const safeTeam = canonicalizeText(teamName || "team").replace(/[^a-zA-Z0-9_-]/g, "_");
     const fileName = `${safeTeam}_haxtreme5.png`;
 
     canvas.toBlob((blob) => {
@@ -212,7 +335,7 @@ export default function Photobooth({ teamName, participantName }: PhotoboothProp
     const canvas = canvasRef.current;
     if (!canvas || !navigator.share) return;
 
-    const safeTeam = canonicalizeText(teamName).replace(/[^a-zA-Z0-9_-]/g, "_");
+    const safeTeam = canonicalizeText(teamName || "team").replace(/[^a-zA-Z0-9_-]/g, "_");
     const fileName = `${safeTeam}_haxtreme5.png`;
 
     canvas.toBlob(async (blob) => {
@@ -223,8 +346,8 @@ export default function Photobooth({ teamName, participantName }: PhotoboothProp
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
           await navigator.share({
-            title: `HaXtreme 5.0 - ${teamName}`,
-            text: "Check out our team at HaXtreme 5.0!",
+            title: `HaXtreme 5.0 - Team ${teamName}`,
+            text: `Check out our official pass for HaXtreme 5.0!`,
             files: [file],
           });
         } catch (error) {
@@ -234,8 +357,13 @@ export default function Photobooth({ teamName, participantName }: PhotoboothProp
     }, "image/png");
   };
 
+  const resetPosition = () => {
+    setOffset({ x: 0, y: 0 });
+    setZoom(1);
+  };
+
   return (
-    <div className="flex flex-col items-center gap-6 w-full max-w-md mx-auto">
+    <div className="flex flex-col items-center gap-5 w-full max-w-md mx-auto select-none">
       <input
         type="file"
         accept="image/jpeg,image/png,image/webp"
@@ -246,23 +374,35 @@ export default function Photobooth({ teamName, participantName }: PhotoboothProp
       />
 
       {uploadError && (
-        <div className="w-full p-3 bg-red-500/10 border border-red-500 text-red-400 text-xs font-['Space_Mono',monospace]">
+        <div className="w-full p-3 bg-red-500/10 border border-red-500 text-red-400 text-xs font-['Space_Mono',monospace] rounded-none">
           [ERROR]: {uploadError}
         </div>
       )}
 
-      {/* SHARP CORNERS: rounded-none */}
-      <button
-        onClick={() => fileInputRef.current?.click()}
-        className="bg-[#191919] hover:bg-[#252525] text-[#bbbaa6] border border-[#42433d] px-6 py-3 text-xs font-['Space_Mono',monospace] uppercase tracking-wider transition-colors rounded-none w-full sm:w-auto"
-      >
-        {userImage ? "Change Photo" : "Upload Photo"}
-      </button>
+      {/* Action Buttons: Upload & Reset */}
+      <div className="w-full flex items-center justify-between gap-3">
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className="flex-1 bg-[#191919] hover:bg-[#252525] text-[#bbbaa6] hover:text-white border border-[#42433d] px-4 py-2.5 text-xs font-['Space_Mono',monospace] uppercase tracking-wider transition-colors rounded-none text-center"
+        >
+          {userImage ? "Change Photo" : "Upload Photo"}
+        </button>
 
-      {/* SHARP CORNERS: rounded-none */}
+        {userImage && (
+          <button
+            onClick={resetPosition}
+            className="bg-[#191919] hover:bg-[#252525] text-[#bbbaa6] hover:text-white border border-[#42433d] px-4 py-2.5 text-xs font-['Space_Mono',monospace] uppercase tracking-wider transition-colors rounded-none"
+            title="Reset position and zoom"
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      {/* Interactive Frame Canvas Preview */}
       <div
         ref={containerRef}
-        className={`relative w-full max-w-[420px] aspect-square rounded-none overflow-hidden border border-[#42433d] bg-black shadow-2xl ${
+        className={`relative w-full aspect-[1112/1273] rounded-none overflow-hidden border border-[#42433d] bg-[#050505] shadow-2xl ${
           isDragging ? "cursor-grabbing" : "cursor-grab"
         }`}
         onMouseDown={onMouseDown}
@@ -276,27 +416,19 @@ export default function Photobooth({ teamName, participantName }: PhotoboothProp
       >
         <canvas
           ref={canvasRef}
-          width={1080}
-          height={1080}
-          className="w-full h-full object-cover touch-none pointer-events-none rounded-none"
+          width={CANVAS_WIDTH}
+          height={CANVAS_HEIGHT}
+          className="w-full h-full object-contain touch-none pointer-events-none rounded-none"
         />
-        {!userImage && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <span className="text-[#bbbaa6]/50 font-['Space_Mono',monospace] text-xs text-center px-4 leading-relaxed">
-              Upload a photo to preview
-              <br />
-              Drag to pan, use slider to zoom
-            </span>
-          </div>
-        )}
       </div>
 
+      {/* Zoom Slider */}
       {userImage && (
-        <div className="w-full max-w-[420px] flex flex-col gap-2">
-          <label className="text-xs text-[#bbbaa6] font-['Space_Mono',monospace] flex justify-between">
-            <span>Zoom</span>
-            <span>{Math.round(zoom * 100)}%</span>
-          </label>
+        <div className="w-full flex flex-col gap-1.5 px-1">
+          <div className="flex justify-between items-center text-xs text-[#bbbaa6] font-['Space_Mono',monospace]">
+            <span>ZOOM</span>
+            <span className="text-[#0ae448]">{Math.round(zoom * 100)}%</span>
+          </div>
           <input
             type="range"
             min="0.5"
@@ -309,8 +441,8 @@ export default function Photobooth({ teamName, participantName }: PhotoboothProp
         </div>
       )}
 
-      {/* SHARP CORNERS: rounded-none */}
-      <div className="w-full max-w-[420px] flex flex-col gap-3 mt-2">
+      {/* Export Controls */}
+      <div className="w-full flex flex-col gap-2.5 mt-1">
         <button
           onClick={handleDownload}
           disabled={!userImage}
@@ -324,7 +456,7 @@ export default function Photobooth({ teamName, participantName }: PhotoboothProp
           <button
             onClick={handleShare}
             disabled={!userImage}
-            className="w-full py-3.5 rounded-none font-bold uppercase tracking-wider bg-transparent border border-[#0ae448] text-[#0ae448] disabled:opacity-40 disabled:cursor-not-allowed text-xs font-['Space_Mono',monospace] transition-all hover:bg-[#0ae448]/10"
+            className="w-full py-3 rounded-none font-bold uppercase tracking-wider bg-transparent border border-[#0ae448] text-[#0ae448] disabled:opacity-40 disabled:cursor-not-allowed text-xs font-['Space_Mono',monospace] transition-all hover:bg-[#0ae448]/10"
           >
             Share Badge
           </button>

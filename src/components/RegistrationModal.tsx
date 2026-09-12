@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { supabase } from "@/lib/supabase";
 
 interface RegistrationModalProps {
   isOpen: boolean;
@@ -142,42 +141,36 @@ export default function RegistrationModal({ isOpen, onClose, onSuccess }: Regist
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      // 1. Insert Team
-      const { data: teamData, error: teamError } = await supabase
-        .from("teams")
-        .insert({
-          team_name: teamInfo.teamName,
-          institution: teamInfo.institution,
-          leader_name: leaderDetails.name,
-          leader_email: leaderDetails.email,
-          leader_phone: leaderDetails.phone,
-        })
-        .select()
-        .single();
+      const payload = {
+        category: "University",
+        teamName: teamInfo.teamName,
+        institution: teamInfo.institution,
+        leaderName: leaderDetails.name,
+        leaderEmail: leaderDetails.email,
+        leaderPhone: leaderDetails.phone,
+        leaderIeee: false,
+        member2Name: teamMembers[0]?.name || "Member 2",
+        member2Email: teamMembers[0]?.email || "",
+        member2Phone: teamMembers[0]?.phone || "",
+        member2Ieee: false,
+        member3Name: teamMembers[1]?.name || "",
+        member3Email: teamMembers[1]?.email || "",
+        member3Phone: teamMembers[1]?.phone || "",
+        member3Ieee: false,
+        password: "DefaultPassword123!",
+        agreedToRules: true,
+      };
 
-      if (teamError) {
-        if (teamError.code === "23505") {
-          throw new Error("Team name or email already registered.");
-        }
-        throw new Error(teamError.message);
-      }
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-      const teamId = teamData.id;
+      const data = await res.json();
 
-      // 2. Insert Members
-      const membersToInsert = teamMembers.map(m => ({
-        team_id: teamId,
-        member_name: m.name,
-        member_email: m.email,
-        member_phone: m.phone || null,
-      }));
-
-      const { error: membersError } = await supabase
-        .from("team_members")
-        .insert(membersToInsert);
-
-      if (membersError) {
-        throw new Error(membersError.message);
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Registration failed. Please try again.");
       }
 
       setIsSuccess(true);
