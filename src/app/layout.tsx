@@ -3,6 +3,7 @@ import "./globals.css";
 import "../components/GSAP_Hero/hero.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://haxtreme.ieeeuor.org"),
   title: "HaXtreme 5.0 | Redefine Possible",
   description:
     "HaXtreme 5.0 is the premier competitive programming and hackathon arena organized by the IEEE Student Branch of University of Ruhuna in collaboration with the Computer Engineering Society (ComES). Bringing together top undergraduate minds across Sri Lanka to architect, build, and deploy innovative solutions.",
@@ -20,6 +21,11 @@ export const metadata: Metadata = {
     "Redefine Possible",
   ],
   authors: [{ name: "IEEE Student Branch of University of Ruhuna" }, { name: "ComES" }],
+  icons: {
+    icon: "/Favicon.png",
+    shortcut: "/Favicon.png",
+    apple: "/Favicon.png",
+  },
   openGraph: {
     title: "HaXtreme 5.0 | Redefine Possible",
     description:
@@ -28,10 +34,10 @@ export const metadata: Metadata = {
     siteName: "HaXtreme 5.0",
     images: [
       {
-        url: "/Logo.png",
+        url: "/LinkPreview.png",
         width: 1200,
         height: 630,
-        alt: "HaXtreme 5.0",
+        alt: "HaXtreme 5.0 | Redefine Possible",
       },
     ],
     locale: "en_US",
@@ -42,7 +48,7 @@ export const metadata: Metadata = {
     title: "HaXtreme 5.0 | Redefine Possible",
     description:
       "Premier competitive programming and hackathon arena organized by IEEE SB University of Ruhuna & ComES.",
-    images: ["/Logo.png"],
+    images: ["/LinkPreview.png"],
   },
 };
 

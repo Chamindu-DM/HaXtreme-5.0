@@ -13,10 +13,10 @@ export const metadata: Metadata = {
     siteName: "HaXtreme 5.0",
     images: [
       {
-        url: "/Logo.png",
+        url: "/LinkPreview.png",
         width: 1200,
         height: 630,
-        alt: "HaXtreme 5.0 Registration",
+        alt: "Join HaXtreme 5.0 | Official Team Registration",
       },
     ],
   },
