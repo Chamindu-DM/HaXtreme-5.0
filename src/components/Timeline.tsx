@@ -909,15 +909,18 @@ export default function Timeline({ className = "" }: { className?: string }) {
           
           {/* Left Column: Sticky Big Headline on Desktop / Top on Mobile */}
           <div className="w-full lg:w-5/12 lg:sticky lg:top-32 flex flex-col justify-start space-y-6 mb-16 lg:mb-0 z-10">
-
             <h2
-              className="text-5xl sm:text-6xl md:text-7xl xl:text-8xl font-bold text-white tracking-tight leading-[1.02]"
+              className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-tight"
               style={{
                 fontFamily:
                   '"Helvetica Neue", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
               }}
             >
-              Timeline
+              <span className="block overflow-hidden">
+                <span className="block guideline-line-reveal">
+                  Timeline
+                </span>
+              </span>
             </h2>
 
             <p className="font-space-mono text-gray-300 text-sm sm:text-base lg:text-lg leading-relaxed max-w-md">

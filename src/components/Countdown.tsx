@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { getTeamSession, onAuthChange } from "@/lib/auth";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -48,6 +50,10 @@ export default function Countdown() {
     };
   };
 
+  const router = useRouter();
+  const pathname = usePathname();
+  const [hasSession, setHasSession] = useState(false);
+
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
     hours: 0,
@@ -63,7 +69,17 @@ export default function Countdown() {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
-    return () => clearInterval(interval);
+    const updateSession = () => {
+      const session = getTeamSession();
+      setHasSession(!!session);
+    };
+    updateSession();
+    const unsubscribeAuth = onAuthChange(updateSession);
+
+    return () => {
+      clearInterval(interval);
+      unsubscribeAuth();
+    };
   }, []);
 
   useGSAP(
@@ -325,12 +341,22 @@ export default function Countdown() {
 
           {/* White-Themed Space Mono Register Button (Mobile only) */}
           <div className="mt-5 sm:mt-7 flex lg:hidden justify-center w-full">
-            <a
-              href="#register"
-              className="inline-flex items-center w-[226px] justify-center px-6 sm:px-8 py-2.5 sm:py-3 bg-white text-black font-space-mono text-xs sm:text-sm font-bold uppercase tracking-widest border-[0.5px] border-black rounded-none transition-all duration-200"
+            <button
+              type="button"
+              onClick={() => {
+                if (hasSession) {
+                  router.push("/contest");
+                } else if (pathname === "/register") {
+                  const el = document.getElementById("registration-form");
+                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                } else {
+                  router.push("/register");
+                }
+              }}
+              className="inline-flex items-center w-[226px] justify-center px-6 sm:px-8 py-2.5 sm:py-3 bg-white hover:bg-neutral-100 text-black font-space-mono text-xs sm:text-sm font-bold uppercase tracking-widest border-[0.5px] border-black rounded-none transition-all duration-200 cursor-pointer select-none"
             >
-              <span>Register</span>
-            </a>
+              <span>{hasSession ? "Contest" : "Register"}</span>
+            </button>
           </div>
         </div>
       </div>

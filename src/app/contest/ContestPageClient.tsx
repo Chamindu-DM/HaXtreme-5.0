@@ -13,10 +13,6 @@ import {
 } from "@/lib/auth";
 import { validateEmail, canonicalizeText } from "@/lib/security";
 
-const HACKERRANK_CONTEST_URL =
-  process.env.NEXT_PUBLIC_HACKERRANK_CONTEST_URL ||
-  "https://www.hackerrank.com/haxtreme-5-0";
-
 const OC_CONTACT_EMAIL = "info.haxtreme@gmail.com";
 
 // Official contest start time: October 3, 2026 09:00:00 AM Sri Lanka Time (UTC+05:30)
@@ -325,47 +321,37 @@ export default function ContestPageClient() {
               <div className="pt-6 space-y-4">
                 <div className="p-6 bg-[#0e100f] border border-[#242622] rounded-none flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                   <div className="space-y-2 max-w-2xl">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 bg-[#0ae448]" />
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="w-2 h-2 bg-amber-400" />
                       <h3 className="text-base font-bold text-white uppercase font-['Space_Mono',monospace]">
                         Online Preliminary Round Arena
                       </h3>
+                      <span className="text-[10px] font-['Space_Mono',monospace] text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2.5 py-0.5 rounded-none uppercase">
+                        Scheduled: October 3, 2026
+                      </span>
                     </div>
                     <p className="text-xs text-[#bbbaa6] leading-relaxed font-['Space_Mono',monospace]">
-                      The official competitive programming round is hosted on HackerRank. All members of the team must compete using only ONE shared HackerRank account.
+                      The Online Preliminary Round is scheduled for <span className="text-white font-bold">October 3, 2026</span>. The official HackerRank contest link will unlock on competition day. All members of the team must compete using only ONE shared HackerRank account.
                     </p>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 text-[11px] font-['Space_Mono',monospace] text-[#7c7c6f]">
+                      <span className="text-amber-400 font-bold">[ROUND DATE]: October 3, 2026</span>
                       <span>[PLATFORM]: HackerRank</span>
                       <span>[DURATION]: 4 Hours</span>
                       <span>[LANGUAGES]: C, C++, Java, Python, JS</span>
                     </div>
                   </div>
 
-                  {/* Decent looking Enter Contest button */}
-                  <div className="shrink-0 w-full md:w-auto">
-                    <a
-                      href={HACKERRANK_CONTEST_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#141615] hover:bg-[#1a1d1b] border-2 border-[#0ae448] text-white font-bold text-xs uppercase font-['Space_Mono',monospace] tracking-wider transition-all duration-300 shadow-lg shadow-green-500/10 hover:shadow-green-500/20 w-full md:w-auto rounded-none text-center"
+                  {/* Grayed-out Contest Button */}
+                  <div className="shrink-0 w-full md:w-auto flex flex-col items-start md:items-end gap-1.5">
+                    <div
+                      className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#141615] border-2 border-[#34352F] text-[#7c7c6f] font-bold text-xs uppercase font-['Space_Mono',monospace] tracking-wider cursor-not-allowed select-none rounded-none w-full md:w-auto text-center"
+                      title="Contest will unlock on October 3, 2026"
                     >
-                      <span className="text-[#0ae448] group-hover:text-white transition-colors">
-                        Enter Contest
-                      </span>
-                      <svg
-                        className="w-4 h-4 text-[#0ae448] group-hover:text-white group-hover:translate-x-1 transition-all"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M14 5l7 7m0 0l-7 7m7-7H3"
-                        />
+                      <svg className="w-4 h-4 text-[#7c7c6f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                       </svg>
-                    </a>
+                      <span>Contest Locked</span>
+                    </div>
                   </div>
                 </div>
 

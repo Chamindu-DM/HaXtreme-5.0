@@ -92,14 +92,18 @@ export default function MemoryLane() {
         {/* Intro Narrative Card */}
         <div className="w-[90vw] sm:w-[48vw] md:w-[35vw] lg:w-[26vw] max-w-[400px] shrink-0 flex flex-col justify-center space-y-6 pr-4 sm:pr-8">
           <h2
-            className="text-5xl sm:text-6xl md:text-7xl font-bold text-white tracking-tight leading-[1.02]"
-            style={{
-              fontFamily:
-                '"Helvetica Neue", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-            }}
-          >
-            Memory Lane
-          </h2>
+              className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-tight"
+              style={{
+                fontFamily:
+                  '"Helvetica Neue", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+              }}
+            >
+              <span className="block overflow-hidden">
+                <span className="block guideline-line-reveal">
+                  Memory Lane
+                </span>
+              </span>
+            </h2>
 
           <div className="space-y-4 font-space-mono text-gray-300 text-sm sm:text-base leading-relaxed">
             <p>
