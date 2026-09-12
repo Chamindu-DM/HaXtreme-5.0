@@ -178,7 +178,7 @@ export default function WhatIs() {
               viewBox="-1 -1 103 103"
               fill="none"
               /* 
-               * 💡 STROKE REDUCTION:
+               * NOTE - STROKE REDUCTION:
                * You can adjust stroke-width directly here on the SVG (e.g. strokeWidth="1.5" or "1.0")
                * or on the <path> element below. Default is "1.8".
                */

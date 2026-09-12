@@ -128,11 +128,11 @@ export default function PhotoboothModal({ isOpen, onClose }: PhotoboothModalProp
       />
       
       {/* Modal */}
-      <div className="relative w-full max-w-xl bg-[#191919] border border-[#42433d] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-xl bg-[#191919] border border-[#42433d] rounded-none shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Close Button */}
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 p-2 text-[#bbbaa6] hover:text-white rounded-full bg-black/20 hover:bg-black/40 transition-colors"
+          className="absolute top-4 right-4 z-10 p-2 text-[#bbbaa6] hover:text-white rounded-none bg-black/20 hover:bg-black/40 transition-colors border border-[#42433d]"
           aria-label="Close"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -144,8 +144,8 @@ export default function PhotoboothModal({ isOpen, onClose }: PhotoboothModalProp
           {!verifiedTeamName ? (
             <div className="flex flex-col items-center text-center space-y-6 py-8">
               <div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">Virtual Photobooth</h2>
-                <p className="text-[#bbbaa6] text-sm">Enter your registered email to access the photobooth</p>
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2 uppercase font-['Space_Mono',monospace]">Virtual Photobooth</h2>
+                <p className="text-[#bbbaa6] text-xs font-['Space_Mono',monospace]">Enter your registered leader email to access the photobooth</p>
               </div>
 
               <form onSubmit={handleVerify} className="w-full max-w-sm space-y-4">
@@ -155,13 +155,13 @@ export default function PhotoboothModal({ isOpen, onClose }: PhotoboothModalProp
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="leader@example.com"
-                    className="w-full bg-[#0E100F] border border-[#42433d] rounded-lg px-4 py-3 text-white placeholder-[#bbbaa6]/50 focus:outline-none focus:border-[#0ae448] transition-colors"
+                    className="w-full bg-[#0E100F] border border-[#42433d] rounded-none px-4 py-3 text-white placeholder-[#bbbaa6]/50 focus:outline-none focus:border-[#0ae448] transition-colors font-['Space_Mono',monospace] text-xs"
                     required
                   />
                 </div>
 
                 {message && (
-                  <div className={`p-3 rounded-lg text-sm text-left border ${
+                  <div className={`p-3 rounded-none text-xs text-left border font-['Space_Mono',monospace] ${
                     message.type === 'error' ? 'bg-red-500/10 border-red-500/30 text-red-400' :
                     message.type === 'info' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' :
                     'bg-green-500/10 border-green-500/30 text-green-400'
@@ -173,7 +173,8 @@ export default function PhotoboothModal({ isOpen, onClose }: PhotoboothModalProp
                 <button
                   type="submit"
                   disabled={isVerifying}
-                  className="w-full py-3.5 rounded-full font-bold text-black uppercase tracking-wider bg-gradient-to-r from-[#0ae448] to-[#abff84] disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-green-500/20 text-sm transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2"
+                  className="w-full py-3.5 rounded-none font-extrabold text-black uppercase tracking-wider text-xs font-['Space_Mono',monospace] disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-green-500/20 transition-all border border-[#0ae448] flex items-center justify-center gap-2"
+                  style={{ background: "var(--grad-macha)" }}
                 >
                   {isVerifying ? (
                     <>
@@ -181,7 +182,7 @@ export default function PhotoboothModal({ isOpen, onClose }: PhotoboothModalProp
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Verifying...
+                      Verifying Access...
                     </>
                   ) : (
                     'Verify Access'

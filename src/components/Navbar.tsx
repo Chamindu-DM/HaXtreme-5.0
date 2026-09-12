@@ -2,29 +2,31 @@
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { triggerSectionTransition } from "./SectionTransition";
 import RegistrationModal from "./RegistrationModal";
-import PhotoboothModal from "./PhotoboothModal";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP);
 }
 
 const navLinks = [
-  { name: "About", href: "#what-is", num: "01" },
-  { name: "Guidelines", href: "#guidelines", num: "02" },
-  { name: "Timeline", href: "#timeline", num: "03" },
-  { name: "Memory Lane", href: "#memory-lane", num: "04" },
-  { name: "Partners", href: "#partners", num: "05" },
-  { name: "Contact", href: "#contact-us", num: "06" },
-  { name: "Photobooth", href: "#photobooth", num: "07" },
+  { name: "About", href: "/#what-is", num: "01" },
+  { name: "Guidelines", href: "/#guidelines", num: "02" },
+  { name: "Timeline", href: "/#timeline", num: "03" },
+  { name: "Memory Lane", href: "/#memory-lane", num: "04" },
+  { name: "Partners", href: "/#partners", num: "05" },
+  { name: "Contact", href: "/#contact-us", num: "06" },
 ];
 
 const registerChars = "REGISTER".split("");
 
 export default function Navbar() {
+  const router = useRouter();
+  const pathname = usePathname();
   const containerRef = useRef<HTMLDivElement>(null);
   const menuPanelRef = useRef<HTMLDivElement>(null);
   const menuBtnRef = useRef<HTMLButtonElement>(null);
@@ -38,7 +40,6 @@ export default function Navbar() {
   const [isLight, setIsLight] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [showRegistration, setShowRegistration] = useState(false);
-  const [showPhotobooth, setShowPhotobooth] = useState(false);
   const lastScrollYRef = useRef(0);
 
   useEffect(() => {
@@ -347,7 +348,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto py-3.5 flex justify-between items-center w-full">
         {/* Left: Logo */}
         <div className="flex items-center gap-2">
-          <a href="#hero" className="flex items-center group relative w-36 sm:w-44 h-8">
+          <Link href="/" className="flex items-center group relative w-36 sm:w-44 h-8">
             <Image
               src={isLight ? "/White_Logo.svg" : "/Logo.svg"}
               alt="HaXtreme 5.0"
@@ -355,7 +356,7 @@ export default function Navbar() {
               className="object-contain transition-all duration-300 group-hover:scale-105"
               priority
             />
-          </a>
+          </Link>
         </div>
 
         {/* ─── Desktop Navbar: Minimal & Common UI ─── */}
@@ -371,12 +372,11 @@ export default function Navbar() {
                     : "text-[#bbbaa6] hover:text-[#0ae448]"
                 }`}
                 onClick={(e) => {
-                  if (link.href === "#hero") {
-                    e.preventDefault();
-                    triggerSectionTransition("hero");
-                  } else if (link.href === "#photobooth") {
-                    e.preventDefault();
-                    setShowPhotobooth(true);
+                  if (link.href === "/#hero" || link.href === "#hero") {
+                    if (pathname === "/") {
+                      e.preventDefault();
+                      triggerSectionTransition("hero");
+                    }
                   }
                 }}
               >
@@ -404,7 +404,14 @@ export default function Navbar() {
               id="btnAuto"
               type="button"
               onMouseEnter={handleButtonMouseEnter}
-              onClick={() => setShowRegistration(true)}
+              onClick={() => {
+                if (pathname === "/register") {
+                  const el = document.getElementById("registration-form");
+                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                } else {
+                  router.push("/register");
+                }
+              }}
               className="mag-btn relative h-10 px-6 rounded-[40px] flex justify-center items-center gap-2 cursor-pointer select-none shadow-md shadow-green-500/15 hover:shadow-green-500/30 will-change-transform overflow-hidden border-none"
             >
               <div
@@ -590,19 +597,16 @@ export default function Navbar() {
             </div>
 
             {/* Right: Register Button */}
-            <button
-              type="button"
-              onClick={() => {
-                closeMenu();
-                setShowRegistration(true);
-              }}
+            <Link
+              href="/register"
+              onClick={closeMenu}
               className="relative h-8 px-4 rounded-[40px] flex justify-center items-center gap-1.5 select-none shadow-md shadow-green-500/20 active:scale-95 transition-transform"
               style={{ background: "var(--grad-macha)" }}
             >
               <span className="text-[#0e100f] text-xs font-bold tracking-wider font-['Helvetica_Neue','Inter',sans-serif] uppercase">
                 REGISTER
               </span>
-            </button>
+            </Link>
           </div>
 
           {/* Navigation Links */}
@@ -619,12 +623,8 @@ export default function Navbar() {
                     ? "1px solid rgba(0, 0, 0, 0.08)"
                     : undefined,
                 }}
-                onClick={(e) => {
+                onClick={() => {
                   closeMenu();
-                  if (link.href === "#photobooth") {
-                    e.preventDefault();
-                    setShowPhotobooth(true);
-                  }
                 }}
               >
                 <span className="font-medium text-sm">{link.name}</span>
@@ -644,10 +644,6 @@ export default function Navbar() {
       <RegistrationModal
         isOpen={showRegistration}
         onClose={() => setShowRegistration(false)}
-      />
-      <PhotoboothModal
-        isOpen={showPhotobooth}
-        onClose={() => setShowPhotobooth(false)}
       />
     </header>
   );

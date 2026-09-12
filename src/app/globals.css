@@ -272,7 +272,7 @@ body {
   width: 100%;
   background: #0e100f;
   border: 1.5px solid #42433d;
-  border-radius: 10px;
+  border-radius: 0px;
   color: #ededed;
   padding: 0.75rem 1rem;
   font-size: 0.9rem;
@@ -312,7 +312,7 @@ input[type="range"].photobooth-slider {
   width: 100%;
   height: 4px;
   background: #42433d;
-  border-radius: 2px;
+  border-radius: 0px;
   outline: none;
 }
 
@@ -321,7 +321,7 @@ input[type="range"].photobooth-slider::-webkit-slider-thumb {
   appearance: none;
   width: 18px;
   height: 18px;
-  border-radius: 50%;
+  border-radius: 0px;
   background: #0ae448;
   cursor: pointer;
   border: 2px solid #0e100f;
@@ -331,7 +331,7 @@ input[type="range"].photobooth-slider::-webkit-slider-thumb {
 input[type="range"].photobooth-slider::-moz-range-thumb {
   width: 18px;
   height: 18px;
-  border-radius: 50%;
+  border-radius: 0px;
   background: #0ae448;
   cursor: pointer;
   border: 2px solid #0e100f;
@@ -349,7 +349,7 @@ input[type="range"].photobooth-slider::-moz-range-thumb {
 
 .modal-scrollbar::-webkit-scrollbar-thumb {
   background: #42433d;
-  border-radius: 3px;
+  border-radius: 0px;
 }
 
 .modal-scrollbar::-webkit-scrollbar-thumb:hover {
