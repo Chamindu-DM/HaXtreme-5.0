@@ -10,6 +10,7 @@ import Partners from "@/components/Partners";
 import Prizes from "@/components/Prizes";
 import MemoryLane from "@/components/MemoryLane";
 import ContactUs from "@/components/ContactUs";
+import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -26,6 +27,7 @@ export default function Home() {
       <Prizes />
       <MemoryLane />
       <Partners />
+      <FAQ />
       <ContactUs />
       <Footer />
     </main>

@@ -20,7 +20,8 @@ const navLinks = [
   { name: "Timeline", href: "/#timeline", num: "03" },
   { name: "Memory Lane", href: "/#memory-lane", num: "04" },
   { name: "Partners", href: "/#partners", num: "05" },
-  { name: "Contact", href: "/#contact-us", num: "06" },
+  { name: "FAQ", href: "/#faq", num: "06" },
+  { name: "Contact", href: "/#contact-us", num: "07" },
 ];
 
 const registerChars = "REGISTER".split("");
