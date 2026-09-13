@@ -248,8 +248,7 @@ function FAQAccordionItem({ item, isOpen, onToggle }: FAQAccordionItemProps) {
 
 export default function FAQ() {
   const containerRef = useRef<HTMLElement>(null);
-  // Default to first question open to showcase design as in Figma
-  const [openId, setOpenId] = useState<string | null>("eligibility");
+  const [openId, setOpenId] = useState<string | null>(null);
 
   const toggleItem = (id: string) => {
     setOpenId((prev) => (prev === id ? null : id));
@@ -302,7 +301,7 @@ export default function FAQ() {
       className="w-full pt-16 pb-12 sm:pt-24 sm:pb-20 px-8 sm:px-8 lg:px-20 flex flex-col items-center bg-transparent relative z-10"
     >
       {/* Section Header */}
-      <div className="w-full max-w-[1400px] mx-auto flex flex-col items-center text-center mb-12 sm:mb-16 gap-8">
+      <div className="w-full max-w-[1400px] mx-auto flex flex-col items-center text-center mt-16 mb-12 sm:mb-16 gap-8">
         <h2
           className="faq-header-reveal text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-tight"
           style={{
