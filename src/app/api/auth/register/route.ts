@@ -265,7 +265,49 @@ export async function POST(request: Request) {
 
       const teamId = insertedTeam.id;
 
-      // Insert 2 Team Members
+      // 1. Insert ALL 3 participants into the comprehensive `registrations` table
+      const allRegistrationsToInsert = [
+        {
+          team_id: teamId,
+          member_order: 1,
+          role: "Leader",
+          member_name: lNameVal.sanitized,
+          member_email: cleanLeaderEmail,
+          member_phone: lPhoneVal.sanitized,
+          member_ieee_member: !!leaderIeee,
+          member_ieee_number: cleanLeaderIeee || null,
+        },
+        {
+          team_id: teamId,
+          member_order: 2,
+          role: "Member",
+          member_name: m2NameVal.sanitized,
+          member_email: cleanM2Email,
+          member_phone: m2PhoneVal.sanitized,
+          member_ieee_member: !!member2Ieee,
+          member_ieee_number: cleanM2Ieee || null,
+        },
+        {
+          team_id: teamId,
+          member_order: 3,
+          role: "Member",
+          member_name: m3NameVal.sanitized,
+          member_email: cleanM3Email,
+          member_phone: m3PhoneVal.sanitized,
+          member_ieee_member: !!member3Ieee,
+          member_ieee_number: cleanM3Ieee || null,
+        },
+      ];
+
+      const { error: regInsertError } = await supabaseAdmin
+        .from("registrations")
+        .insert(allRegistrationsToInsert);
+
+      if (regInsertError) {
+        console.warn("Registrations table insert warning (schema might need update):", regInsertError.message);
+      }
+
+      // 2. Also insert into backwards-compatible `team_members` table (Member 2 and Member 3)
       const membersToInsert = [
         {
           team_id: teamId,
@@ -291,9 +333,9 @@ export async function POST(request: Request) {
         .from("team_members")
         .insert(membersToInsert);
 
-      if (membersInsertError) {
+      if (membersInsertError && regInsertError) {
         console.error("Members insert error:", membersInsertError);
-        // Clean up orphaned team record if member insert fails
+        // Clean up orphaned team record if both member inserts fail
         await supabaseAdmin.from("teams").delete().eq("id", teamId);
         throw new Error("Failed to register team members. Please try again.");
       }

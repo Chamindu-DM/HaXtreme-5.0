@@ -73,7 +73,30 @@ export async function POST(request: Request) {
       });
     }
 
-    // 2. Check if email belongs to a team member
+    // 2. Check if email belongs to any registered participant (registrations table or team_members)
+    const { data: regParticipant, error: regError } = await supabaseAdmin
+      .from("registrations")
+      .select("member_name, team_id, teams(team_name, status)")
+      .eq("member_email", normalizedEmail)
+      .maybeSingle();
+
+    if (!regError && regParticipant && regParticipant.teams) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const teamObj: any = Array.isArray(regParticipant.teams)
+        ? regParticipant.teams[0]
+        : regParticipant.teams;
+
+      return NextResponse.json({
+        success: true,
+        teamName: teamObj?.team_name || "Team",
+        participantName: regParticipant.member_name,
+        status: teamObj?.status || "registered",
+        qualified: false,
+        message: "Virtual Photobooth unlocks strictly after the Online Preliminary Round.",
+      });
+    }
+
+    // Fallback: Check legacy team_members table
     const { data: memberData, error: memberError } = await supabaseAdmin
       .from("team_members")
       .select("member_name, team_id, teams(team_name, status)")
