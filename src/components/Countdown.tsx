@@ -31,8 +31,8 @@ export default function Countdown() {
   const exitOverlayRef = useRef<HTMLDivElement>(null);
   const exitPathRef = useRef<SVGPathElement>(null);
 
-  // Target countdown date: 15 September 2026, 12:00 a.m. (00:00:00)
-  const targetDate = useRef(new Date("2026-09-15T00:00:00+05:30").getTime());
+  // Target countdown date: 30 September 2026, 12:00 a.m. (00:00:00)
+  const targetDate = useRef(new Date("2026-09-30T00:00:00+05:30").getTime());
 
   const calculateTimeLeft = (): TimeLeft => {
     const now = new Date().getTime();

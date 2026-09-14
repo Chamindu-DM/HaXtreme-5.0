@@ -1,15 +1,43 @@
 import { NextResponse } from "next/server";
-import crypto from "crypto";
 import { supabaseAdmin } from "@/lib/supabaseServer";
-import { validateEmail } from "@/lib/security";
+import {
+  validateEmail,
+  getClientIp,
+  checkRateLimit,
+  RATE_LIMITS,
+} from "@/lib/security";
+import { verifyPassword, hashPassword } from "@/lib/cryptoServer";
 import type { TeamSessionData } from "@/lib/auth";
-
-function hashPasswordServer(password: string): string {
-  return crypto.createHash("sha256").update(password).digest("hex");
-}
 
 export async function POST(request: Request) {
   try {
+    // 0. Rate Limiting Check (5 attempts per 5 minutes per IP)
+    const clientIp = getClientIp(request);
+    const rateLimit = checkRateLimit(
+      `${RATE_LIMITS.LOGIN.prefix}:${clientIp}`,
+      RATE_LIMITS.LOGIN.max,
+      RATE_LIMITS.LOGIN.windowSeconds
+    );
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Too many failed login attempts. Please wait before trying again.",
+          retryAfter: rateLimit.retryAfter,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimit.retryAfter),
+            "X-RateLimit-Limit": String(RATE_LIMITS.LOGIN.max),
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": String(rateLimit.resetSeconds),
+          },
+        }
+      );
+    }
+
     const body = await request.json();
     const { email, password } = body;
 
@@ -29,7 +57,6 @@ export async function POST(request: Request) {
     }
 
     const normalizedEmail = emailVal.sanitized.toLowerCase();
-    const hashedInput = hashPasswordServer(password);
 
     // Query team from database via server-side client
     const { data: teamData, error: teamError } = await supabaseAdmin
@@ -53,12 +80,24 @@ export async function POST(request: Request) {
       );
     }
 
-    // Verify password hash on the server
-    if (teamData.password_hash && teamData.password_hash !== hashedInput) {
-      return NextResponse.json(
-        { success: false, error: "Invalid email or password." },
-        { status: 401 }
-      );
+    // Verify password hash on the server (supports both salted and legacy hashes)
+    if (teamData.password_hash) {
+      const isMatch = verifyPassword(password, teamData.password_hash);
+      if (!isMatch) {
+        return NextResponse.json(
+          { success: false, error: "Invalid email or password." },
+          { status: 401 }
+        );
+      }
+
+      // Transparent upgrade: If legacy unsalted hash, upgrade to salted hash in database
+      if (!teamData.password_hash.includes(":")) {
+        const upgraded = hashPassword(password);
+        await supabaseAdmin
+          .from("teams")
+          .update({ password_hash: upgraded.stored })
+          .eq("id", teamData.id);
+      }
     }
 
     // Fetch team members

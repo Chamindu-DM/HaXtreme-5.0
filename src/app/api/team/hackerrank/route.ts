@@ -1,12 +1,45 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseServer";
-import { canonicalizeText, validateEmail } from "@/lib/security";
+import {
+  canonicalizeText,
+  validateEmail,
+  getClientIp,
+  checkRateLimit,
+  RATE_LIMITS,
+} from "@/lib/security";
 
 // Official contest start time: October 3, 2026 09:00:00 AM Sri Lanka Time (UTC+05:30)
 const CONTEST_START_TIMESTAMP = new Date("2026-10-03T09:00:00+05:30").getTime();
 
 export async function POST(request: Request) {
   try {
+    // 0. Rate Limiting Check (10 attempts per 10 minutes per IP)
+    const clientIp = getClientIp(request);
+    const rateLimit = checkRateLimit(
+      `${RATE_LIMITS.HACKERRANK.prefix}:${clientIp}`,
+      RATE_LIMITS.HACKERRANK.max,
+      RATE_LIMITS.HACKERRANK.windowSeconds
+    );
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Too many update attempts. Please wait before trying again.",
+          retryAfter: rateLimit.retryAfter,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimit.retryAfter),
+            "X-RateLimit-Limit": String(RATE_LIMITS.HACKERRANK.max),
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": String(rateLimit.resetSeconds),
+          },
+        }
+      );
+    }
+
     const body = await request.json();
     const { teamId, email, hackerrankUsername } = body;
 

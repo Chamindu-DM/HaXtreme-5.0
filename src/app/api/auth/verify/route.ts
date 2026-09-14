@@ -1,9 +1,36 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseServer";
-import { validateEmail } from "@/lib/security";
+import { validateEmail, getClientIp, checkRateLimit, RATE_LIMITS } from "@/lib/security";
 
 export async function POST(request: Request) {
   try {
+    // 0. Rate Limiting Check (15 checks per minute per IP to prevent email harvesting)
+    const clientIp = getClientIp(request);
+    const rateLimit = checkRateLimit(
+      `${RATE_LIMITS.VERIFY.prefix}:${clientIp}`,
+      RATE_LIMITS.VERIFY.max,
+      RATE_LIMITS.VERIFY.windowSeconds
+    );
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Too many verification requests. Please try again later.",
+          retryAfter: rateLimit.retryAfter,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimit.retryAfter),
+            "X-RateLimit-Limit": String(RATE_LIMITS.VERIFY.max),
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": String(rateLimit.resetSeconds),
+          },
+        }
+      );
+    }
+
     const body = await request.json();
     const { email } = body;
 

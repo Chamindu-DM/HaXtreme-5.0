@@ -52,41 +52,24 @@ alter table team_members add column if not exists member_order int not null defa
 alter table team_members add column if not exists member_ieee_member boolean default false;
 alter table team_members add column if not exists member_ieee_number text;
 
--- ─── Row Level Security ───
+-- ─── Row Level Security (Defense in Depth) ───
+-- Note: All mutations and queries are executed server-side using the Next.js backend API
+-- with the Supabase Service Role Key (which bypasses RLS).
+-- Direct public access via the Anon Key is disabled or strictly guarded to prevent
+-- database scraping or unauthorized updates from browser bundles.
 alter table teams enable row level security;
 alter table team_members enable row level security;
 
--- Allow anyone to INSERT new teams (public registration)
+-- Revoke all direct public client access by default
 drop policy if exists "Anyone can register a team" on teams;
-create policy "Anyone can register a team"
-  on teams for insert
-  with check (true);
-
--- Allow anyone to read team (for sign in and photobooth verification)
 drop policy if exists "Anyone can read team by leader email" on teams;
 drop policy if exists "Anyone can read teams" on teams;
-create policy "Anyone can read teams"
-  on teams for select
-  using (true);
-
--- Allow anyone to INSERT team members (during registration)
 drop policy if exists "Anyone can add team members" on team_members;
-create policy "Anyone can add team members"
-  on team_members for insert
-  with check (true);
-
--- Allow reading team members for associated teams
 drop policy if exists "Anyone can read team members" on team_members;
-create policy "Anyone can read team members"
-  on team_members for select
-  using (true);
-
--- Allow updating team details (e.g. hackerrank_username)
 drop policy if exists "Anyone can update teams" on teams;
-create policy "Anyone can update teams"
-  on teams for update
-  using (true)
-  with check (true);
+
+-- If public anon access is ever queried directly, only non-sensitive columns should be visible
+-- All authentication and registration operations proceed securely via server-side /api routes.
 
 -- ─── Indexes ───
 create index if not exists idx_teams_leader_email on teams(leader_email);

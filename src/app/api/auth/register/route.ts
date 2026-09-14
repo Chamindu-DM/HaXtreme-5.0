@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import crypto from "crypto";
 import { supabaseAdmin } from "@/lib/supabaseServer";
 import {
   validateTeamName,
@@ -9,15 +8,42 @@ import {
   validateInstitution,
   validateIeeeNumber,
   validatePassword,
+  getClientIp,
+  checkRateLimit,
+  RATE_LIMITS,
 } from "@/lib/security";
+import { hashPassword } from "@/lib/cryptoServer";
 import type { TeamSessionData } from "@/lib/auth";
-
-function hashPasswordServer(password: string): string {
-  return crypto.createHash("sha256").update(password).digest("hex");
-}
 
 export async function POST(request: Request) {
   try {
+    // 0. Rate Limiting Check (3 submissions per hour per IP)
+    const clientIp = getClientIp(request);
+    const rateLimit = checkRateLimit(
+      `${RATE_LIMITS.REGISTER.prefix}:${clientIp}`,
+      RATE_LIMITS.REGISTER.max,
+      RATE_LIMITS.REGISTER.windowSeconds
+    );
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Too many registration attempts. Please try again later.",
+          retryAfter: rateLimit.retryAfter,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimit.retryAfter),
+            "X-RateLimit-Limit": String(RATE_LIMITS.REGISTER.max),
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": String(rateLimit.resetSeconds),
+          },
+        }
+      );
+    }
+
     const body = await request.json();
 
     const {
@@ -180,7 +206,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const passwordHash = hashPasswordServer(password);
+    const passwordHash = hashPassword(password).stored;
     const cleanTeamName = teamVal.sanitized;
     const cleanInstitution = instVal.sanitized;
 

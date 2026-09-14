@@ -346,3 +346,125 @@ export async function validateImageFile(file: File): Promise<{ valid: boolean; e
 
   return { valid: true };
 }
+
+// ─── 3. Sliding-Window Token Bucket Rate Limiting (Option A) ───
+
+interface RateLimitEntry {
+  timestamps: number[];
+}
+
+/**
+ * Global in-memory bucket store for IP-based rate limiting.
+ * Key: `${prefix}:${clientIp}`
+ */
+const rateLimitStore = new Map<string, RateLimitEntry>();
+
+/**
+ * Periodic eviction timer (every 5 minutes) to prune stale entries and prevent memory leaks.
+ */
+let lastCleanup = Date.now();
+function cleanupStaleEntries(windowMs: number) {
+  const now = Date.now();
+  if (now - lastCleanup < 60_000) return; // Clean at most once every minute
+  lastCleanup = now;
+
+  for (const [key, entry] of rateLimitStore.entries()) {
+    entry.timestamps = entry.timestamps.filter((ts) => now - ts < windowMs);
+    if (entry.timestamps.length === 0) {
+      rateLimitStore.delete(key);
+    }
+  }
+}
+
+export interface RateLimitResult {
+  allowed: boolean;
+  remaining: number;
+  resetSeconds: number;
+  retryAfter: number;
+}
+
+/**
+ * Extracts client IP from incoming standard Request headers with fallback.
+ */
+export function getClientIp(request: Request): string {
+  const headers = request.headers;
+  // x-forwarded-for can be a comma-separated list; first IP is client
+  const forwarded = headers.get("x-forwarded-for");
+  if (forwarded) {
+    const clientIp = forwarded.split(",")[0].trim();
+    if (clientIp) return clientIp;
+  }
+
+  const realIp = headers.get("x-real-ip");
+  if (realIp && realIp.trim()) return realIp.trim();
+
+  const cfIp = headers.get("cf-connecting-ip");
+  if (cfIp && cfIp.trim()) return cfIp.trim();
+
+  return "127.0.0.1";
+}
+
+/**
+ * Checks and records rate limit for a specific key using sliding-window algorithm.
+ *
+ * @param key Unique key (e.g. "login:192.168.1.1")
+ * @param maxRequests Maximum requests allowed in the window
+ * @param windowSeconds Window length in seconds
+ */
+export function checkRateLimit(
+  key: string,
+  maxRequests: number,
+  windowSeconds: number
+): RateLimitResult {
+  const now = Date.now();
+  const windowMs = windowSeconds * 1000;
+
+  cleanupStaleEntries(windowMs);
+
+  let entry = rateLimitStore.get(key);
+  if (!entry) {
+    entry = { timestamps: [] };
+    rateLimitStore.set(key, entry);
+  }
+
+  // Keep only timestamps within current window
+  entry.timestamps = entry.timestamps.filter((ts) => now - ts < windowMs);
+
+  if (entry.timestamps.length >= maxRequests) {
+    // Exceeded limit. Calculate time until oldest timestamp in window expires.
+    const oldestTimestamp = entry.timestamps[0];
+    const retryAfter = Math.max(1, Math.ceil((oldestTimestamp + windowMs - now) / 1000));
+
+    return {
+      allowed: false,
+      remaining: 0,
+      resetSeconds: retryAfter,
+      retryAfter,
+    };
+  }
+
+  // Record this request
+  entry.timestamps.push(now);
+
+  const remaining = Math.max(0, maxRequests - entry.timestamps.length);
+  return {
+    allowed: true,
+    remaining,
+    resetSeconds: windowSeconds,
+    retryAfter: 0,
+  };
+}
+
+/**
+ * Predefined Rate Limit Profiles
+ */
+export const RATE_LIMITS = {
+  // Login: 5 attempts per 5 minutes (300s)
+  LOGIN: { max: 5, windowSeconds: 300, prefix: "login" },
+  // Registration: 3 submissions per hour (3600s)
+  REGISTER: { max: 3, windowSeconds: 3600, prefix: "register" },
+  // Email verification / status check: 15 checks per minute (60s)
+  VERIFY: { max: 15, windowSeconds: 60, prefix: "verify" },
+  // HackerRank handle update: 10 attempts per 10 minutes (600s)
+  HACKERRANK: { max: 10, windowSeconds: 600, prefix: "hackerrank" },
+};
