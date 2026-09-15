@@ -304,40 +304,10 @@ export async function POST(request: Request) {
         .insert(allRegistrationsToInsert);
 
       if (regInsertError) {
-        console.warn("Registrations table insert warning (schema might need update):", regInsertError.message);
-      }
-
-      // 2. Also insert into backwards-compatible `team_members` table (Member 2 and Member 3)
-      const membersToInsert = [
-        {
-          team_id: teamId,
-          member_order: 2,
-          member_name: m2NameVal.sanitized,
-          member_email: cleanM2Email,
-          member_phone: m2PhoneVal.sanitized,
-          member_ieee_member: !!member2Ieee,
-          member_ieee_number: cleanM2Ieee || null,
-        },
-        {
-          team_id: teamId,
-          member_order: 3,
-          member_name: m3NameVal.sanitized,
-          member_email: cleanM3Email,
-          member_phone: m3PhoneVal.sanitized,
-          member_ieee_member: !!member3Ieee,
-          member_ieee_number: cleanM3Ieee || null,
-        },
-      ];
-
-      const { error: membersInsertError } = await supabaseAdmin
-        .from("team_members")
-        .insert(membersToInsert);
-
-      if (membersInsertError && regInsertError) {
-        console.error("Members insert error:", membersInsertError);
-        // Clean up orphaned team record if both member inserts fail
+        console.error("Registrations insert error:", regInsertError);
+        // Clean up orphaned team record if registrations insert fails
         await supabaseAdmin.from("teams").delete().eq("id", teamId);
-        throw new Error("Failed to register team members. Please try again.");
+        throw new Error("Failed to register team participants. Please try again.");
       }
 
       // Build safe session object (NEVER include passwordHash)

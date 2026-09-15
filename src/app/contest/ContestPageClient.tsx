@@ -13,7 +13,7 @@ import {
 } from "@/lib/auth";
 import { validateEmail, canonicalizeText } from "@/lib/security";
 
-const OC_CONTACT_EMAIL = "info.haxtreme@gmail.com";
+const OC_CONTACT_EMAIL = "haxtremeofficial@gmail.com";
 
 // Official contest start time: October 3, 2026 09:00:00 AM Sri Lanka Time (UTC+05:30)
 const CONTEST_START_TIMESTAMP = new Date("2026-10-03T09:00:00+05:30").getTime();

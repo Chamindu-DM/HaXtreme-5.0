@@ -100,35 +100,15 @@ export async function POST(request: Request) {
       }
     }
 
-    // Fetch team members from registrations table (fallback to team_members if empty/table not yet migrated)
-    let membersData: Array<{
-      member_order: number;
-      member_name: string;
-      member_email: string;
-      member_phone?: string | null;
-      member_ieee_member?: boolean | null;
-      member_ieee_number?: string | null;
-    }> | null = null;
-
-    const { data: regData, error: regError } = await supabaseAdmin
+    // Fetch team members directly from registrations table
+    const { data: membersData, error: regError } = await supabaseAdmin
       .from("registrations")
       .select("*")
       .eq("team_id", teamData.id)
       .order("member_order", { ascending: true });
 
-    if (!regError && regData && regData.length > 0) {
-      membersData = regData;
-    } else {
-      const { data: tmData, error: tmError } = await supabaseAdmin
-        .from("team_members")
-        .select("*")
-        .eq("team_id", teamData.id)
-        .order("member_order", { ascending: true });
-
-      if (tmError) {
-        console.warn("Could not fetch team members on login:", tmError);
-      }
-      membersData = tmData;
+    if (regError) {
+      console.warn("Could not fetch team registrations on login:", regError);
     }
 
     const m2 = membersData?.find((m) => m.member_order === 2);
