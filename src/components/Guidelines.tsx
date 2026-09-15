@@ -226,25 +226,43 @@ export default function Guidelines() {
               </p>
             </div>
 
-            {/* Document Specs & Download CTA Button */}
-            <div className="guidelines-cta pt-4 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-              
-              {/* Primary Download Button */}
+            {/* Document Specs & Action Buttons */}
+            <div className="guidelines-cta pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              {/* Primary View Booklet in Browser Button */}
               <a
-                href="#download"
-                onClick={(e) => {
-                  e.preventDefault();
-                  alert("HaXtreme 5.0 Guideline booklet will be available for download soon!");
-                }}
-                className="group inline-flex items-center gap-3 bg-[#0ae448] hover:bg-[#abff84] text-black font-space-mono font-bold px-7 py-4 rounded-full transition-all duration-200 transform hover:scale-[1.02] shadow-lg shadow-[#0ae448]/20"
+                href="/HaXtreme_5.0_Hacker_Guide.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center justify-center gap-3 bg-[#0ae448] hover:bg-[#abff84] text-black font-space-mono font-bold px-7 py-4 rounded-none transition-all duration-200 transform hover:scale-[1.02] shadow-lg shadow-[#0ae448]/20 text-xs sm:text-sm uppercase tracking-wider"
               >
-                <span>Download Booklet</span>
+                <span>View Booklet</span>
                 <svg
-                  className="w-5 h-5 transition-transform duration-200 group-hover:translate-y-0.5"
+                  className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2.2"
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  />
+                </svg>
+              </a>
+
+              {/* Secondary Download PDF Button */}
+              <a
+                href="/HaXtreme_5.0_Hacker_Guide.pdf"
+                download="HaXtreme_5.0_Hacker_Guide.pdf"
+                className="group inline-flex items-center justify-center gap-3 border border-[#34352F] hover:border-[#0ae448] hover:bg-[#0ae448]/10 text-[#bbbaa6] hover:text-[#0ae448] font-space-mono font-bold px-6 py-4 rounded-none transition-all duration-200 text-xs sm:text-sm uppercase tracking-wider"
+              >
+                <span>Download PDF</span>
+                <svg
+                  className="w-4 h-4 transition-transform duration-200 group-hover:translate-y-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
                   <path
                     strokeLinecap="round"

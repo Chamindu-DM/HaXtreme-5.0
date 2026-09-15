@@ -5,12 +5,12 @@ export default function Footer() {
   return (
     <footer className="w-full py-12 sm:py-16 px-6 flex justify-center items-center bg-transparent relative z-10">
       {/* Partner and Organizer Logos */}
-      <div className="relative w-full max-w-[220px] sm:max-w-[340px] md:max-w-[420px] lg:max-w-[480px] aspect-[1232/106]">
+      <div className="relative w-full max-w-[340px] md:max-w-[420px] lg:max-w-[480px] aspect-[1232/106]">
         <Image
           src="/Logo.png"
           alt="HaXtreme 5.0 Partners and Organizers"
           fill
-          sizes="(max-width: 640px) 220px, (max-width: 768px) 340px, (max-width: 1024px) 420px, 480px"
+          sizes="(max-width: 768px) 340px, (max-width: 1024px) 420px, 480px"
           className="object-contain"
           priority
         />
